@@ -1,5 +1,5 @@
 /* عُقَد — offline cache. Bump VERSION whenever any shell file changes. */
-const VERSION = 'uqad-v1';
+const VERSION = 'uqad-v2';
 const SHELL = [
   './',
   './index.html',
@@ -7,6 +7,8 @@ const SHELL = [
   './icons/apple-touch-icon.png',
   './icons/icon-192.png',
   './icons/icon-512.png',
+  './fonts/Amiri-Regular.woff2',
+  './fonts/Amiri-Bold.woff2',
   './fonts/Cairo-Var.woff2',
   './fonts/Changa-Var.woff2',
   './fonts/Tajawal-Medium.woff2',

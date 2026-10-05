@@ -15,10 +15,14 @@
 <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
 <link rel="manifest" href="./manifest.webmanifest">
+<link rel="preload" href="./fonts/Amiri-Bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="./fonts/Cairo-Var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="./fonts/Changa-Var.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-/* ---------- RJverse brand fonts (subset from RJverse-Design-System/fonts, self-hosted) ---------- */
+/* ---------- Fonts (self-hosted) ----------
+   Amiri: hadith + dhikr text (as in the Claude Design film).
+   Cairo / Tajawal / Changa: RJverse design system UI fonts. */
+@font-face { font-family: 'Amiri';   src: url('./fonts/Amiri-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
+@font-face { font-family: 'Amiri';   src: url('./fonts/Amiri-Bold.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
 @font-face { font-family: 'Cairo';   src: url('./fonts/Cairo-Var.woff2') format('woff2'); font-weight: 400 800; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Changa';  src: url('./fonts/Changa-Var.woff2') format('woff2'); font-weight: 300 600; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Tajawal'; src: url('./fonts/Tajawal-Medium.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
@@ -29,60 +33,38 @@
   --rj-soft-cloud: #F4FAFF;
   --rj-sky-blue: #9BB1FF;
   --rj-indigo-tint: #788BFF;
-  --rj-blue: #5465FF;
-  --rj-midnight: #0B1C3D;
-  --rj-blue-50: #EEF1FF;
-  --rj-blue-300: #9BB1FF;
-  --rj-blue-400: #788BFF;
+  --rj-blue-100: #DDE2FF;
   --rj-blue-500: #5465FF;
   --rj-blue-600: #4252E6;
   --rj-blue-700: #3340BF;
   --rj-blue-800: #232E8C;
-  --rj-blue-900: #0B1C3D;
-  --rj-ink: #1A1A1A;
-  --rj-ink-3: #8089A0;
-  --rj-ink-inverse: #F4FAFF;
-  --status-warning: #E0A100;
+  --rj-midnight: #0B1C3D;
 
-  /* dark-mode semantic set (.rj-dark in the design system) */
-  --fg-1: var(--rj-ink-inverse);
+  /* dark-mode semantic set (.rj-dark) */
+  --fg-1: #F4FAFF;
   --fg-2: rgba(244, 250, 255, 0.72);
   --fg-3: rgba(244, 250, 255, 0.48);
-  --bg-1: var(--rj-midnight);
   --bg-2: #112347;
   --bg-card: #14264b;
   --border-1: rgba(244, 250, 255, 0.14);
 
   --shadow-lg: 0 24px 48px -16px rgba(11, 28, 61, 0.18), 0 4px 12px rgba(11, 28, 61, 0.06);
-  --shadow-glow: 0 16px 40px -12px rgba(84, 101, 255, 0.45);
 
-  --radius-md: 12px;
-  --radius-lg: 18px;
-  --radius-xl: 24px;
-  --radius-pill: 999px;
-
+  --radius-sm: 8px; --radius-md: 12px; --radius-lg: 18px; --radius-xl: 24px; --radius-pill: 999px;
   --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px;
-  --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px; --space-16: 64px;
+  --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px;
 
-  /* Arabic stacks — README: Cairo display/headings, Tajawal subheadings, Changa body.
-     Fallbacks are the Arabic system faces on iOS/Android/desktop. */
+  --font-hadith: 'Amiri', 'Geeza Pro', 'Noto Naskh Arabic', 'Times New Roman', serif;
   --font-display-ar: 'Cairo', 'SF Arabic', 'Geeza Pro', 'Noto Kufi Arabic', 'Noto Sans Arabic', 'Segoe UI', system-ui, sans-serif;
   --font-heading-ar: 'Tajawal', 'Cairo', 'SF Arabic', 'Geeza Pro', 'Noto Sans Arabic', 'Segoe UI', system-ui, sans-serif;
   --font-body-ar: 'Changa', 'Tajawal', 'SF Arabic', 'Geeza Pro', 'Noto Sans Arabic', 'Segoe UI', system-ui, sans-serif;
 
-  --fw-light: 300; --fw-regular: 400; --fw-medium: 500; --fw-semibold: 600; --fw-bold: 700; --fw-extrabold: 800;
-  --fs-h2: 36px; --fs-h3: 28px; --fs-h4: 22px; --fs-body-lg: 18px; --fs-body: 16px; --fs-small: 14px; --fs-caption: 12px;
-
+  --fs-h2: 36px; --fs-h4: 22px; --fs-body-lg: 18px; --fs-body: 16px; --fs-small: 14px; --fs-caption: 12px;
   --ease-out: cubic-bezier(.2, .7, .2, 1);
-  --ease-in-out: cubic-bezier(.4, 0, .2, 1);
   --dur-fast: 120ms;
-  --dur-base: 200ms;
-  --dur-slow: 360ms;
 
-  /* app */
-  --untie: 1200ms;
-  --stage: min(64vw, 29vh, 300px);
-  --hadith-size: clamp(26px, 7.2vw, 32px);
+  --seg-size: clamp(28px, 7.8vw, 34px);
+  --wake: min(48vw, 26vh, 200px);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -100,292 +82,162 @@ body {
 }
 button { font: inherit; color: inherit; }
 a { color: var(--rj-sky-blue); text-decoration: none; }
-a:hover { opacity: .7; text-decoration: underline; text-underline-offset: 3px; }
 :focus-visible { outline: 2px solid var(--rj-blue-500); outline-offset: 2px; }
 [hidden] { display: none !important; }
 
-/* ---------- Sky: night → first light → dawn (layers cross-fade; gradients can't tween) ---------- */
-.sky { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
-.sky > i { position: absolute; inset: 0; opacity: 0; transition: opacity 1600ms var(--ease-in-out); }
-.sky .l-night {
-  background:
-    linear-gradient(180deg, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, .12) 70%, rgba(0, 0, 0, 0) 100%),
-    var(--rj-midnight);
+/* ---------- Layers: sky canvas → figure → shade → UI ---------- */
+#sky { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; transition: filter 1600ms ease; }
+#fig { position: fixed; left: 0; top: 0; z-index: 1; pointer-events: none; transition: filter 1600ms ease; }
+#fig .cam { width: 100%; height: 100%; transform-origin: 50% 52%; }
+#fig svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.shade {
+  position: fixed; left: 0; right: 0; bottom: 0; height: 58vh; z-index: 2; pointer-events: none;
+  background: linear-gradient(180deg, rgba(11, 28, 61, 0) 0%, rgba(11, 28, 61, .72) 38%, rgba(11, 28, 61, .9) 100%);
+  transition: opacity 800ms ease;
 }
-.sky .l-k2 {
-  background:
-    radial-gradient(140% 48% at 50% 112%, rgba(35, 46, 140, .75) 0%, rgba(35, 46, 140, 0) 72%),
-    linear-gradient(180deg, rgba(0, 0, 0, .38) 0%, rgba(0, 0, 0, 0) 65%),
-    var(--rj-midnight);
-}
-.sky .l-k3 {
-  background:
-    radial-gradient(140% 52% at 50% 112%, rgba(120, 139, 255, .30) 0%, rgba(51, 64, 191, .55) 30%, rgba(35, 46, 140, 0) 74%),
-    linear-gradient(180deg, rgba(0, 0, 0, .22) 0%, rgba(0, 0, 0, 0) 60%),
-    var(--rj-midnight);
-}
-.sky .l-dawn {
-  background:
-    radial-gradient(150% 46% at 50% 114%, rgba(224, 161, 0, .55) 0%, rgba(224, 161, 0, .18) 36%, rgba(224, 161, 0, 0) 62%),
-    radial-gradient(140% 70% at 50% 110%, rgba(155, 177, 255, .40) 0%, rgba(84, 101, 255, .32) 38%, rgba(51, 64, 191, 0) 78%),
-    linear-gradient(180deg, var(--rj-midnight) 0%, var(--rj-blue-800) 62%, var(--rj-blue-700) 100%);
-}
-.sky .l-fail {
-  background:
-    linear-gradient(180deg, rgba(26, 26, 26, .55) 0%, rgba(26, 26, 26, .35) 100%),
-    var(--rj-midnight);
-  filter: saturate(.35);
-}
-.sky .l-home {
-  background:
-    radial-gradient(130% 40% at 50% 112%, rgba(35, 46, 140, .55) 0%, rgba(35, 46, 140, 0) 72%),
-    linear-gradient(180deg, rgba(0, 0, 0, .3) 0%, rgba(0, 0, 0, 0) 60%),
-    var(--rj-midnight);
-}
-body[data-sky="night"] .l-night,
-body[data-sky="k2"] .l-k2,
-body[data-sky="k3"] .l-k3,
-body[data-sky="dawn"] .l-dawn,
-body[data-sky="fail"] .l-fail,
-body[data-sky="home"] .l-home { opacity: 1; }
+body.is-dim #sky { filter: saturate(.3) brightness(.62); }
+body.is-dim #fig { filter: saturate(.2) brightness(.72); }
+body[data-screen="home"] .shade { opacity: 0; }
 
-/* ---------- Shell ---------- */
 .app {
-  position: relative; z-index: 1;
+  position: relative; z-index: 3;
   width: 100%; max-width: 520px; margin: 0 auto;
   min-height: 100vh; min-height: 100dvh;
   display: flex; flex-direction: column;
   padding:
     calc(env(safe-area-inset-top, 0px) + var(--space-3))
     calc(env(safe-area-inset-right, 0px) + var(--space-5))
-    calc(env(safe-area-inset-bottom, 0px) + var(--space-4))
+    calc(env(safe-area-inset-bottom, 0px) + var(--space-3))
     calc(env(safe-area-inset-left, 0px) + var(--space-5));
 }
 .screen { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-
-.topbar {
-  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
-  min-height: 44px; gap: var(--space-2);
-}
-.topbar > :first-child { justify-self: start; }
-.topbar > :last-child { justify-self: end; }
+.grow { flex: 1; min-height: var(--space-4); }
 
 .badge-test {
-  font-family: var(--font-heading-ar); font-weight: var(--fw-bold);
-  font-size: var(--fs-caption); line-height: 1;
-  color: var(--rj-sky-blue);
-  background: rgba(84, 101, 255, .16);
-  border: 1px solid rgba(155, 177, 255, .28);
-  padding: 6px 10px; border-radius: var(--radius-pill);
-  white-space: nowrap;
+  font-family: var(--font-heading-ar); font-weight: 700; font-size: var(--fs-caption); line-height: 1;
+  color: var(--rj-sky-blue); background: rgba(84, 101, 255, .16); border: 1px solid rgba(155, 177, 255, .28);
+  padding: 6px 10px; border-radius: var(--radius-pill); white-space: nowrap;
 }
-
 .link-quiet {
-  background: none; border: 0; cursor: pointer;
-  font-family: var(--font-body-ar); font-size: 13px; font-weight: var(--fw-regular);
-  color: var(--fg-3); opacity: .55;
-  padding: 10px 6px; min-height: 44px;
+  background: none; border: 0; cursor: pointer; padding: 10px 4px; min-height: 44px;
+  font-family: var(--font-heading-ar); font-weight: 500; font-size: 14px; color: var(--fg-2);
+  display: inline-flex; align-items: center; gap: 6px;
 }
-.link-quiet:hover { opacity: .8; }
+.link-quiet svg { width: 16px; height: 16px; }
+.link-faint { color: rgba(244, 250, 255, .3); font-size: 13px; }
 
-/* knot progress (3 small knots) */
-.progress { display: flex; gap: var(--space-2); direction: rtl; }
-.progress svg { width: 26px; height: 26px; display: block; overflow: visible; }
-.progress .p-ring { fill: none; stroke: var(--rj-sky-blue); stroke-width: 2.4; opacity: .35; transition: opacity var(--dur-slow) var(--ease-out); }
-.progress .p-body { fill: var(--rj-blue-500); stroke: var(--rj-sky-blue); stroke-width: 2; transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); transform-box: fill-box; transform-origin: center; }
-.progress .p-cross { fill: none; stroke: var(--rj-soft-cloud); stroke-width: 1.8; stroke-linecap: round; transition: opacity var(--dur-slow) var(--ease-out); }
-.progress .is-done .p-body { opacity: 0; transform: scale(.4); }
-.progress .is-done .p-cross { opacity: 0; }
-.progress .is-done .p-ring { opacity: .9; stroke-dasharray: 3 3; }
-.progress .is-current .p-ring { opacity: .9; }
-
-/* ---------- Stage: figure + countdown ring ---------- */
-.stage {
-  position: relative;
-  width: var(--stage); height: var(--stage);
-  margin: var(--space-2) auto 0;
-  flex: none;
-}
-.stage > svg { width: 100%; height: 100%; display: block; overflow: visible; }
-.ring-track { fill: none; stroke: rgba(155, 177, 255, .14); stroke-width: 5; }
-.ring-prog {
-  fill: none; stroke: var(--rj-sky-blue); stroke-width: 5; stroke-linecap: round;
-  transition: stroke-dashoffset 260ms linear, opacity var(--dur-slow) var(--ease-out);
-}
-.ring-hidden .ring-track, .ring-hidden .ring-prog { opacity: 0; }
-.porthole { fill: rgba(155, 177, 255, .045); }
-
-.time-pill {
-  position: absolute; left: 50%; bottom: -14px; transform: translateX(-50%);
-  font-family: var(--font-heading-ar); font-weight: var(--fw-bold); font-size: 18px; line-height: 1;
-  color: var(--fg-1);
-  background: var(--bg-card);
-  border: 1px solid var(--border-1);
-  border-radius: var(--radius-pill);
-  padding: 8px 14px 7px;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-.time-pill small { font-family: var(--font-body-ar); font-weight: var(--fw-regular); font-size: 12px; color: var(--fg-2); margin-inline-start: 6px; }
-
-/* figure — posture driven by data-slump (3 = all knots tied … 0 = upright) */
-.fig-torso, .fig-neck, .fig-head { transition: transform var(--untie) var(--ease-out); }
-.fig-head { transform-origin: 120px 170px; }
-.figure[data-slump="3"] .fig-head  { transform: translate(-2px, 17px) rotate(-10deg); }
-.figure[data-slump="2"] .fig-head  { transform: translate(-1px, 11px) rotate(-6deg); }
-.figure[data-slump="1"] .fig-head  { transform: translate(0, 5px) rotate(-2.5deg); }
-.figure[data-slump="0"] .fig-head  { transform: none; }
-.figure[data-slump="3"] .fig-neck  { transform: translateY(12px); }
-.figure[data-slump="2"] .fig-neck  { transform: translateY(8px); }
-.figure[data-slump="1"] .fig-neck  { transform: translateY(4px); }
-.figure[data-slump="3"] .fig-torso { transform: translateY(9px); }
-.figure[data-slump="2"] .fig-torso { transform: translateY(6px); }
-.figure[data-slump="1"] .fig-torso { transform: translateY(3px); }
-.fig-all { transition: transform 900ms var(--ease-out), filter 1200ms var(--ease-out); }
-.figure.is-risen .fig-all { transform: translateY(-7px); }
-.figure.is-dim .fig-all { filter: saturate(.25) brightness(.72); }
-
-.rope { fill: none; stroke: var(--rj-sky-blue); stroke-width: 4.2; stroke-linecap: round; transition: opacity 900ms var(--ease-out), transform 900ms var(--ease-out); }
-.figure[data-slump="2"] .rope { opacity: .8; }
-.figure[data-slump="1"] .rope { opacity: .6; }
-.figure[data-slump="0"] .rope { opacity: 0; transform: translateY(18px); }
-
-.knot-glow { opacity: .9; transition: opacity var(--untie) var(--ease-out); }
-.knot-body, .knot-tails { transform-box: fill-box; }
-.knot-body { transform-origin: center; transition: transform var(--untie) var(--ease-out), opacity var(--untie) var(--ease-out); }
-.knot-body path, .knot-tails path { fill: none; stroke: var(--rj-sky-blue); stroke-width: 4.2; stroke-linecap: round; }
-.knot-body path.under, .knot-tails path.under { stroke: var(--rj-blue-800); stroke-width: 7.4; }
-.knot-tails { transform-origin: 50% 0; transition: transform 1000ms var(--ease-in-out) 200ms, opacity 1000ms var(--ease-out) 200ms; }
-.knot-loose { fill: none; stroke: var(--rj-sky-blue); stroke-width: 3; stroke-linecap: round; opacity: 0; stroke-dasharray: 64; stroke-dashoffset: 0; }
-
-.knot.is-untied .knot-body { transform: scale(1.75) rotate(40deg); opacity: 0; }
-.knot.is-untied .knot-tails { transform: translateY(34px) rotate(8deg); opacity: 0; }
-.knot.is-untied .knot-glow { opacity: 0; }
-.knot.is-untying .knot-loose { animation: loosen var(--untie) var(--ease-out) forwards; }
-@keyframes loosen {
-  0%   { opacity: 0;  stroke-dashoffset: 0; transform: translateY(0); }
-  30%  { opacity: .9; }
-  100% { opacity: 0;  stroke-dashoffset: 64; transform: translateY(16px); }
+/* ---------- Top bar (knot screens) ---------- */
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); min-height: 64px; }
+.kprog { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.minis { display: flex; gap: 2px; }
+.minis svg { width: 26px; height: 26px; display: block; }
+.kcount { font-family: var(--font-heading-ar); font-weight: 500; font-size: 13px; color: var(--fg-2); line-height: 1.3; }
+.ring { position: relative; width: 60px; height: 60px; flex: none; }
+.ring svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring .track { fill: none; stroke: var(--border-1); stroke-width: 3.4; }
+.ring .prog { fill: none; stroke: var(--rj-indigo-tint); stroke-width: 3.4; stroke-linecap: round; transition: stroke-dashoffset 260ms linear; }
+.ring span {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-heading-ar); font-weight: 700; font-size: 14px; color: var(--fg-1);
+  font-variant-numeric: tabular-nums; direction: ltr;
 }
 
-.no-anim, .no-anim * { transition: none !important; animation: none !important; }
+.alarm-pill {
+  align-self: center; display: inline-flex; align-items: center; gap: 8px; margin-top: var(--space-2);
+  padding: 7px 14px; border-radius: var(--radius-pill);
+  background: rgba(20, 38, 75, .85); border: 1px solid var(--border-1);
+  font-family: var(--font-heading-ar); font-weight: 500; font-size: 13px; color: var(--rj-sky-blue); line-height: 1.2;
+}
+.bars { display: inline-flex; align-items: center; gap: 2px; height: 14px; }
+.bars i { width: 2.5px; height: 100%; border-radius: 2px; background: var(--rj-sky-blue); transform-origin: center; animation: bar 900ms ease-in-out infinite alternate; }
+.bars i:nth-child(2) { animation-delay: -200ms; } .bars i:nth-child(3) { animation-delay: -450ms; } .bars i:nth-child(4) { animation-delay: -650ms; }
+@keyframes bar { from { transform: scaleY(.3); } to { transform: scaleY(1); } }
 
-/* ---------- Type ---------- */
-.eyebrow {
-  font-family: var(--font-heading-ar); font-weight: var(--fw-bold);
-  font-size: var(--fs-small); line-height: 1.4;
-  color: var(--rj-indigo-tint);
-  text-align: center; margin: 0;
+/* ---------- Text ---------- */
+.textblock { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); text-align: center; min-width: 0; }
+.theme { font-family: var(--font-heading-ar); font-weight: 700; font-size: 15px; letter-spacing: .04em; color: var(--rj-sky-blue); margin: 0; line-height: 1.3; }
+.seg { font-family: var(--font-hadith); font-weight: 700; font-size: var(--seg-size); line-height: 1.75; color: var(--fg-1); margin: 0; text-wrap: balance; }
+.dhikr-card {
+  width: 100%; padding: var(--space-3) var(--space-5) var(--space-4);
+  border-radius: var(--radius-lg); background: rgba(20, 38, 75, .82); border: 1px solid var(--border-1);
+  display: flex; flex-direction: column; gap: 2px;
 }
-.hadith {
-  font-family: var(--font-display-ar); font-weight: var(--fw-semibold);
-  font-size: var(--hadith-size); line-height: 1.95;
-  color: var(--fg-1);
-  text-align: center; text-wrap: balance;
-  margin: 0;
-}
-.hadith-sm { font-size: 26px; }
-.source { font-family: var(--font-body-ar); font-size: var(--fs-small); color: var(--fg-2); text-align: center; margin: var(--space-2) 0 0; }
-.headline {
-  font-family: var(--font-display-ar); font-weight: var(--fw-extrabold);
-  font-size: clamp(30px, 8.6vw, 40px); line-height: 1.45;
-  color: var(--rj-sky-blue);
-  text-align: center; text-wrap: balance;
-  margin: 0;
-}
-.fail .headline { color: var(--fg-1); font-weight: var(--fw-bold); }
-.quiet-line { font-family: var(--font-heading-ar); font-weight: var(--fw-medium); font-size: var(--fs-body-lg); color: var(--fg-2); text-align: center; margin: 0; }
-
-/* ---------- Knot screen ---------- */
-.knot-content {
-  flex: 1; display: flex; flex-direction: column; justify-content: center;
-  gap: var(--space-4);
-  padding: var(--space-8) 0 var(--space-4);
-  min-width: 0;
-}
-.card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-1);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4) var(--space-5);
-  box-shadow: var(--shadow-lg);
-}
-.dhikr-label { font-family: var(--font-heading-ar); font-weight: var(--fw-bold); font-size: var(--fs-small); color: var(--rj-indigo-tint); margin: 0 0 var(--space-1); text-align: center; }
-.dhikr { font-family: var(--font-display-ar); font-weight: var(--fw-semibold); font-size: clamp(22px, 6.2vw, 26px); line-height: 1.9; color: var(--fg-1); text-align: center; margin: 0; text-wrap: balance; }
-
-details.full { align-self: center; width: 100%; }
-details.full > summary {
-  list-style: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; gap: var(--space-1);
-  font-family: var(--font-heading-ar); font-weight: var(--fw-medium); font-size: 15px;
-  color: var(--fg-2);
-  min-height: 40px;
-}
-details.full > summary::-webkit-details-marker { display: none; }
-details.full > summary svg { width: 16px; height: 16px; transition: transform var(--dur-base) var(--ease-out); }
-details.full[open] > summary svg { transform: rotate(180deg); }
-details.full .card { margin-top: var(--space-2); }
+.dhikr-label { font-family: var(--font-heading-ar); font-weight: 500; font-size: 13px; color: var(--fg-3); margin: 0; }
+.dhikr { font-family: var(--font-hadith); font-weight: 400; font-size: clamp(24px, 6.6vw, 27px); line-height: 1.7; color: var(--rj-blue-100); margin: 0; text-wrap: balance; }
+.headline { font-family: var(--font-display-ar); font-weight: 800; font-size: clamp(30px, 8.4vw, 36px); line-height: 1.35; color: var(--fg-1); margin: 0; text-wrap: balance; }
+.seg-sky { color: var(--rj-sky-blue); }
+.quiet-line { font-family: var(--font-heading-ar); font-weight: 500; font-size: var(--fs-body-lg); color: var(--fg-2); margin: 0; }
 
 /* ---------- Buttons ---------- */
 .btn {
-  display: flex; align-items: center; justify-content: center; flex-direction: column;
-  width: 100%;
-  border: 1px solid transparent; border-radius: var(--radius-pill);
-  font-family: var(--font-display-ar); font-weight: var(--fw-bold);
-  cursor: pointer; user-select: none; -webkit-user-select: none;
-  touch-action: manipulation;
-  transition: background-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out), transform var(--dur-fast) var(--ease-out), color var(--dur-base) var(--ease-out);
+  position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center; gap: var(--space-3);
+  width: 100%; border: 1px solid transparent; border-radius: var(--radius-pill);
+  font-family: var(--font-display-ar); font-weight: 700; cursor: pointer;
+  user-select: none; -webkit-user-select: none; touch-action: manipulation;
+  transition: background-color 300ms var(--ease-out), box-shadow 300ms var(--ease-out), color 300ms var(--ease-out), border-color 300ms var(--ease-out), transform var(--dur-fast) var(--ease-out);
 }
-.btn-primary { background: var(--rj-blue-500); color: #fff; box-shadow: var(--shadow-glow); }
-.btn-primary:hover { background: var(--rj-blue-600); }
-.btn-primary:active { transform: scale(.985); }
-.btn-secondary { background: transparent; color: var(--rj-sky-blue); border-color: rgba(155, 177, 255, .35); }
-.btn-secondary:active { transform: scale(.985); }
-.btn[disabled], .btn[aria-disabled="true"] {
-  background: rgba(84, 101, 255, .14); color: var(--fg-3);
-  box-shadow: none; cursor: not-allowed; border-color: rgba(155, 177, 255, .14);
-}
-.btn-done { min-height: 80px; font-size: 32px; line-height: 1.25; padding: var(--space-2) var(--space-6); gap: 2px; }
-.btn-done .sub { font-family: var(--font-body-ar); font-weight: var(--fw-regular); font-size: 14px; line-height: 1.2; }
-.btn-done[disabled] > span:first-child { font-size: 26px; }
-.btn-lg { min-height: 64px; font-size: 22px; padding: var(--space-3) var(--space-6); }
+.btn:active { transform: scale(.97); }
+.btn-primary { background: var(--rj-blue-500); color: #fff; box-shadow: 0 18px 44px -14px rgba(84, 101, 255, .75); }
+.btn-secondary { background: rgba(84, 101, 255, .16); color: var(--fg-1); border-color: rgba(155, 177, 255, .25); }
+.btn[disabled] { background: rgba(84, 101, 255, .16); border-color: rgba(155, 177, 255, .25); color: rgba(244, 250, 255, .4); box-shadow: none; cursor: not-allowed; }
+.btn[disabled]:active { transform: none; }
+.btn-main { min-height: 72px; font-size: 28px; line-height: 1.2; padding: var(--space-2) var(--space-6); margin-top: var(--space-5); }
 .btn-md { min-height: 52px; font-size: 18px; padding: var(--space-2) var(--space-5); }
+.chip {
+  font-family: var(--font-heading-ar); font-weight: 700; font-size: 15px; line-height: 1; color: var(--fg-2);
+  background: rgba(11, 28, 61, .6); padding: 7px 12px 6px; border-radius: var(--radius-pill);
+  font-variant-numeric: tabular-nums; direction: ltr;
+}
+.ripple {
+  position: absolute; width: 180px; height: 180px; margin: -90px 0 0 -90px; border-radius: 50%;
+  background: rgba(244, 250, 255, .5); pointer-events: none;
+  animation: ripple 650ms var(--ease-out) forwards;
+}
+@keyframes ripple { from { opacity: .55; transform: scale(.45); } to { opacity: 0; transform: scale(1.35); } }
 
-.footer { padding-top: var(--space-2); }
+.bottomrow { display: flex; align-items: center; justify-content: space-between; margin-top: var(--space-1); }
 
 /* ---------- Splash ---------- */
-.splash .brand { font-family: var(--font-display-ar); font-weight: var(--fw-extrabold); font-size: 28px; color: var(--rj-sky-blue); text-align: center; margin: 0; line-height: 1.3; }
-.splash { --stage: min(78vw, 40vh, 340px); }
-.splash .slot { margin-top: var(--space-6); }
-.splash .quiet-line { margin-top: var(--space-6); }
-.splash .spacer { flex: 1; min-height: var(--space-6); }
-.btn-wake { min-height: 132px; font-size: 52px; font-weight: var(--fw-extrabold); border-radius: 66px; }
+.clock { text-align: center; margin-top: var(--space-2); }
+.clock-time { font-family: var(--font-display-ar); font-weight: 400; font-size: 56px; line-height: 1.05; color: var(--fg-1); direction: ltr; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.clock-label { font-family: var(--font-heading-ar); font-weight: 500; font-size: 17px; color: var(--fg-2); }
+.opening { display: grid; }
+.opening > * { grid-area: 1 / 1; align-self: end; }
+.opening .seg { font-size: clamp(26px, 7.2vw, 30px); }
+.wake-wrap { position: relative; width: var(--wake); height: var(--wake); margin: var(--space-6) auto var(--space-2); flex: none; }
+.wake-wrap .pulse { position: absolute; inset: 0; border-radius: 50%; border: 2px solid var(--rj-indigo-tint); opacity: 0; animation: pulse 2.2s linear infinite; }
+.wake-wrap .pulse:nth-child(2) { animation-delay: -733ms; } .wake-wrap .pulse:nth-child(3) { animation-delay: -1467ms; }
+@keyframes pulse { from { transform: scale(1); opacity: .45; } to { transform: scale(1.45); opacity: 0; } }
+.btn-wake {
+  position: absolute; inset: 0; border-radius: 50%; padding: 0;
+  font-size: clamp(30px, 8.6vw, 38px); font-weight: 800;
+  box-shadow: 0 22px 60px -16px rgba(84, 101, 255, .75);
+}
 
-/* ---------- Ending screens ---------- */
-.ending { text-align: center; }
-.ending .body { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: var(--space-4); padding: var(--space-6) 0; }
-.reveal { opacity: 0; transform: translateY(8px); transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out); transition-delay: var(--reveal-delay, 0ms); }
+/* ---------- Endings ---------- */
+.reveal { opacity: 0; transform: translateY(10px); transition: opacity 800ms var(--ease-out), transform 800ms var(--ease-out); transition-delay: var(--d, 0ms); }
 .reveal.is-in { opacity: 1; transform: none; }
-.ending .footer { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); }
-.ending .footer .link-quiet { opacity: .7; font-size: 14px; }
+.ending .links { display: flex; justify-content: center; }
 
 /* ---------- Home ---------- */
-.home-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); min-height: 44px; }
-.home-title { font-family: var(--font-display-ar); font-weight: var(--fw-extrabold); font-size: var(--fs-h2); line-height: 1.2; color: var(--rj-sky-blue); margin: 0; }
-.home-sub { font-family: var(--font-body-ar); font-size: var(--fs-small); color: var(--fg-2); margin: var(--space-1) 0 var(--space-6); }
+.home { padding-bottom: var(--space-2); }
+.home-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); min-height: 56px; }
+.home-title { font-family: var(--font-hadith); font-weight: 700; font-size: 48px; line-height: 1.3; color: var(--rj-sky-blue); margin: 0; }
+.home-sub { font-family: var(--font-body-ar); font-size: var(--fs-small); color: var(--fg-2); margin: 0 0 var(--space-6); }
+.card { background: var(--bg-card); border: 1px solid var(--border-1); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5); box-shadow: var(--shadow-lg); }
 .stats { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
-.stat-label { font-family: var(--font-heading-ar); font-weight: var(--fw-medium); font-size: var(--fs-small); color: var(--fg-2); margin: 0 0 var(--space-1); }
-.stat-value { font-family: var(--font-display-ar); font-weight: var(--fw-bold); font-size: var(--fs-h4); line-height: 1.35; color: var(--fg-1); margin: 0; }
-.stat-big { font-family: var(--font-display-ar); font-weight: var(--fw-extrabold); font-size: 40px; line-height: 1.1; color: var(--rj-sky-blue); }
+.stat-label { font-family: var(--font-heading-ar); font-weight: 500; font-size: var(--fs-small); color: var(--fg-2); margin: 0 0 var(--space-1); }
+.stat-value { font-family: var(--font-display-ar); font-weight: 700; font-size: var(--fs-h4); line-height: 1.35; color: var(--fg-1); margin: 0; }
+.stat-big { font-family: var(--font-display-ar); font-weight: 800; font-size: 40px; line-height: 1.1; color: var(--rj-sky-blue); }
 .stat-unit { font-family: var(--font-body-ar); font-size: var(--fs-small); color: var(--fg-2); margin-inline-start: var(--space-1); }
-.section-title { font-family: var(--font-heading-ar); font-weight: var(--fw-bold); font-size: var(--fs-body-lg); color: var(--fg-1); margin: var(--space-8) 0 var(--space-3); }
+.section-title { font-family: var(--font-heading-ar); font-weight: 700; font-size: var(--fs-body-lg); color: var(--fg-1); margin: var(--space-8) 0 var(--space-3); }
 .grid30 { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 6px; }
 .day {
-  aspect-ratio: 1; border-radius: var(--radius-sm, 8px);
+  aspect-ratio: 1; border-radius: var(--radius-sm); min-width: 0;
   display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-heading-ar); font-weight: var(--fw-medium); font-size: 11px; line-height: 1;
+  font-family: var(--font-heading-ar); font-weight: 500; font-size: 11px; line-height: 1;
   border: 1px solid var(--border-1); color: var(--fg-3);
-  min-width: 0;
 }
 .day.r-success { background: var(--rj-sky-blue); border-color: var(--rj-sky-blue); color: var(--rj-midnight); }
 .day.r-failed { background: rgba(128, 137, 160, .38); border-color: transparent; color: var(--fg-2); }
@@ -394,196 +246,124 @@ details.full .card { margin-top: var(--space-2); }
 .legend { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); margin-top: var(--space-3); font-size: var(--fs-small); color: var(--fg-2); }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .legend i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
-.home-actions { margin-top: auto; padding-top: var(--space-8); display: flex; flex-direction: column; gap: var(--space-3); align-items: stretch; }
-.home-actions .link-quiet { align-self: center; opacity: .7; font-size: 14px; }
-.home-hadith { margin-top: var(--space-6); }
+.home-actions { margin-top: auto; padding-top: var(--space-8); display: flex; flex-direction: column; gap: var(--space-2); align-items: center; }
+.home-actions .btn { align-self: stretch; }
 
-/* ---------- Modal ---------- */
-.scrim { position: fixed; inset: 0; z-index: 10; background: rgba(11, 28, 61, .55); display: flex; align-items: flex-end; justify-content: center; padding: var(--space-5); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--space-5)); }
-.sheet { width: 100%; max-width: 480px; background: var(--bg-2); border: 1px solid var(--border-1); border-radius: var(--radius-xl); padding: var(--space-6) var(--space-5) var(--space-5); box-shadow: var(--shadow-lg); }
-.sheet h2 { font-family: var(--font-display-ar); font-weight: var(--fw-bold); font-size: var(--fs-h4); color: var(--fg-1); margin: 0 0 var(--space-2); text-align: center; }
-.sheet p { font-size: var(--fs-body); color: var(--fg-2); margin: 0 0 var(--space-5); text-align: center; }
+/* ---------- Sheets ---------- */
+.scrim { position: fixed; inset: 0; z-index: 10; background: rgba(11, 28, 61, .55); display: flex; align-items: flex-end; justify-content: center; padding: var(--space-4); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--space-4)); }
+.sheet { width: 100%; max-width: 480px; max-height: 86vh; overflow-y: auto; background: var(--bg-2); border: 1px solid var(--border-1); border-radius: var(--radius-xl); padding: var(--space-6) var(--space-5) var(--space-5); box-shadow: var(--shadow-lg); text-align: center; }
+.sheet h2 { font-family: var(--font-display-ar); font-weight: 700; font-size: var(--fs-h4); color: var(--fg-1); margin: 0 0 var(--space-2); }
+.sheet p.note { font-size: var(--fs-body); color: var(--fg-2); margin: 0 0 var(--space-5); }
 .sheet .row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.full-hadith { font-family: var(--font-hadith); font-weight: 400; font-size: 26px; line-height: 1.95; color: var(--fg-1); margin: 0; }
+.source { font-family: var(--font-body-ar); font-size: var(--fs-small); color: var(--fg-2); margin: var(--space-3) 0 var(--space-5); }
 
 /* ---------- Short screens ---------- */
-@media (max-height: 700px) {
-  :root { --stage: min(56vw, 26vh, 240px); --hadith-size: 26px; }
-  .knot-content { gap: var(--space-3); padding-top: var(--space-6); }
-  .btn-wake { min-height: 112px; }
+@media (max-height: 740px) {
+  :root { --seg-size: 27px; --wake: min(44vw, 24vh, 170px); }
+  .dhikr { font-size: 23px; line-height: 1.6; }
+  .btn-main { min-height: 64px; margin-top: var(--space-4); }
+  .clock-time { font-size: 46px; }
 }
 
-/* ---------- Reduced motion: simple fades ---------- */
+/* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .fig-torso, .fig-neck, .fig-head, .fig-all, .rope { transition: opacity 600ms linear !important; }
-  .knot-body, .knot-tails { transition: opacity 600ms linear !important; }
-  .knot.is-untied .knot-body, .knot.is-untied .knot-tails { transform: none; }
-  .knot.is-untying .knot-loose { animation: none; }
+  .bars i, .wake-wrap .pulse { animation: none; }
+  .wake-wrap .pulse:first-child { opacity: .35; }
   .reveal { transform: none; transition: opacity 600ms linear; }
-  .sky > i { transition: opacity 800ms linear; }
+  .ripple { display: none; }
   .btn { transition: none; }
 }
 </style>
 </head>
-<body data-sky="night">
-<div class="sky" aria-hidden="true"><i class="l-night"></i><i class="l-k2"></i><i class="l-k3"></i><i class="l-dawn"></i><i class="l-fail"></i><i class="l-home"></i></div>
-
-<!-- Shared illustration. Moved into whichever screen is active. -->
-<template id="tpl-stage">
-<div class="stage ring-hidden" id="stage">
-  <svg viewBox="0 0 240 240" role="img" aria-label="شخص نائم وعلى قافية رأسه ثلاث عُقد">
-    <defs>
-      <clipPath id="clip-porthole"><circle cx="120" cy="120" r="106"/></clipPath>
-      <linearGradient id="g-body" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#3340BF"/>
-        <stop offset=".45" stop-color="#232E8C"/>
-        <stop offset="1" stop-color="#0B1C3D"/>
-      </linearGradient>
-      <linearGradient id="g-neck" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#232E8C"/>
-        <stop offset="1" stop-color="#0B1C3D"/>
-      </linearGradient>
-      <radialGradient id="g-head" cx=".62" cy=".28" r=".85">
-        <stop offset="0" stop-color="#3340BF"/>
-        <stop offset=".55" stop-color="#232E8C"/>
-        <stop offset="1" stop-color="#16226a"/>
-      </radialGradient>
-      <radialGradient id="g-knot-glow">
-        <stop offset="0" stop-color="#9BB1FF" stop-opacity=".55"/>
-        <stop offset="1" stop-color="#9BB1FF" stop-opacity="0"/>
-      </radialGradient>
-    </defs>
-
-    <circle class="ring-track" cx="120" cy="120" r="115"/>
-    <circle class="ring-prog" id="ring-prog" cx="120" cy="120" r="115" transform="rotate(-90 120 120)"/>
-    <circle class="porthole" cx="120" cy="120" r="106"/>
-
-    <g class="figure" id="figure" data-slump="3" clip-path="url(#clip-porthole)">
-      <g class="fig-all">
-        <g class="fig-neck">
-          <path d="M104 118 C105 140 103 156 98 168 L142 168 C137 156 135 140 136 118 Z" fill="url(#g-neck)"/>
-        </g>
-        <g class="fig-torso">
-          <path d="M16 256 C18 204 38 174 80 163 C96 159 108 158 120 158 C134 158 148 160 162 165 C202 177 222 206 224 256 Z" fill="url(#g-body)" stroke="rgba(155,177,255,.28)" stroke-width="1.4"/>
-          <path d="M121 172 C120 198 121 222 120 250" fill="none" stroke="rgba(11,28,61,.45)" stroke-width="5" stroke-linecap="round"/>
-          <path d="M64 196 C76 186 92 184 104 189" fill="none" stroke="rgba(155,177,255,.10)" stroke-width="3" stroke-linecap="round"/>
-          <path d="M176 198 C164 188 150 186 138 191" fill="none" stroke="rgba(155,177,255,.08)" stroke-width="3" stroke-linecap="round"/>
-        </g>
-        <g class="fig-head">
-          <ellipse cx="81" cy="100" rx="6.5" ry="11" fill="#232E8C" stroke="rgba(155,177,255,.26)" stroke-width="1.2"/>
-          <ellipse cx="119" cy="90" rx="39" ry="44" transform="rotate(-6 119 90)" fill="url(#g-head)" stroke="rgba(155,177,255,.30)" stroke-width="1.4"/>
-          <path d="M94 56 C106 47 128 45 144 55" fill="none" stroke="rgba(155,177,255,.16)" stroke-width="3" stroke-linecap="round"/>
-          <path class="rope" d="M84 120 Q119 146 154 120"/>
-          <g class="knot" data-knot="1" transform="translate(140 128.3)">
-            <circle class="knot-glow" r="19" fill="url(#g-knot-glow)"/>
-            <g class="knot-tails"><path class="under" d="M3 6 C5 12 3 17 6 23"/><path d="M3 6 C5 12 3 17 6 23"/></g>
-            <path class="knot-loose" d="M-12 0 C-15 10 -3 15 2 6 C6 -2 15 2 11 15"/>
-            <g class="knot-body">
-              <path class="under" d="M-11 3 C-9 -8 5 -11 7 -3 C9 5 -2 9 -4 2"/><path d="M-11 3 C-9 -8 5 -11 7 -3 C9 5 -2 9 -4 2"/>
-              <path class="under" d="M-4 2 C-6 -5 4 -9 11 -2"/><path d="M-4 2 C-6 -5 4 -9 11 -2"/>
-            </g>
-          </g>
-          <g class="knot" data-knot="2" transform="translate(119 133)">
-            <circle class="knot-glow" r="19" fill="url(#g-knot-glow)"/>
-            <g class="knot-tails"><path class="under" d="M3 6 C5 12 3 17 6 23"/><path d="M3 6 C5 12 3 17 6 23"/></g>
-            <path class="knot-loose" d="M-12 0 C-15 10 -3 15 2 6 C6 -2 15 2 11 15"/>
-            <g class="knot-body">
-              <path class="under" d="M-11 3 C-9 -8 5 -11 7 -3 C9 5 -2 9 -4 2"/><path d="M-11 3 C-9 -8 5 -11 7 -3 C9 5 -2 9 -4 2"/>
-              <path class="under" d="M-4 2 C-6 -5 4 -9 11 -2"/><path d="M-4 2 C-6 -5 4 -9 11 -2"/>
-            </g>
-          </g>
-          <g class="knot" data-knot="3" transform="translate(98 128.3)">
-            <circle class="knot-glow" r="19" fill="url(#g-knot-glow)"/>
-            <g class="knot-tails"><path class="under" d="M3 6 C5 12 3 17 6 23"/><path d="M3 6 C5 12 3 17 6 23"/></g>
-            <path class="knot-loose" d="M-12 0 C-15 10 -3 15 2 6 C6 -2 15 2 11 15"/>
-            <g class="knot-body">
-              <path class="under" d="M-11 3 C-9 -8 5 -11 7 -3 C9 5 -2 9 -4 2"/><path d="M-11 3 C-9 -8 5 -11 7 -3 C9 5 -2 9 -4 2"/>
-              <path class="under" d="M-4 2 C-6 -5 4 -9 11 -2"/><path d="M-4 2 C-6 -5 4 -9 11 -2"/>
-            </g>
-          </g>
-        </g>
-      </g>
-    </g>
-  </svg>
-  <div class="time-pill" id="time-pill" hidden><span dir="ltr" id="time-left">00:00</span><small>متبقٍّ</small></div>
-</div>
-</template>
+<body data-screen="home" data-sky="night">
+<canvas id="sky" aria-hidden="true"></canvas>
+<div id="fig" aria-hidden="true"><div class="cam" id="cam"></div></div>
+<div class="shade" aria-hidden="true"></div>
 
 <main class="app" id="app">
 
-  <!-- Splash: one tap to wake (unlocks audio on iOS) -->
+  <!-- Splash: opening + one tap to wake (unlocks audio on iOS) -->
   <section class="screen splash" id="s-splash" hidden>
-    <div class="topbar"><span></span><p class="brand">عُقَد</p><span><span class="badge-test" data-test-only hidden>وضع التجربة</span></span></div>
-    <div class="slot"></div>
-    <p class="quiet-line">ثلاث عُقد تنتظر أن تنحلّ</p>
-    <div class="spacer"></div>
-    <button class="btn btn-primary btn-wake" id="btn-wake" type="button">استيقظ</button>
+    <div class="topbar" style="min-height:32px"><span></span><span class="badge-test" data-test-only hidden>وضع التجربة</span><span></span></div>
+    <div class="clock" data-top><div class="clock-time" id="clock">4:12</div><div class="clock-label">الفجر</div></div>
+    <div class="grow"></div>
+    <div class="textblock opening" data-anchor>
+      <p class="seg" id="open1"></p>
+      <p class="seg" id="open2"></p>
+    </div>
+    <div class="wake-wrap"><span class="pulse"></span><span class="pulse"></span><span class="pulse"></span>
+      <button class="btn btn-primary btn-wake" id="btn-wake" type="button">استيقظ</button>
+    </div>
   </section>
 
   <!-- Knot -->
   <section class="screen knot-screen" id="s-knot" hidden>
-    <div class="topbar">
-      <span><span class="badge-test" data-test-only hidden>وضع التجربة</span></span>
-      <div class="progress" id="progress" aria-label="العُقد"></div>
-      <button class="link-quiet" id="btn-emergency" type="button">طوارئ</button>
+    <div class="topbar" data-top>
+      <div class="kprog"><div class="minis" id="minis"></div><div class="kcount" id="kcount"></div></div>
+      <span class="badge-test" data-test-only hidden>وضع التجربة</span>
+      <div class="ring" aria-label="الوقت المتبقي">
+        <svg viewBox="0 0 60 60"><circle class="track" cx="30" cy="30" r="26"/><circle class="prog" id="ring-prog" cx="30" cy="30" r="26"/></svg>
+        <span id="ring-time">0:00</span>
+      </div>
     </div>
-    <div class="slot"></div>
-    <div class="knot-content">
-      <p class="eyebrow" id="knot-label"></p>
-      <p class="hadith" id="knot-text"></p>
-      <div class="card" id="dhikr-card" hidden>
+    <div class="alarm-pill" id="alarm-pill" hidden><span class="bars"><i></i><i></i><i></i><i></i></span>المنبّه يعمل</div>
+    <div class="grow"></div>
+    <div class="textblock" data-anchor>
+      <p class="theme" id="theme"></p>
+      <p class="seg" id="knot-text"></p>
+      <div class="dhikr-card" id="dhikr-card" hidden>
         <p class="dhikr-label">قُل</p>
         <p class="dhikr" id="dhikr-text"></p>
       </div>
-      <details class="full">
-        <summary>الحديث كاملاً <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
-        <div class="card"><p class="hadith hadith-sm" data-text="full"></p><p class="source" data-text="source"></p></div>
-      </details>
     </div>
-    <div class="footer">
-      <button class="btn btn-primary btn-done" id="btn-done" type="button"><span>تم</span><span class="sub" id="done-sub" hidden></span></button>
+    <button class="btn btn-primary btn-main" id="btn-done" type="button"><span>تم</span><span class="chip" id="dwell-chip" hidden></span></button>
+    <div class="bottomrow">
+      <button class="link-quiet" type="button" data-open="full">الحديث كاملاً <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <button class="link-quiet link-faint" id="btn-emergency" type="button">طوارئ</button>
     </div>
   </section>
 
   <!-- Success -->
-  <section class="screen ending success" id="s-success" hidden>
-    <div class="topbar"><span><span class="badge-test" data-test-only hidden>وضع التجربة</span></span><span></span><span></span></div>
-    <div class="slot"></div>
-    <div class="body">
+  <section class="screen ending" id="s-success" hidden>
+    <div class="topbar" data-top style="min-height:32px"><span></span><span class="badge-test" data-test-only hidden>وضع التجربة</span><span></span></div>
+    <div class="grow"></div>
+    <div class="textblock" data-anchor>
       <h1 class="headline reveal">أصبحتَ نشيطًا طيّبَ النفس</h1>
-      <p class="hadith reveal" style="--reveal-delay:250ms" data-text="success-seg"></p>
+      <p class="seg seg-sky reveal" style="--d:250ms" data-text="success-seg"></p>
     </div>
-    <div class="footer reveal" style="--reveal-delay:500ms">
-      <button class="btn btn-primary btn-lg" type="button" data-run="done">افتح الجوال</button>
-      <button class="link-quiet" type="button" data-go="home">السجل</button>
+    <div class="reveal" style="--d:500ms">
+      <button class="btn btn-primary btn-main" type="button" data-run="done">افتح الجوال</button>
+      <div class="links"><button class="link-quiet" type="button" data-go="home">السجل</button></div>
     </div>
   </section>
 
   <!-- Failed -->
-  <section class="screen ending fail" id="s-failed" hidden>
-    <div class="topbar"><span><span class="badge-test" data-test-only hidden>وضع التجربة</span></span><span></span><span></span></div>
-    <div class="slot"></div>
-    <div class="body">
-      <h1 class="headline reveal">أصبحتَ اليوم خبيثَ النفسِ كسلان</h1>
-      <p class="hadith reveal" style="--reveal-delay:250ms" data-text="fail-seg"></p>
-      <p class="quiet-line reveal" style="--reveal-delay:600ms">غدًا فجرٌ جديد</p>
+  <section class="screen ending" id="s-failed" hidden>
+    <div class="topbar" data-top style="min-height:32px"><span></span><span class="badge-test" data-test-only hidden>وضع التجربة</span><span></span></div>
+    <div class="grow"></div>
+    <div class="textblock" data-anchor>
+      <h1 class="headline reveal" style="font-weight:700">أصبحتَ اليوم خبيثَ النفسِ كسلان</h1>
+      <p class="seg reveal" style="--d:250ms" data-text="fail-seg"></p>
+      <p class="quiet-line reveal" style="--d:600ms">غدًا فجرٌ جديد</p>
     </div>
-    <div class="footer reveal" style="--reveal-delay:800ms">
-      <button class="btn btn-secondary btn-lg" type="button" data-run="fail">افتح الجوال</button>
-      <button class="link-quiet" type="button" data-go="home">السجل</button>
+    <div class="reveal" style="--d:800ms">
+      <button class="btn btn-secondary btn-main" type="button" data-run="fail">افتح الجوال</button>
+      <div class="links"><button class="link-quiet" type="button" data-go="home">السجل</button></div>
     </div>
   </section>
 
   <!-- Emergency -->
-  <section class="screen ending emergency" id="s-emergency" hidden>
-    <div class="topbar"><span><span class="badge-test" data-test-only hidden>وضع التجربة</span></span><span></span><span></span></div>
-    <div class="slot"></div>
-    <div class="body">
-      <h1 class="headline reveal" style="color:var(--fg-1)">سُجِّل اليوم حالةً طارئة</h1>
-      <p class="quiet-line reveal" style="--reveal-delay:250ms">غدًا فجرٌ جديد</p>
+  <section class="screen ending" id="s-emergency" hidden>
+    <div class="topbar" data-top style="min-height:32px"><span></span><span class="badge-test" data-test-only hidden>وضع التجربة</span><span></span></div>
+    <div class="grow"></div>
+    <div class="textblock" data-anchor>
+      <h1 class="headline reveal" style="font-weight:700">سُجِّل اليوم حالةً طارئة</h1>
+      <p class="quiet-line reveal" style="--d:250ms">غدًا فجرٌ جديد</p>
     </div>
-    <div class="footer reveal" style="--reveal-delay:400ms">
-      <button class="btn btn-secondary btn-lg" type="button" data-run="fail">افتح الجوال</button>
-      <button class="link-quiet" type="button" data-go="home">السجل</button>
+    <div class="reveal" style="--d:400ms">
+      <button class="btn btn-secondary btn-main" type="button" data-run="fail">افتح الجوال</button>
+      <div class="links"><button class="link-quiet" type="button" data-go="home">السجل</button></div>
     </div>
   </section>
 
@@ -609,25 +389,30 @@ details.full .card { margin-top: var(--space-2); }
       <span><i style="border:1px solid var(--border-1)"></i>لا جلسة</span>
     </div>
 
-    <details class="full home-hadith">
-      <summary>الحديث كاملاً <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
-      <div class="card"><p class="hadith hadith-sm" data-text="full"></p><p class="source" data-text="source"></p></div>
-    </details>
-
     <div class="home-actions">
       <button class="btn btn-primary btn-md" id="btn-test-new" type="button" data-test-only hidden>ابدأ تجربة جديدة</button>
       <button class="btn btn-secondary btn-md" id="btn-back-today" type="button" hidden>عودة إلى نتيجة اليوم</button>
+      <button class="link-quiet" type="button" data-open="full">الحديث كاملاً <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
       <a class="link-quiet" id="link-test" href="./?test=1&amp;start=1">وضع التجربة</a>
       <a class="link-quiet" id="link-exit-test" href="./" data-test-only hidden>الخروج من وضع التجربة</a>
     </div>
   </section>
 </main>
 
+<!-- Full hadith -->
+<div class="scrim" id="sheet-full" hidden role="dialog" aria-modal="true" aria-label="الحديث كاملاً">
+  <div class="sheet">
+    <p class="full-hadith" data-text="full"></p>
+    <p class="source" data-text="source"></p>
+    <button class="btn btn-secondary btn-md" type="button" data-close>إغلاق</button>
+  </div>
+</div>
+
 <!-- Emergency confirm -->
 <div class="scrim" id="confirm" hidden role="dialog" aria-modal="true" aria-labelledby="confirm-title">
   <div class="sheet">
     <h2 id="confirm-title">حالة طارئة؟</h2>
-    <p>ستنتهي جلسة اليوم وتُسجَّل «طوارئ»، ثم يُفتح الجوال.</p>
+    <p class="note">ستنتهي جلسة اليوم وتُسجَّل «طوارئ»، ثم يُفتح الجوال.</p>
     <div class="row">
       <button class="btn btn-primary btn-md" id="confirm-no" type="button">رجوع</button>
       <button class="btn btn-secondary btn-md" id="confirm-yes" type="button">تأكيد</button>
@@ -643,16 +428,15 @@ details.full .card { margin-top: var(--space-2); }
   const CONFIG = {
     timeZone: 'Asia/Riyadh',
     knots: [
-      { windowSec: 10 * 60, minDwellSec: 0,   alarm: true  },  // ذِكر
-      { windowSec: 10 * 60, minDwellSec: 90,  alarm: false },  // وضوء
-      { windowSec: 30 * 60, minDwellSec: 240, alarm: false },  // صلاة
+      { windowSec: 5 * 60,  minDwellSec: 60,  alarm: true  },  // ذِكر
+      { windowSec: 10 * 60, minDwellSec: 180, alarm: false },  // وضوء
+      { windowSec: 45 * 60, minDwellSec: 240, alarm: false },  // صلاة
     ],
-    test: { windowsSec: [20, 20, 40], minDwellSec: 5 },        // ?test=1
+    test: { windowsSec: [60, 60, 90], minDwellSec: 5 },        // ?test=1
     shortcuts: { done: 'Uqad Done', fail: 'Uqad Fail' },
     storagePrefix: 'uqad.v1.',
     historyDays: 30,
     historyKeepDays: 400,
-    untieMs: 1200,
     tickMs: 250,
   };
 
@@ -660,6 +444,8 @@ details.full .card { margin-top: var(--space-2); }
   const TEXT = {
     full: 'يَعقِدُ الشَّيطانُ على قافيةِ رَأسِ أحَدِكُم إذا هو نامَ ثَلاثَ عُقدٍ، يَضرِبُ كُلَّ عُقدةٍ: عليك لَيلٌ طَويلٌ فارقُدْ، فإنِ استَيقَظَ فذَكَرَ اللهَ انحَلَّت عُقدةٌ، فإن تَوضَّأ انحَلَّت عُقدةٌ، فإن صَلَّى انحَلَّت عُقدةٌ، فأصبَحَ نَشيطًا طَيِّبَ النَّفسِ، وإلَّا أصبَحَ خَبيثَ النَّفسِ كَسلانَ.',
     source: 'متفق عليه — البخاري ١١٤٢، مسلم ٧٧٦',
+    open1: 'يَعقِدُ الشَّيطانُ على قافيةِ رَأسِ أحَدِكُم إذا هو نامَ ثَلاثَ عُقدٍ',
+    open2: 'يَضرِبُ كُلَّ عُقدةٍ: عليك لَيلٌ طَويلٌ فارقُدْ',
     knots: [
       'فإنِ استَيقَظَ فذَكَرَ اللهَ انحَلَّت عُقدةٌ',
       'فإن تَوضَّأ انحَلَّت عُقدةٌ',
@@ -669,7 +455,7 @@ details.full .card { margin-top: var(--space-2); }
     successSeg: 'فأصبَحَ نَشيطًا طَيِّبَ النَّفسِ',
     failSeg: 'وإلَّا أصبَحَ خَبيثَ النَّفسِ كَسلانَ',
   };
-  const KNOT_LABELS = ['العقدة الأولى · الذِّكر', 'العقدة الثانية · الوضوء', 'العقدة الثالثة · الصلاة'];
+  const THEMES = ['ذِكر', 'وُضوء', 'صَلاة'];
 
   /* =================== Mode =================== */
   const params = new URLSearchParams(location.search);
@@ -725,8 +511,9 @@ details.full .card { margin-top: var(--space-2); }
   }
 
   /* =================== Dates (Asia/Riyadh) =================== */
-  let dateFmt = null;
+  let dateFmt = null, timeFmt = null;
   try { dateFmt = new Intl.DateTimeFormat('en-CA', { timeZone: CONFIG.timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }); } catch (_) {}
+  try { timeFmt = new Intl.DateTimeFormat('en-US', { timeZone: CONFIG.timeZone, hour: 'numeric', minute: '2-digit', hour12: true }); } catch (_) {}
   function today(now = Date.now()) {
     if (dateFmt) {
       try {
@@ -740,14 +527,18 @@ details.full .card { margin-top: var(--space-2); }
     const t = Date.UTC(+date.slice(0, 4), +date.slice(5, 7) - 1, +date.slice(8, 10)) + n * 864e5;
     return new Date(t).toISOString().slice(0, 10);
   }
+  function clockText(now = Date.now()) {
+    if (timeFmt) {
+      try { const p = {}; for (const x of timeFmt.formatToParts(new Date(now))) p[x.type] = x.value; return `${p.hour}:${p.minute}`; } catch (_) {}
+    }
+    const d = new Date(now + 3 * 3600e3);
+    return `${(d.getUTCHours() % 12) || 12}:${String(d.getUTCMinutes()).padStart(2, '0')}`;
+  }
 
   /* =================== Formatting =================== */
   const AR_DIGITS = '٠١٢٣٤٥٦٧٨٩';
   const ar = (v) => String(v).replace(/\d/g, (d) => AR_DIGITS[d]);
-  function mmss(ms) {
-    const s = Math.max(0, Math.ceil(ms / 1000));
-    return ar(String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'));
-  }
+  const mss = (ms) => { const s = Math.max(0, Math.ceil(ms / 1000)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
 
   /* =================== Device helpers =================== */
   function buzz(pattern) { try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (_) {} }
@@ -759,9 +550,8 @@ details.full .card { margin-top: var(--space-2); }
   }
 
   const Wake = {
-    lock: null, want: false,
+    lock: null,
     async acquire() {
-      this.want = true;
       if (!('wakeLock' in navigator) || document.visibilityState !== 'visible') return;
       try {
         if (this.lock && !this.lock.released) return;
@@ -770,7 +560,6 @@ details.full .card { margin-top: var(--space-2); }
       } catch (_) { this.lock = null; }
     },
     release() {
-      this.want = false;
       try { if (this.lock) this.lock.release(); } catch (_) {}
       this.lock = null;
     },
@@ -785,26 +574,26 @@ details.full .card { margin-top: var(--space-2); }
       const AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) return;
       try {
-        const ctx = new AC();
-        this.ctx = ctx;
-        const master = ctx.createGain();
-        const comp = ctx.createDynamicsCompressor();
-        master.connect(comp); comp.connect(ctx.destination);
-        const t = ctx.currentTime;
+        const ac = new AC();
+        this.ctx = ac;
+        const master = ac.createGain();
+        const comp = ac.createDynamicsCompressor();
+        master.connect(comp); comp.connect(ac.destination);
+        const t = ac.currentTime;
         master.gain.setValueAtTime(0.0001, t);
         master.gain.exponentialRampToValueAtTime(0.22, t + 4);   // fade in
         master.gain.linearRampToValueAtTime(0.75, t + 90);       // slowly louder
         this.master = master;
         this.on = true;
         this.next = t + 0.1;
-        if (ctx.state === 'suspended') ctx.resume();
+        if (ac.state === 'suspended') ac.resume();
         this.pump();
         this.timer = setInterval(() => this.pump(), 200);
       } catch (_) { this.on = false; }
     },
     pump() {
-      const ctx = this.ctx; if (!ctx) return;
-      while (this.next < ctx.currentTime + 1.2) { this.phrase(this.next); this.next += 3.4; }
+      const ac = this.ctx; if (!ac) return;
+      while (this.next < ac.currentTime + 1.2) { this.phrase(this.next); this.next += 3.4; }
     },
     phrase(t0) {
       // three-note rising arpeggio (A4 · C#5 · E5) with a soft octave pad
@@ -812,12 +601,12 @@ details.full .card { margin-top: var(--space-2); }
       this.note(220, t0, 2.8, 0.18);
     },
     note(freq, t, dur, level = 0.32) {
-      const ctx = this.ctx;
-      const o1 = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain();
+      const ac = this.ctx;
+      const o1 = ac.createOscillator(), o2 = ac.createOscillator(), g = ac.createGain();
       o1.type = 'sine'; o2.type = 'triangle';
       o1.frequency.setValueAtTime(freq * 0.985, t); o1.frequency.exponentialRampToValueAtTime(freq, t + 0.25);
       o2.frequency.setValueAtTime(freq * 2, t);
-      const g2 = ctx.createGain(); g2.gain.value = 0.08;
+      const g2 = ac.createGain(); g2.gain.value = 0.08;
       o1.connect(g); o2.connect(g2); g2.connect(g); g.connect(this.master);
       g.gain.setValueAtTime(0.0001, t);
       g.gain.exponentialRampToValueAtTime(level, t + 0.06);
@@ -829,29 +618,379 @@ details.full .card { margin-top: var(--space-2); }
       if (!this.on) return;
       this.on = false;
       clearInterval(this.timer); this.timer = null;
-      const ctx = this.ctx, master = this.master;
+      const ac = this.ctx, master = this.master;
       this.ctx = null; this.master = null;
       try {
-        const t = ctx.currentTime;
+        const t = ac.currentTime;
         master.gain.cancelScheduledValues(t);
         master.gain.setValueAtTime(Math.max(master.gain.value, 0.0001), t);
         master.gain.exponentialRampToValueAtTime(0.0001, t + 0.4);
-        setTimeout(() => { try { ctx.close(); } catch (_) {} }, 600);
+        setTimeout(() => { try { ac.close(); } catch (_) {} }, 600);
       } catch (_) {}
     },
   };
 
+  /* =================== Motion engine (ported from the Claude Design film) =================== */
+  const RM = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const TAU = Math.PI * 2;
+  const cl = (v, a, b) => Math.max(a, Math.min(b, v));
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const Ease = {
+    out: (x) => 1 - Math.pow(1 - x, 3),
+    inOut: (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2),
+    back: (x) => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); },
+  };
+  const P = (t, a, b, e = Ease.out) => e(cl((t - a) / (b - a), 0, 1));
+  const B = (t, a, b, c, d, e = Ease.out) => P(t, a, b, e) * (1 - P(t, c, d, e));
+  const nowS = () => performance.now() / 1000;
+
+  let busyUntil = 0;
+  class Val {
+    constructor(v) { this.a = v; this.b = v; this.t0 = 0; this.d = 0; this.e = Ease.out; }
+    get(t = nowS()) { if (!this.d) return this.b; return this.a + (this.b - this.a) * this.e(cl((t - this.t0) / this.d, 0, 1)); }
+    set(v) { this.a = this.b = v; this.d = 0; kick(); return this; }
+    to(v, dur, e = Ease.out, delay = 0) {
+      const t = nowS();
+      if (RM) dur = Math.min(dur, 0.6);
+      this.a = this.get(t); this.b = v; this.t0 = t + delay; this.d = Math.max(0.001, dur); this.e = e;
+      busyUntil = Math.max(busyUntil, this.t0 + this.d + 0.05);
+      kick();
+      return this;
+    }
+  }
+
+  const C = { midnight: '#0B1C3D', navy2: '#112347', card: '#14264b', b800: '#232E8C', b700: '#3340BF', blue: '#5465FF', indigo: '#788BFF', sky: '#9BB1FF', b100: '#DDE2FF', cloud: '#F4FAFF' };
+  const ROPE = C.indigo;
+
+  // knot n (1..3) → slot on the nape. RTL: knot 1 is on the right.
+  const SLOTS = [[365, 337, -28], [300, 354, 0], [235, 337, 28]];
+
+  const FX = {
+    T: 0,
+    ambient: false,
+    w: { water: new Val(0), dawn: new Val(0) },
+    dawnB: new Val(0.18), bloom: new Val(0),
+    figOp: new Val(0),
+    ti: [new Val(1), new Val(1), new Val(1)],
+    q: [new Val(0), new Val(0), new Val(0)],
+    strikes: [], pulses: [], intro: null,
+    dawnLive: false,
+    headY: 0, figScale: 1,   // screen-space head centre + figure scale (for the sky)
+  };
+
+  /* ---------- Sky (canvas) — Night · Water · Dawn scenes in 1080×1920 film space ---------- */
+  const W_ = 1080, H_ = 1920;
+  const canvas = document.getElementById('sky');
+  const mainCtx = canvas.getContext('2d');
+  let ctx = mainCtx;                       // the scene painters draw into whichever context is current
+  let off = null, offCtx = null;
+  let cv = { w: 0, h: 0, dpr: 1, s: 1, ox: 0, oy: 0 };
+
+  function mulberry(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  const STAR_LAYERS = (() => {
+    const r = mulberry(11);
+    return [{ n: 34, r: 1.6, v: 4 }, { n: 22, r: 2.6, v: 9 }, { n: 10, r: 3.8, v: 16 }].map((L) => ({
+      ...L, stars: Array.from({ length: L.n }, () => ({ x: r() * W_, y: r() * H_ * 0.8, s: 0.6 + r() * 0.8, ph: r() * TAU, c: r() < 0.3 ? C.sky : C.cloud })),
+    }));
+  })();
+  const DROPS = [{ x: 210, y: 1480, P: 3.1, ph: 0.4 }, { x: 870, y: 1360, P: 3.7, ph: 1.9 }, { x: 560, y: 1600, P: 4.3, ph: 3.0 }, { x: 360, y: 1230, P: 5.1, ph: 2.2 }];
+
+  function sizeCanvas() {
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    const w = window.innerWidth, h = window.innerHeight;
+    canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+    const s = Math.max(w / W_, h / H_);
+    cv = { w, h, dpr, s, ox: (w - W_ * s) / 2, oy: (h - H_ * s) / 2 };
+  }
+  const toFilmY = (y) => (y - cv.oy) / cv.s;
+
+  function linGrad(y0, y1, stops) {
+    const g = ctx.createLinearGradient(0, y0, 0, y1);
+    for (const [o, c] of stops) g.addColorStop(o, c);
+    return g;
+  }
+  function ellipseGlow(cx, cy, rx, ry, stops, alpha, scale = 1) {
+    if (alpha <= 0.002) return;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.translate(cx, cy); ctx.scale(scale, scale * ry / rx);
+    const g = ctx.createRadialGradient(0, 0, 0, 0, 0, rx);
+    for (const [o, c] of stops) g.addColorStop(o, c);
+    ctx.fillStyle = g; ctx.fillRect(-rx, -rx, rx * 2, rx * 2);
+    ctx.restore();
+  }
+
+  function drawNight(T, headY) {
+    ctx.fillStyle = linGrad(0, H_, [[0, C.midnight], [0.45, C.midnight], [1, C.navy2]]);
+    ctx.fillRect(0, 0, W_, H_);
+    const pulse = 0.5 + 0.5 * Math.sin(T * TAU / 5.5);
+    ellipseGlow(540, headY, 1431, 1431, [[0, 'rgba(84,101,255,0.42)'], [0.22, 'rgba(51,64,191,0.18)'], [0.48, 'rgba(11,28,61,0)'], [1, 'rgba(11,28,61,0)']], 0.55 + 0.45 * pulse);
+    STAR_LAYERS.forEach((L, li) => {
+      for (const s of L.stars) {
+        const x = ((s.x - L.v * T) % W_ + W_) % W_;
+        const y = ((s.y - L.v * 0.3 * T) % (H_ * 0.8) + H_ * 0.8) % (H_ * 0.8);
+        const tw = 0.35 + 0.5 * (0.5 + 0.5 * Math.sin(T * 1.3 + s.ph));
+        ctx.globalAlpha = tw * (0.5 + li * 0.25);
+        ctx.fillStyle = s.c;
+        ctx.beginPath(); ctx.arc(x, y, L.r * s.s, 0, TAU); ctx.fill();
+      }
+    });
+    ctx.globalAlpha = 1;
+  }
+
+  function drawWater(T, headY) {
+    const dy = headY - 585;
+    ctx.fillStyle = linGrad(0, H_, [[0, C.midnight], [0.52, C.b800], [0.78, C.b700], [1, C.b800]]);
+    ctx.fillRect(0, 0, W_, H_);
+    const sheen = 0.5 + 0.5 * Math.sin(T * TAU / 6);
+    ellipseGlow(540, 1190 + dy, 756, 576, [[0, 'rgba(155,177,255,0.35)'], [0.45, 'rgba(120,139,255,0.12)'], [0.75, 'rgba(11,28,61,0)'], [1, 'rgba(11,28,61,0)']], 0.4 + 0.3 * sheen);
+    ctx.lineWidth = 2.5;
+    ctx.strokeStyle = C.sky;
+    for (let k = 0; k < 5; k++) {
+      const f = ((T / 7 + k / 5) % 1 + 1) % 1;
+      const rx = 80 + f * 900;
+      ctx.globalAlpha = (1 - f) * 0.28;
+      ctx.beginPath(); ctx.ellipse(540, 1180 + dy, rx, rx * 0.3, 0, 0, TAU); ctx.stroke();
+    }
+    ctx.strokeStyle = C.b100; ctx.fillStyle = C.b100;
+    for (const d of DROPS) {
+      const local = ((T + d.ph) % d.P + d.P) % d.P;
+      const y0 = d.y + dy;
+      if (local < 0.55) {
+        const k = local / 0.55;
+        ctx.globalAlpha = 0.75 * Math.min(1, k * 4);
+        ctx.beginPath(); ctx.ellipse(d.x, lerp(y0 - 620, y0, k * k), 5, 13, 0, 0, TAU); ctx.fill();
+      } else {
+        const age = local - 0.55;
+        for (let m = 0; m < 3; m++) {
+          const rr = age * 150 + m * 34;
+          const op = cl(1 - age / 2.6, 0, 1) * (0.55 - m * 0.13);
+          if (op <= 0) continue;
+          ctx.globalAlpha = op;
+          ctx.beginPath(); ctx.ellipse(d.x, y0, rr, rr * 0.28, 0, 0, TAU); ctx.stroke();
+        }
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function drawDawn(T, headY, r, b, bloom) {
+    const HZ = headY + 221 * r;               // horizon sits at shoulder height
+    const dy = HZ - 806;
+    const lit = cl(b * 0.85 + bloom * 0.15, 0, 1);
+    ctx.fillStyle = linGrad(dy, dy + H_, [[0, C.midnight], [0.32, C.b800], [0.42, C.b700], [0.58, C.navy2], [0.8, C.midnight]]);
+    ctx.fillRect(0, 0, W_, H_);
+    if (lit > 0.002) {
+      ctx.globalAlpha = lit;
+      ctx.fillStyle = linGrad(dy, dy + H_, [[0, C.b800], [0.17, C.b700], [0.32, C.indigo], [0.415, C.b100], [0.44, C.sky], [0.56, C.b800], [0.74, C.midnight]]);
+      ctx.fillRect(0, 0, W_, H_);
+      ctx.globalAlpha = 1;
+    }
+    ellipseGlow(540, HZ, 648, 422, [[0, 'rgba(244,250,255,0.9)'], [0.25, 'rgba(221,226,255,0.5)'], [0.55, 'rgba(155,177,255,0.18)'], [1, 'rgba(155,177,255,0)']], cl(b * 0.45 + bloom * 0.55, 0, 1), 1 + bloom * 0.7);
+    ctx.fillStyle = C.b100;
+    for (let i = 0; i < 9; i++) {
+      const a = (-80 + i * 20 + 4 * Math.sin(T * 0.12 + i)) * Math.PI / 180, a2 = a + 0.05, L = 1500;
+      ctx.globalAlpha = cl((0.04 + 0.05 * (0.5 + 0.5 * Math.sin(T * 0.5 + i * 1.7))) * (0.3 + 0.7 * b + bloom), 0, 1);
+      ctx.beginPath(); ctx.moveTo(540, HZ); ctx.lineTo(540 + L * Math.sin(a), HZ - L * Math.cos(a)); ctx.lineTo(540 + L * Math.sin(a2), HZ - L * Math.cos(a2)); ctx.closePath(); ctx.fill();
+    }
+    // mihrab arches
+    const arch = (w, rise, top) => {
+      w *= r; rise *= r; top *= r;
+      const Lx = 540 - w, Rx = 540 + w, sp = HZ - rise, tp = sp - top;
+      ctx.beginPath(); ctx.moveTo(Lx, HZ); ctx.lineTo(Lx, sp);
+      ctx.bezierCurveTo(Lx, sp - top * 0.62, 540 - w * 0.28, tp + top * 0.08, 540, tp);
+      ctx.bezierCurveTo(540 + w * 0.28, tp + top * 0.08, Rx, sp - top * 0.62, Rx, sp);
+      ctx.lineTo(Rx, HZ); ctx.stroke();
+    };
+    ctx.strokeStyle = C.sky; ctx.lineWidth = 2.5;
+    const ao = 0.12 + 0.14 * b;
+    ctx.globalAlpha = ao; arch(250, 330, 260);
+    ctx.globalAlpha = ao * 0.7; arch(320, 400, 320);
+    ctx.globalAlpha = ao * 0.45; arch(400, 470, 390);
+    // the sun rises behind the figure
+    if (bloom > 0.002) {
+      const sunY = lerp(HZ + 80 * r, headY + 55 * r, bloom);
+      ctx.fillStyle = C.b100; ctx.globalAlpha = bloom * 0.25;
+      ctx.beginPath(); ctx.arc(540, sunY, 240 * r, 0, TAU); ctx.fill();
+      ctx.fillStyle = C.cloud; ctx.globalAlpha = bloom * 0.95;
+      ctx.beginPath(); ctx.arc(540, sunY, 130 * r, 0, TAU); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // paint a full scene at some opacity: offscreen first, then composite onto the main canvas
+  function layer(paint, alpha) {
+    if (alpha >= 0.997) { paint(); return; }
+    if (!off || off.width !== canvas.width || off.height !== canvas.height) {
+      off = document.createElement('canvas'); off.width = canvas.width; off.height = canvas.height; offCtx = off.getContext('2d');
+    }
+    offCtx.setTransform(mainCtx.getTransform());
+    offCtx.globalAlpha = 1;
+    ctx = offCtx; paint(); ctx = mainCtx;
+    mainCtx.save(); mainCtx.setTransform(1, 0, 0, 1, 0, 0); mainCtx.globalAlpha = alpha; mainCtx.drawImage(off, 0, 0); mainCtx.restore();
+  }
+
+  function drawSky(t) {
+    const T = FX.T;
+    const headY = toFilmY(FX.headY), r = FX.figScale;
+    ctx = mainCtx;
+    ctx.setTransform(cv.dpr * cv.s, 0, 0, cv.dpr * cv.s, cv.dpr * cv.ox, cv.dpr * cv.oy);
+    ctx.globalAlpha = 1;
+    drawNight(T, headY);
+    const ww = FX.w.water.get(t), wd = FX.w.dawn.get(t);
+    if (ww > 0.003) layer(() => drawWater(T, headY), ww);
+    if (wd > 0.003) layer(() => drawDawn(T, headY, r, FX.dawnB.get(t), FX.bloom.get(t)), wd);
+  }
+
+  /* ---------- Figure (inline SVG, faceless, seen from behind) ---------- */
+  const knotSVG = (n) => `
+    <g data-k="${n}">
+      <circle r="56" fill="url(#knotGlow)" class="k-glow"/>
+      <g class="k-tails" fill="none" stroke="${ROPE}" stroke-width="8" stroke-linecap="round"><path d="M -5 12 C -9 28, -3 40, -9 54"/><path d="M 5 12 C 9 26, 4 36, 10 48"/></g>
+      <g class="k-loop" fill="none" stroke="${ROPE}" stroke-width="8" stroke-linecap="round" stroke-dasharray="80"><path d="M -17 -3 C -20 -32, 20 -32, 17 -3"/></g>
+      <g class="k-body"><ellipse rx="19" ry="16" fill="${ROPE}" stroke="${C.b100}" stroke-width="2" stroke-opacity=".5"/><path d="M -13 -6 C -4 5, 4 5, 13 -6" stroke="${C.b100}" stroke-width="3.5" fill="none" opacity=".65" stroke-linecap="round"/></g>
+    </g>`;
+  document.getElementById('cam').innerHTML = `
+    <svg viewBox="0 0 600 760" role="img" aria-label="شخص نائم وعلى قافية رأسه ثلاث عُقد">
+      <defs>
+        <linearGradient id="fadeG" x1="0" y1="0" x2="0" y2="1"><stop offset="0.6" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <mask id="fadeM" maskUnits="userSpaceOnUse" x="-200" y="-200" width="1000" height="1000"><rect x="-200" y="-200" width="1000" height="960" fill="url(#fadeG)"/></mask>
+        <radialGradient id="knotGlow"><stop offset="0" stop-color="${ROPE}" stop-opacity=".75"/><stop offset="1" stop-color="${ROPE}" stop-opacity="0"/></radialGradient>
+        <linearGradient id="torsoG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.card}"/><stop offset="1" stop-color="${C.midnight}"/></linearGradient>
+        <radialGradient id="headG" cx=".66" cy=".28" r=".8"><stop offset="0" stop-color="${C.b700}" stop-opacity=".45"/><stop offset="1" stop-color="${C.b800}" stop-opacity="0"/></radialGradient>
+      </defs>
+      <g mask="url(#fadeM)">
+        <g id="f-torso">
+          <path d="M 60 800 C 60 580, 120 470, 300 452 C 480 470, 540 580, 540 800 Z" fill="url(#torsoG)" stroke="${C.sky}" stroke-opacity=".32" stroke-width="3"/>
+          <path d="M 262 320 L 258 470 C 280 480, 320 480, 342 470 L 338 320 Z" fill="${C.navy2}"/>
+        </g>
+        <g id="f-head">
+          <ellipse cx="193" cy="262" rx="13" ry="26" fill="${C.card}"/>
+          <ellipse cx="407" cy="262" rx="13" ry="26" fill="${C.card}"/>
+          <circle cx="300" cy="250" r="106" fill="${C.card}"/>
+          <circle cx="300" cy="250" r="106" fill="url(#headG)"/>
+          <path d="M 318 146 A 106 106 0 0 1 405 262" stroke="${C.sky}" stroke-opacity=".55" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <g id="f-rope"><path d="M 214 324 Q 300 384 386 324" stroke="${ROPE}" stroke-width="9" fill="none" stroke-linecap="round"/></g>
+          ${[1, 2, 3].map(knotSVG).join('')}
+        </g>
+      </g>
+    </svg>`;
+  const fig = document.getElementById('fig');
+  const cam = document.getElementById('cam');
+  const fTorso = document.getElementById('f-torso');
+  const fHead = document.getElementById('f-head');
+  const fRope = document.getElementById('f-rope');
+  const knotEls = [1, 2, 3].map((n) => {
+    const g = fig.querySelector(`[data-k="${n}"]`);
+    return { g, glow: g.querySelector('.k-glow'), tails: g.querySelector('.k-tails'), loop: g.querySelector('.k-loop'), body: g.querySelector('.k-body') };
+  });
+
+  function drawFigure(t) {
+    const T = FX.T, still = RM ? 0 : 1;
+    const q = FX.q.map((v) => v.get(t));
+    const ti = FX.ti.map((v) => v.get(t));
+    const st = [0, 1, 2].map((i) => (FX.strikes[i] == null || RM) ? 0 : B(t, FX.strikes[i], FX.strikes[i] + 0.12, FX.strikes[i] + 0.12, FX.strikes[i] + 0.6));
+    const u = 0.25 * q[0] + 0.3 * q[1] + 0.45 * q[2];
+    const br = still * Math.sin(T * TAU / 4.2), bs = 1.01 + 0.01 * br;
+    const hdx = 10 * (1 - u), hdy = 30 + 52 * (1 - u) - 4 * br, hr = 7 * (1 - u);
+    const tdy = 18 * (1 - u), tsx = 1 + 0.03 * (1 - u);
+    fTorso.setAttribute('transform', `translate(0 ${tdy.toFixed(2)}) translate(300 760) scale(${(tsx * bs).toFixed(4)} ${bs.toFixed(4)}) translate(-300 -760)`);
+    fHead.setAttribute('transform', `translate(${hdx.toFixed(2)} ${hdy.toFixed(2)}) rotate(${hr.toFixed(2)} 300 470)`);
+    const ropeIn = cl(ti[0] * 1.5, 0, 1);
+    fRope.setAttribute('opacity', (ropeIn * (1 - q[2])).toFixed(3));
+    fRope.setAttribute('transform', `translate(0 ${(q[2] * 50).toFixed(2)})`);
+    const dim = document.body.classList.contains('is-dim');
+    const glow = dim ? 0.12 : 0.35 + 0.25 * (0.5 + 0.5 * Math.sin(T * TAU / 3));
+    knotEls.forEach((k, i) => {
+      const [x, y, rot] = SLOTS[i];
+      if (ti[i] <= 0.001) { k.g.setAttribute('opacity', '0'); return; }
+      k.g.setAttribute('opacity', '1');
+      const s = 0.92 * ti[i] * (1 + 0.16 * st[i]);
+      k.g.setAttribute('transform', `translate(${x} ${y}) rotate(${rot}) scale(${s.toFixed(4)})`);
+      k.glow.setAttribute('opacity', ((1 - q[i]) * (glow + 0.7 * st[i])).toFixed(3));
+      const sway = still * 4 * Math.sin(T * TAU / 5 + i * 1.3);
+      k.tails.setAttribute('transform', `translate(0 ${(still * q[i] * 110).toFixed(2)}) rotate(${(sway + still * q[i] * 24).toFixed(2)})`);
+      k.tails.setAttribute('opacity', (1 - q[i]).toFixed(3));
+      k.loop.setAttribute('stroke-dashoffset', (80 * q[i]).toFixed(2));
+      k.loop.setAttribute('opacity', (1 - q[i] * 0.6).toFixed(3));
+      k.body.setAttribute('transform', `scale(${(1 - 0.75 * q[i] * still).toFixed(4)})`);
+      k.body.setAttribute('opacity', (1 - q[i]).toFixed(3));
+    });
+    // camera: intro push-in, a nudge on every untie, a little settle on sunrise
+    let c = 1;
+    if (!RM) {
+      if (FX.intro != null) c += 0.35 * B(t, FX.intro + 0.6, FX.intro + 3.6, FX.intro + 6.3, FX.intro + 7.4, Ease.inOut);
+      for (const a of FX.pulses) c += 0.16 * B(t, a - 0.2, a + 0.5, a + 1.6, a + 2.4, Ease.inOut);
+      c *= 1 - 0.06 * FX.bloom.get(t);
+    }
+    cam.style.transform = c === 1 ? '' : `scale(${c.toFixed(4)})`;
+    fig.style.opacity = FX.figOp.get(t).toFixed(3);
+  }
+
+  const open1 = document.getElementById('open1'), open2 = document.getElementById('open2');
+  function drawOpening(t) {
+    let a = 0, b = 1;
+    if (FX.intro != null) {
+      const s = FX.intro;
+      a = B(t, s + 0.8, s + 1.5, s + 3.6, s + 4.1);
+      b = P(t, s + 4.0, s + 4.6);
+    }
+    open1.style.opacity = a.toFixed(3); open1.style.transform = `translateY(${((1 - a) * 10).toFixed(1)}px)`;
+    open2.style.opacity = b.toFixed(3); open2.style.transform = `translateY(${((1 - b) * 10).toFixed(1)}px)`;
+  }
+
+  /* ---------- Frame loop (30 fps while something moves; sleeps otherwise) ---------- */
+  let rafOn = false, lastFrame = 0, dirty = true;
+  function kick() { dirty = true; if (!rafOn) { rafOn = true; requestAnimationFrame(frame); } }
+  function frame(ts) {
+    const t = ts / 1000;
+    const moving = (FX.ambient && !RM) || t < busyUntil;
+    if (!moving && !dirty) { rafOn = false; return; }
+    requestAnimationFrame(frame);
+    if (!dirty && t - lastFrame < 1 / 30 - 0.003) return;
+    lastFrame = t; dirty = false;
+    if (FX.ambient && !RM) FX.T = t;
+    if (FX.dawnLive && S && S.phase === 'knot' && S.knot === 3) {
+      const k = KNOTS[2], f = cl((Date.now() - S.startedAt) / (k.windowSec * 1000), 0, 1);
+      FX.dawnB.b = FX.dawnB.a = 0.18 + 0.67 * f; FX.dawnB.d = 0;
+    }
+    drawSky(t);
+    drawFigure(t);
+    if (screenNow === 'splash') drawOpening(t);
+  }
+
+  /* ---------- Layout: fit the figure between the top bar and the text ---------- */
+  function layout() {
+    const sec = document.getElementById('s-' + screenNow);
+    if (!sec || screenNow === 'home') { kick(); return; }
+    const topEl = sec.querySelector('[data-top]'), anchor = sec.querySelector('[data-anchor]');
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const top = topEl ? topEl.getBoundingClientRect().bottom : 60;
+    const textTop = anchor ? anchor.getBoundingClientRect().top : vh * 0.6;
+    // knots sit just above the text, but never lower than ~47% of the screen (film framing)
+    const knotY = Math.min(textTop - 28, vh * 0.47);
+    let H = Math.min((knotY - 8 - top) / 0.36, vw * 1.22, vh * 0.72, 720);
+    H = Math.max(H, 240);
+    const Wd = H * 600 / 760;
+    const figTop = Math.max(top - 0.2 * H + 8, knotY - 0.56 * H);
+    fig.style.width = Wd + 'px'; fig.style.height = H + 'px';
+    fig.style.left = ((vw - Wd) / 2) + 'px'; fig.style.top = figTop + 'px';
+    FX.headY = figTop + (250 + 56) / 760 * H;     // head centre, mid-posture
+    FX.figScale = (H / cv.s) / 963;               // relative to the film's figure
+    kick();
+  }
+
   /* =================== State machine =================== */
   // IDLE (no session today) → KNOT1 → KNOT2 → KNOT3 → SUCCESS; any knot → FAILED (deadline) or EMERGENCY.
   // Everything is recomputed from absolute timestamps, so closing/killing the app is harmless.
-  let S = null;                 // today's (or still-running) session
-  let audioUnlocked = false;    // splash tap happened in this page load
-  let viewHome = false;         // user chose "السجل" from an ending screen
+  let S = null;
+  let audioUnlocked = false;
+  let viewHome = false;
   let renderedKey = '';
-  let revealDelay = 0;
+  let screenNow = '';
 
   function reconcile(now = Date.now()) {
-    let s = loadSession();
+    const s = loadSession();
     if (!s) return null;
     if (s.phase === 'knot' && now >= s.deadline) {
       s.phase = 'failed'; s.failedKnot = s.knot; s.endedAt = s.deadline;
@@ -875,11 +1014,10 @@ details.full .card { margin-top: var(--space-2); }
     return s;
   }
 
-  function untiedCount(s) {
-    if (!s) return 0;
-    if (s.phase === 'success') return 3;
-    return Math.min(3, s.completed.length);
-  }
+  // knot 1's minimum time counts from the «استيقظ» tap, the others from when their knot began
+  const dwellBase = (s) => (s.knot === 1 && isNum(s.wokeAt) ? s.wokeAt : s.startedAt);
+
+  const untiedCount = (s) => (!s ? 0 : s.phase === 'success' ? 3 : Math.min(3, s.completed.length));
 
   function screenFor(s) {
     if (!s || viewHome) return 'home';
@@ -887,101 +1025,96 @@ details.full .card { margin-top: var(--space-2); }
     return s.phase;
   }
 
-  function skyFor(screen, s) {
-    if (screen === 'home') return 'home';
-    if (screen === 'success') return 'dawn';
-    if (screen === 'failed' || screen === 'emergency') return 'fail';
-    if (screen === 'knot') return ['night', 'k2', 'k3'][s.knot - 1];
-    return 'night';
-  }
-
   /* =================== DOM =================== */
-  const $ = (sel, root = document) => root.querySelector(sel);
-  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
-
-  document.body.appendChild($('#tpl-stage').content.cloneNode(true));
-  const stage = $('#stage');
-  const figure = $('#figure');
-  const ringProg = $('#ring-prog');
-  const RING_C = 2 * Math.PI * 115;
-  ringProg.style.strokeDasharray = RING_C.toFixed(2);
-  ringProg.style.strokeDashoffset = '0';
+  function $(sel, root = document) { return root.querySelector(sel); }
+  function $$(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
 
   $$('[data-text="full"]').forEach((el) => { el.textContent = TEXT.full; });
   $$('[data-text="source"]').forEach((el) => { el.textContent = TEXT.source; });
   $('[data-text="success-seg"]').textContent = TEXT.successSeg;
   $('[data-text="fail-seg"]').textContent = TEXT.failSeg;
   $('#dhikr-text').textContent = TEXT.dhikr;
-  if (TEST) $$('[data-test-only]').forEach((el) => { el.hidden = false; });
-  if (TEST) $('#link-test').hidden = true;
+  open1.textContent = TEXT.open1;
+  open2.textContent = TEXT.open2;
+  if (TEST) { $$('[data-test-only]').forEach((el) => { el.hidden = false; }); $('#link-test').hidden = true; }
 
-  const progressEl = $('#progress');
-  progressEl.innerHTML = [1, 2, 3].map((i) =>
-    `<svg viewBox="-13 -13 26 26" data-p="${i}" aria-hidden="true"><circle class="p-ring" r="11"/><circle class="p-body" r="6.5"/><path class="p-cross" d="M-4.5 3 Q0 0 3 -4.5"/></svg>`).join('');
+  const RING_C = 2 * Math.PI * 26;
+  const ringProg = $('#ring-prog');
+  ringProg.style.strokeDasharray = RING_C.toFixed(2);
 
-  function setFigure(untied, { animateKnot = 0, instant = false } = {}) {
-    if (instant) figure.classList.add('no-anim');
-    figure.dataset.slump = String(3 - untied);
-    $$('.knot', figure).forEach((k) => {
-      const n = +k.dataset.knot;
-      const isUntied = n <= untied;
-      if (n === animateKnot && isUntied) {
-        k.classList.add('is-untying');
-        setTimeout(() => k.classList.remove('is-untying'), CONFIG.untieMs + 100);
-      }
-      k.classList.toggle('is-untied', isUntied);
-    });
-    if (instant) { figure.getBoundingClientRect(); requestAnimationFrame(() => figure.classList.remove('no-anim')); }
+  function miniKnot(state) {
+    if (state === 'untied') return `<svg viewBox="-32 -32 64 64"><g fill="none" stroke="rgba(244,250,255,.48)" stroke-width="4" stroke-linecap="round"><path d="M -20 6 C -14 -8, -8 -8, -4 2"/><path d="M 20 -6 C 14 8, 8 8, 4 -2"/></g></svg>`;
+    return `<svg viewBox="-32 -32 64 64">${state === 'current' ? `<circle r="29" fill="none" stroke="${C.sky}" stroke-opacity=".5" stroke-width="2"/>` : ''}<path d="M -9 -4 C -10 -20, 10 -20, 9 -4 M -3 6 C -6 14, -2 18, -6 24 M 3 6 C 6 13, 2 17, 6 22" stroke="${ROPE}" stroke-width="4" fill="none" stroke-linecap="round"/><ellipse cy="-1" rx="10" ry="8.5" fill="${ROPE}"/></svg>`;
   }
 
-  function placeStage(screen) {
-    const slot = $(`#s-${screen} .slot`);
-    if (slot && stage.parentNode !== slot) {
-      slot.appendChild(stage);
-      stage.getBoundingClientRect();                   // flush style so post-move class changes still transition
+  function setScene(screen, instant) {
+    const d = instant ? 0.001 : 2.2;
+    const knot3 = screen === 'knot' && S.knot === 3;
+    FX.w.water.to(screen === 'knot' && S.knot === 2 ? 1 : 0, d, Ease.inOut);
+    FX.w.dawn.to(knot3 || screen === 'success' ? 1 : 0, d, Ease.inOut);
+    FX.dawnLive = knot3;
+    if (screen === 'success') {
+      FX.dawnB.to(1, instant ? 0.001 : 2.4, Ease.inOut);
+      if (instant) FX.bloom.set(1);
+    } else if (!knot3) {
+      FX.dawnB.set(0.18); FX.bloom.set(0);
     }
-    stage.hidden = !slot;
-    stage.classList.toggle('ring-hidden', screen !== 'knot');
-    $('#time-pill').hidden = screen !== 'knot';
+    FX.ambient = !['failed', 'emergency'].includes(screen);
+    document.body.classList.toggle('is-dim', screen === 'failed' || screen === 'emergency');
+    document.body.dataset.sky = screen === 'home' ? 'home' : screen === 'success' ? 'dawn'
+      : (screen === 'failed' || screen === 'emergency') ? 'fail'
+      : screen === 'knot' ? ['night', 'water', 'dawn'][S.knot - 1] : 'night';
   }
 
-  function render({ animateKnot = 0, fresh = false } = {}) {
-    const now = Date.now();
+  function setKnots(untied) {
+    for (let i = 0; i < 3; i++) { FX.q[i].set(i < untied ? 1 : 0); FX.ti[i].set(1); }
+    FX.strikes = []; FX.pulses = []; FX.intro = null;
+  }
+
+  function render({ fresh = false } = {}) {
     const screen = screenFor(S);
     const key = screen + ':' + (S ? S.knot + ':' + S.phase : '');
-    const changed = key !== renderedKey;
-    renderedKey = key;
-
-    if (changed) {
+    if (key !== renderedKey) {
+      const prevScreen = screenNow;
+      renderedKey = key; screenNow = screen;
+      document.body.dataset.screen = screen;
       $$('.screen').forEach((el) => { el.hidden = el.id !== 's-' + screen; });
-      document.body.dataset.sky = skyFor(screen, S);
-      placeStage(screen);
+      if (fresh || prevScreen === 'home' || prevScreen === '') setKnots(untiedCount(S));
+      setScene(screen, fresh);
+      FX.figOp.to(screen === 'home' ? 0 : 1, fresh ? 1.2 : 0.8);
 
-      const untied = untiedCount(S);
-      setFigure(untied, { animateKnot, instant: fresh || !animateKnot });
-      figure.classList.toggle('is-risen', screen === 'success');
-      figure.classList.toggle('is-dim', screen === 'failed' || screen === 'emergency');
-
+      if (screen === 'splash') startIntro();
       if (screen === 'knot') {
         const i = S.knot - 1;
-        $('#knot-label').textContent = KNOT_LABELS[i];
+        $('#theme').textContent = THEMES[i];
         $('#knot-text').textContent = TEXT.knots[i];
         $('#dhikr-card').hidden = S.knot !== 1;
-        $$('svg', progressEl).forEach((svg) => {
-          const n = +svg.dataset.p;
-          svg.classList.toggle('is-done', n < S.knot);
-          svg.classList.toggle('is-current', n === S.knot);
-        });
+        $('#kcount').textContent = `العقدة ${ar(S.knot)} من ٣`;
+        $('#minis').innerHTML = [1, 2, 3].map((n) => miniKnot(n < S.knot ? 'untied' : n === S.knot ? 'current' : 'tied')).join('');
       }
       if (screen === 'success' || screen === 'failed' || screen === 'emergency') {
         const els = $$(`#s-${screen} .reveal`);
         els.forEach((el) => el.classList.remove('is-in'));
-        setTimeout(() => els.forEach((el) => el.classList.add('is-in')), revealDelay || 60);
-        revealDelay = 0;
+        const delay = screen === 'success' && !fresh ? 2300 : 120;
+        setTimeout(() => els.forEach((el) => el.classList.add('is-in')), delay);
       }
       if (screen === 'home') renderHome();
+      layout();
     }
-    if (screen === 'knot') renderClock(now);
+    if (screen === 'knot') renderClock(Date.now());
+    if (screen === 'splash') $('#clock').textContent = clockText();
+  }
+
+  function startIntro() {
+    if (S && S.introShown) { FX.intro = null; for (const v of FX.ti) v.set(1); return; }
+    const t = nowS();
+    FX.intro = t;
+    // knots tie one by one (knot 1 first), then each is struck: «يَضرِبُ كُلَّ عُقدةٍ»
+    [1.6, 2.2, 2.8].forEach((a, i) => { FX.ti[i].set(0); FX.ti[i].to(1, 0.55, Ease.back, a); });
+    FX.strikes = [4.4, 5.0, 5.6].map((a) => t + a);
+    busyUntil = Math.max(busyUntil, t + 8);
+    if (S) { S.introShown = true; saveSession(S); }
+    kick();
   }
 
   function renderClock(now) {
@@ -989,14 +1122,14 @@ details.full .card { margin-top: var(--space-2); }
     const left = S.deadline - now;
     const frac = Math.max(0, Math.min(1, left / (k.windowSec * 1000)));
     ringProg.style.strokeDashoffset = (RING_C * (1 - frac)).toFixed(2);
-    $('#time-left').textContent = mmss(left);
-
-    const dwellLeft = S.startedAt + k.minDwellSec * 1000 - now;
-    const btn = $('#btn-done'), sub = $('#done-sub');
+    $('#ring-time').textContent = mss(left);
+    const dwellLeft = (S.knot === 1 && !isNum(S.wokeAt) ? now : dwellBase(S)) + k.minDwellSec * 1000 - now;
+    const btn = $('#btn-done'), chip = $('#dwell-chip');
     const locked = dwellLeft > 0;
     if (btn.disabled !== locked) btn.disabled = locked;
-    sub.hidden = !locked;
-    if (locked) sub.textContent = 'متاح بعد \u2066' + mmss(dwellLeft) + '\u2069';   // LRI…PDI keeps mm:ss in order
+    chip.hidden = !locked;
+    if (locked) chip.textContent = mss(dwellLeft);
+    $('#alarm-pill').hidden = !Alarm.on;
   }
 
   const RESULT_TEXT = { success: 'انحلّت العُقد الثلاث', failed: 'بقيت العُقد', emergency: 'طوارئ' };
@@ -1034,10 +1167,25 @@ details.full .card { margin-top: var(--space-2); }
   }
 
   /* =================== Actions =================== */
+  function ripple(e) {
+    if (RM) return;
+    const btn = e.currentTarget, r = btn.getBoundingClientRect();
+    const sp = document.createElement('span');
+    sp.className = 'ripple';
+    sp.style.left = ((e.clientX || r.left + r.width / 2) - r.left) + 'px';
+    sp.style.top = ((e.clientY || r.top + r.height / 2) - r.top) + 'px';
+    btn.appendChild(sp);
+    setTimeout(() => sp.remove(), 700);
+  }
+
   function onWake() {
     audioUnlocked = true;
     S = reconcile();
     if (!S || S.phase !== 'knot') { render(); return; }
+    if (!isNum(S.wokeAt)) { S.wokeAt = Date.now(); saveSession(S); }
+    // if the opening was cut short, finish tying quickly
+    const t = nowS();
+    FX.ti.forEach((v, i) => { if (v.get(t) < 0.999 || v.t0 > t) v.to(1, 0.45, Ease.back, i * 0.12); });
     Alarm.start();
     Wake.acquire();
     buzz(40);
@@ -1049,32 +1197,37 @@ details.full .card { margin-top: var(--space-2); }
     S = reconcile(now);
     if (!S || S.phase !== 'knot') { render(); return; }
     const k = KNOTS[S.knot - 1];
-    if (now < S.startedAt + k.minDwellSec * 1000) return;
+    if (now < dwellBase(S) + k.minDwellSec * 1000) return;
     const done = S.knot;
     S.completed.push(now);
     if (done === 1) Alarm.stop();
     buzz(30);
+    const t = nowS();
+    FX.q[done - 1].to(1, 1.2, Ease.inOut, 0.1);
+    FX.pulses.push(t);
+    busyUntil = Math.max(busyUntil, t + 2.6);
     if (done < 3) {
       S.knot = done + 1;
       S.startedAt = now;
       S.deadline = now + KNOTS[done].windowSec * 1000;
       saveSession(S);
-      render({ animateKnot: done });
+      render();
     } else {
       S.phase = 'success'; S.endedAt = now;
       saveSession(S);
       record(S.date, 'success');
       Wake.release();
       buzz([30, 80, 30, 80, 60]);
-      revealDelay = CONFIG.untieMs + 700;               // last knot unties, figure rises, then the words
-      render({ animateKnot: 3 });
+      render();
+      FX.bloom.set(0); FX.bloom.to(1, 3.4, Ease.inOut, 1.2);   // the sun rises once the last knot falls
     }
   }
 
-  function openConfirm() { $('#confirm').hidden = false; $('#confirm-no').focus(); }
-  function closeConfirm() { $('#confirm').hidden = true; }
+  function openSheet(id) { $(id).hidden = false; }
+  function closeSheet(id) { $(id).hidden = true; }
+
   function onEmergency() {
-    closeConfirm();
+    closeSheet('#confirm');
     S = reconcile();
     if (S && S.phase === 'knot') {
       S.phase = 'emergency'; S.endedAt = Date.now();
@@ -1086,21 +1239,22 @@ details.full .card { margin-top: var(--space-2); }
     runShortcut('fail');                               // still inside the tap gesture
   }
 
-  function onFailedNow() { Alarm.stop(); Wake.release(); buzz([80, 60, 80]); }
-
   function tick() {
     const prevPhase = S && S.phase;
     S = reconcile();
-    if (prevPhase === 'knot' && S && S.phase === 'failed') onFailedNow();
+    if (prevPhase === 'knot' && S && S.phase === 'failed') { Alarm.stop(); Wake.release(); buzz([80, 60, 80]); }
     render();
   }
 
+  $$('.btn').forEach((b) => b.addEventListener('pointerdown', ripple));
   $('#btn-wake').addEventListener('click', onWake);
   $('#btn-done').addEventListener('click', onDone);
-  $('#btn-emergency').addEventListener('click', openConfirm);
-  $('#confirm-no').addEventListener('click', closeConfirm);
+  $('#btn-emergency').addEventListener('click', () => { openSheet('#confirm'); $('#confirm-no').focus(); });
+  $('#confirm-no').addEventListener('click', () => closeSheet('#confirm'));
   $('#confirm-yes').addEventListener('click', onEmergency);
-  $('#confirm').addEventListener('click', (e) => { if (e.target.id === 'confirm') closeConfirm(); });
+  $$('[data-open="full"]').forEach((b) => b.addEventListener('click', () => openSheet('#sheet-full')));
+  $$('[data-close]').forEach((b) => b.addEventListener('click', () => closeSheet('#sheet-full')));
+  $$('.scrim').forEach((s) => s.addEventListener('click', (e) => { if (e.target === s) s.hidden = true; }));
   $$('[data-run]').forEach((b) => b.addEventListener('click', () => runShortcut(b.dataset.run)));
   $$('[data-go="home"]').forEach((b) => b.addEventListener('click', () => { viewHome = true; render(); }));
   $('#btn-back-today').addEventListener('click', () => { viewHome = false; render(); });
@@ -1110,6 +1264,7 @@ details.full .card { margin-top: var(--space-2); }
     store.del('session');
     Alarm.stop(); viewHome = false; audioUnlocked = false;
     S = startSession(Date.now());
+    renderedKey = '';
     render({ fresh: true });
   });
 
@@ -1118,15 +1273,23 @@ details.full .card { margin-top: var(--space-2); }
     tick();
     if (S && S.phase === 'knot' && audioUnlocked) Wake.acquire();
     if (Alarm.on) Alarm.resume();
+    kick();
   });
   window.addEventListener('pageshow', (e) => { if (e.persisted) tick(); });
   window.addEventListener('storage', (e) => { if (!e.key || e.key.startsWith(KEY)) tick(); });
+  window.addEventListener('resize', () => { sizeCanvas(); layout(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => layout());
 
   /* =================== Boot =================== */
+  sizeCanvas();
   const now = Date.now();
   S = reconcile(now);
   if (params.get('start') === '1') {
-    if (!S) S = startSession(now);                     // only if today has no session yet
+    if (TEST && S && S.phase !== 'knot') {             // test mode: a finished trial never blocks a new one
+      const h = loadHistory(); delete h[S.date]; store.set('history', h);
+      store.del('session'); S = null;
+    }
+    if (!S) S = startSession(now);                     // real mode: only if today has no session yet
     params.delete('start');
     const q = params.toString();
     try { history.replaceState(null, '', location.pathname + (q ? '?' + q : '') + location.hash); } catch (_) {}
@@ -1139,7 +1302,7 @@ details.full .card { margin-top: var(--space-2); }
   }
 
   // test hook (harmless in production)
-  window.__uqad = { CONFIG, TEXT, get session() { return S; }, today, streak, loadHistory };
+  window.__uqad = { CONFIG, KNOTS, TEXT, get session() { return S; }, today, streak, loadHistory };
 })();
 </script>
 </body>

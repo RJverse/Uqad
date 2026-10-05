@@ -20,6 +20,8 @@ const REF = {
   k2: 'فإن تَوضَّأ انحَلَّت عُقدةٌ',
   k3: 'فإن صَلَّى انحَلَّت عُقدةٌ',
   successHead: 'أصبحتَ نشيطًا طيّبَ النفس',
+  open1: 'يَعقِدُ الشَّيطانُ على قافيةِ رَأسِ أحَدِكُم إذا هو نامَ ثَلاثَ عُقدٍ',
+  open2: 'يَضرِبُ كُلَّ عُقدةٍ: عليك لَيلٌ طَويلٌ فارقُدْ',
   successSeg: 'فأصبَحَ نَشيطًا طَيِّبَ النَّفسِ',
   failHead: 'أصبحتَ اليوم خبيثَ النفسِ كسلان',
   failSeg: 'وإلَّا أصبَحَ خَبيثَ النَّفسِ كَسلانَ',
@@ -42,16 +44,17 @@ async function newPage(opts = {}) {
   return { ctx, page };
 }
 
-async function shot(page, name) {
+async function shot(page, name, settleMs = 600) {
   await page.evaluate(() => document.fonts.ready);
-  await page.waitForTimeout(1700); // let real-time CSS transitions settle (page timers are faked)
+  if (settleMs) await page.clock.runFor(settleMs); // advance the faked clock so rAF animations render
+  await page.waitForTimeout(900);                 // real-time CSS transitions (reveals, filters)
   await page.screenshot({ path: `${OUT}/${name}.png` });
   const o = await page.evaluate(() => ({
     sw: document.documentElement.scrollWidth, iw: window.innerWidth,
     wide: Array.from(document.querySelectorAll('body *')).filter((el) => {
       if (!el.getClientRects().length) return false;
       const r = el.getBoundingClientRect();
-      return r.width > 0 && (r.right > window.innerWidth + 0.5 || r.left < -0.5) && !el.closest('.sky');
+      return r.width > 0 && (r.right > window.innerWidth + 0.5 || r.left < -0.5) && !el.closest('#sky, #fig'); // decorative fixed layers are clipped, never scroll
     }).map((el) => el.className || el.tagName).slice(0, 5),
   }));
   ok(o.sw <= o.iw && o.wide.length === 0, `${name}: no horizontal overflow (scrollWidth ${o.sw}/${o.iw}${o.wide.length ? ', offenders: ' + o.wide.join(', ') : ''})`);
@@ -62,6 +65,13 @@ const visibleText = (page) => page.evaluate(() => {
   return s ? s.innerText : '';
 });
 const allText = (page, sel) => page.$$eval(sel, (els) => els.map((e) => e.textContent));
+// the knots (centre knot body) must sit above the text block, not behind it
+const knotsClear = (page) => page.evaluate(() => {
+  const k = document.querySelector('#fig [data-k="2"] .k-body').getBoundingClientRect();
+  const s = Array.from(document.querySelectorAll('.screen')).find((x) => !x.hidden);
+  const a = s.querySelector('[data-anchor]').getBoundingClientRect();
+  return { knot: Math.round(k.bottom), text: Math.round(a.top), ok: k.bottom <= a.top + 4 };
+});
 const screenId = (page) => page.evaluate(() => Array.from(document.querySelectorAll('.screen')).find((x) => !x.hidden)?.id);
 
 // ---------- Happy path ----------
@@ -71,7 +81,10 @@ console.log('Happy path (test mode)');
   await page.goto(BASE + '?test=1&start=1');
   ok(await screenId(page) === 's-splash', 'start=1 opens the tap-to-begin splash');
   ok(!(await page.url()).includes('start=1'), 'start=1 is stripped from the URL');
-  await shot(page, '01-splash');
+  ok((await page.textContent('#open1')) === REF.open1 && (await page.textContent('#open2')) === REF.open2, 'opening lines exact');
+  ok(REF.full.includes(REF.open1) && REF.full.includes(REF.open2), 'opening lines are exact excerpts of the hadith');
+  await shot(page, '01-splash-opening', 2600);
+  await shot(page, '01b-splash', 4000);
 
   await page.click('#btn-wake');
   await page.clock.runFor(400);
@@ -80,23 +93,29 @@ console.log('Happy path (test mode)');
   ok((await page.textContent('#knot-text')) === REF.k1, 'knot 1 hadith segment exact');
   ok((await page.textContent('#dhikr-text')) === REF.dhikr, 'dhikr exact');
   ok((await allText(page, '[data-text="full"]')).every((x) => x === REF.full), 'full hadith exact (every copy)');
-  ok(!(await page.isDisabled('#btn-done')), 'knot 1 "تم" enabled immediately (0s dwell)');
-  ok(/[٠-٩]{2}:[٠-٩]{2}/.test(await page.textContent('#time-left')), 'countdown shows mm:ss');
+  ok(await page.isDisabled('#btn-done') && await page.isVisible('#dwell-chip'), 'knot 1 "تم" locked during its min-dwell');
+  ok(await page.isVisible('#alarm-pill'), 'alarm indicator shown while the tone plays');
+  ok(/^\d+:\d{2}$/.test(await page.textContent('#ring-time')), 'countdown ring shows m:ss');
   ok(await page.evaluate(() => document.body.dataset.sky) === 'night', 'sky = night');
-  await shot(page, '02-knot1');
+  await shot(page, '02-knot1-dwell');
+  let kc = await knotsClear(page); ok(kc.ok, `knot 1: knots above the text (${kc.knot} ≤ ${kc.text})`);
+  await page.clock.runFor(4500);
+  ok(!(await page.isDisabled('#btn-done')), 'knot 1 "تم" enables after the dwell');
+  await shot(page, '03-knot1-ready');
 
-  await page.click('details.full summary');
-  await page.waitForTimeout(100);
-  await shot(page, '03-knot1-full-hadith');
-  await page.click('details.full summary');
+  await page.click('#s-knot [data-open="full"]');
+  await shot(page, '03b-full-hadith', 0);
+  await page.click('#sheet-full [data-close]');
 
   await page.click('#btn-done');
   await page.clock.runFor(1500);
   ok((await page.textContent('#knot-text')) === REF.k2, 'knot 2 hadith segment exact');
   ok(await page.isDisabled('#btn-done'), 'knot 2 "تم" disabled during min-dwell');
-  ok(await page.isVisible('#done-sub'), 'dwell countdown shown on the button');
-  ok(await page.evaluate(() => document.body.dataset.sky) === 'k2', 'sky = k2');
+  ok(await page.isVisible('#dwell-chip'), 'dwell countdown shown on the button');
+  ok(!(await page.isVisible('#alarm-pill')), 'alarm stops after knot 1');
+  ok(await page.evaluate(() => document.body.dataset.sky) === 'water', 'sky = water (wudu)');
   await shot(page, '04-knot2-dwell');
+  kc = await knotsClear(page); ok(kc.ok, `knot 2: knots above the text (${kc.knot} ≤ ${kc.text})`);
 
   // timers survive a reload
   const before = await page.evaluate(() => window.__uqad.session.deadline);
@@ -111,24 +130,42 @@ console.log('Happy path (test mode)');
   await page.click('#btn-done');
   await page.clock.runFor(1500);
   ok((await page.textContent('#knot-text')) === REF.k3, 'knot 3 hadith segment exact');
-  ok(await page.evaluate(() => document.body.dataset.sky) === 'k3', 'sky = k3');
+  ok(await page.evaluate(() => document.body.dataset.sky) === 'dawn', 'sky = dawn (salah)');
   await page.clock.runFor(5000);
   await shot(page, '06-knot3');
+  kc = await knotsClear(page); ok(kc.ok, `knot 3: knots above the text (${kc.knot} ≤ ${kc.text})`);
   await page.click('#btn-done');
   await page.clock.runFor(4000);
   ok(await screenId(page) === 's-success', 'knot 3 → success');
   t = await visibleText(page);
   ok(t.includes(REF.successHead) && (await page.textContent('[data-text="success-seg"]')) === REF.successSeg, 'success text exact');
   ok(await page.evaluate(() => document.body.dataset.sky) === 'dawn', 'sky = dawn');
-  await shot(page, '07-success');
+  await shot(page, '07-success', 2500);
 
-  // start=1 must not restart a finished day
-  await page.goto(BASE + '?test=1&start=1');
-  await page.clock.runFor(300);
-  ok(await screenId(page) === 's-success', '?start=1 after success keeps the finished day');
   await page.click('[data-go="home"]');
   await page.clock.runFor(300);
   ok((await page.textContent('#today-result')).includes('انحلّت'), 'home shows today = success');
+
+  // test mode: the test link always starts a fresh trial, even after a finished one
+  await page.goto(BASE + '?test=1&start=1');
+  await page.clock.runFor(300);
+  ok(await screenId(page) === 's-splash', 'test mode: ?start=1 after a finished trial starts a new one');
+
+  // real mode: ?start=1 must never restart a finished day
+  await page.evaluate((d) => localStorage.setItem('uqad.v1.history', JSON.stringify({ [d]: 'success' })), await page.evaluate(() => window.__uqad.today()));
+  await page.goto(BASE + '?start=1');
+  await page.clock.runFor(300);
+  ok(await screenId(page) === 's-home' && !(await page.evaluate(() => window.__uqad.session)), 'real mode: ?start=1 after a finished day does not restart it');
+  await ctx.close();
+}
+
+// ---------- Real timings ----------
+console.log('Real mode timings');
+{
+  const { ctx, page } = await newPage();
+  await page.goto(BASE);
+  const k = await page.evaluate(() => window.__uqad.KNOTS.map((x) => [x.windowSec, x.minDwellSec]));
+  ok(JSON.stringify(k) === JSON.stringify([[300, 60], [600, 180], [2700, 240]]), `windows 5/10/45 min, dwell 1/3/4 min (got ${JSON.stringify(k)})`);
   await ctx.close();
 }
 
@@ -138,9 +175,9 @@ console.log('Failure path');
   const { ctx, page } = await newPage();
   await page.goto(BASE + '?test=1&start=1');
   await page.click('#btn-wake');
-  await page.clock.runFor(300);
+  await page.clock.runFor(5300);                  // knot 1 dwell (5s in test mode)
   await page.click('#btn-done');
-  await page.clock.runFor(21000);
+  await page.clock.runFor(61000);
   ok(await screenId(page) === 's-failed', 'knot 2 deadline passes → failed');
   ok((await page.textContent('[data-text="fail-seg"]')) === REF.failSeg, 'fail segment exact');
   const t = await visibleText(page);
@@ -158,7 +195,7 @@ console.log('Deadline passes while the app is closed');
   await page.goto(BASE + '?test=1&start=1');
   await page.click('#btn-wake');
   await page.goto('about:blank');
-  await page.clock.fastForward(60000);
+  await page.clock.fastForward(120000);
   await page.goto(BASE + '?test=1');
   await page.clock.runFor(300);
   ok(await screenId(page) === 's-failed', 'reopening after the deadline shows failed');
