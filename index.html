@@ -438,6 +438,11 @@ body[data-screen="home"] .shade { opacity: 0; }
     historyDays: 30,
     historyKeepDays: 400,
     tickMs: 250,
+    // Home-screen web app only: opening it in this window (Riyadh time) starts today's
+    // session by itself — iOS's webapp:// links drop ?start=1, so the app can't be told.
+    autoStart: { from: '03:00', to: '07:00' },
+    // A web app left in test mode and reopened after this long falls back to live mode.
+    testIdleMin: 30,
   };
 
   /* =================== Religious text — exact, do not edit =================== */
@@ -527,6 +532,16 @@ body[data-screen="home"] .shade { opacity: 0; }
     const t = Date.UTC(+date.slice(0, 4), +date.slice(5, 7) - 1, +date.slice(8, 10)) + n * 864e5;
     return new Date(t).toISOString().slice(0, 10);
   }
+  let hmFmt = null;
+  try { hmFmt = new Intl.DateTimeFormat('en-GB', { timeZone: CONFIG.timeZone, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }); } catch (_) {}
+  function minutesNow(now = Date.now()) {
+    if (hmFmt) {
+      try { const p = {}; for (const x of hmFmt.formatToParts(new Date(now))) p[x.type] = x.value; return (+p.hour % 24) * 60 + +p.minute; } catch (_) {}
+    }
+    const d = new Date(now + 3 * 3600e3);
+    return d.getUTCHours() * 60 + d.getUTCMinutes();
+  }
+  const toMin = (hm) => +hm.slice(0, 2) * 60 + +hm.slice(3, 5);
   function clockText(now = Date.now()) {
     if (timeFmt) {
       try { const p = {}; for (const x of timeFmt.formatToParts(new Date(now))) p[x.type] = x.value; return `${p.hour}:${p.minute}`; } catch (_) {}
@@ -1268,8 +1283,30 @@ body[data-screen="home"] .shade { opacity: 0; }
     render({ fresh: true });
   });
 
+  // Opened from the home screen (standalone web app), not a Safari tab
+  const STANDALONE = (() => { try { return navigator.standalone === true || matchMedia('(display-mode: standalone)').matches; } catch (_) { return false; } })();
+
+  // Live web app opened in the Fajr window with no session today → start it.
+  function maybeAutoStart(now = Date.now()) {
+    if (TEST || !STANDALONE || S) return false;
+    const m = minutesNow(now), a = toMin(CONFIG.autoStart.from), b = toMin(CONFIG.autoStart.to);
+    if (m < a || m >= b) return false;
+    const s = startSession(now);                       // returns null if today already has a result
+    if (!s) return false;
+    S = s; audioUnlocked = false; viewHome = false;
+    return true;
+  }
+
+  let hiddenAt = 0;
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState !== 'visible') return;
+    if (document.visibilityState !== 'visible') { hiddenAt = Date.now(); return; }
+    // a web app left in test mode overnight must wake up in live mode
+    if (TEST && STANDALONE && hiddenAt && Date.now() - hiddenAt > CONFIG.testIdleMin * 60e3 && !(S && S.phase === 'knot')) {
+      location.replace('./'); return;
+    }
+    hiddenAt = 0;
+    S = reconcile();
+    if (maybeAutoStart()) renderedKey = '';
     tick();
     if (S && S.phase === 'knot' && audioUnlocked) Wake.acquire();
     if (Alarm.on) Alarm.resume();
@@ -1285,8 +1322,8 @@ body[data-screen="home"] .shade { opacity: 0; }
   const now = Date.now();
   S = reconcile(now);
   if (params.get('start') === '1') {
-    if (TEST && S && S.phase !== 'knot') {             // test mode: a finished trial never blocks a new one
-      const h = loadHistory(); delete h[S.date]; store.set('history', h);
+    if (TEST && !(S && S.phase === 'knot')) {          // test mode: a finished trial never blocks a new one
+      const h = loadHistory(); delete h[today(now)]; store.set('history', h);
       store.del('session'); S = null;
     }
     if (!S) S = startSession(now);                     // real mode: only if today has no session yet
@@ -1294,6 +1331,7 @@ body[data-screen="home"] .shade { opacity: 0; }
     const q = params.toString();
     try { history.replaceState(null, '', location.pathname + (q ? '?' + q : '') + location.hash); } catch (_) {}
   }
+  maybeAutoStart(now);
   render({ fresh: true });
   setInterval(tick, CONFIG.tickMs);
 
@@ -1302,7 +1340,7 @@ body[data-screen="home"] .shade { opacity: 0; }
   }
 
   // test hook (harmless in production)
-  window.__uqad = { CONFIG, KNOTS, TEXT, get session() { return S; }, today, streak, loadHistory };
+  window.__uqad = { CONFIG, KNOTS, TEXT, STANDALONE, get session() { return S; }, today, streak, loadHistory };
 })();
 </script>
 </body>

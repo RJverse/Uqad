@@ -33,14 +33,16 @@ const ok = (cond, msg) => { console.log((cond ? '  ✓ ' : '  ✗ ') + msg); if 
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || undefined });
 
-async function newPage(opts = {}) {
+async function newPage({ standalone = false, time = '2026-10-05T04:40:00+03:00' } = {}) {
   const ctx = await browser.newContext({
     viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true,
-    locale: 'ar-SA', timezoneId: 'Asia/Riyadh', colorScheme: 'dark', serviceWorkers: 'block', ...opts,
+    locale: 'ar-SA', timezoneId: 'Asia/Riyadh', colorScheme: 'dark', serviceWorkers: 'block',
   });
+  // emulate the iOS home-screen web app (navigator.standalone)
+  if (standalone) await ctx.addInitScript(() => Object.defineProperty(navigator, 'standalone', { get: () => true }));
   const page = await ctx.newPage();
   page.on('pageerror', (e) => { console.log('  ✗ page error: ' + e.message); failures++; });
-  await page.clock.install({ time: new Date('2026-10-05T04:40:00+03:00') });
+  await page.clock.install({ time: new Date(time) });
   return { ctx, page };
 }
 
@@ -166,6 +168,35 @@ console.log('Real mode timings');
   await page.goto(BASE);
   const k = await page.evaluate(() => window.__uqad.KNOTS.map((x) => [x.windowSec, x.minDwellSec]));
   ok(JSON.stringify(k) === JSON.stringify([[300, 60], [600, 180], [2700, 240]]), `windows 5/10/45 min, dwell 1/3/4 min (got ${JSON.stringify(k)})`);
+  await ctx.close();
+}
+
+// ---------- Home-screen web app (webapp:// opens it with no query string) ----------
+console.log('Web app auto-start');
+{
+  let { ctx, page } = await newPage({ standalone: true });            // 04:40 Riyadh
+  await page.goto(BASE);
+  ok(await screenId(page) === 's-splash', 'web app opened at 04:40 with no params starts the session');
+  ok(await page.evaluate(() => !document.querySelector('#s-splash .badge-test').offsetParent), 'auto-started session is live (no test badge)');
+  await page.reload(); await page.clock.runFor(300);
+  ok(await screenId(page) === 's-splash' && await page.evaluate(() => window.__uqad.session.knot === 1), 'reopening resumes the same session');
+  await ctx.close();
+
+  ({ ctx, page } = await newPage({ standalone: true, time: '2026-10-05T12:00:00+03:00' }));
+  await page.goto(BASE);
+  ok(await screenId(page) === 's-home', 'web app opened at 12:00 just shows home');
+  await ctx.close();
+
+  ({ ctx, page } = await newPage({ standalone: true }));
+  await page.goto(BASE);
+  await page.evaluate(() => { localStorage.setItem('uqad.v1.history', JSON.stringify({ [window.__uqad.today()]: 'success' })); localStorage.removeItem('uqad.v1.session'); });
+  await page.reload(); await page.clock.runFor(300);
+  ok(await screenId(page) === 's-home', 'web app does not restart a finished day');
+  await ctx.close();
+
+  ({ ctx, page } = await newPage({ standalone: false }));             // Safari tab at 04:40
+  await page.goto(BASE);
+  ok(await screenId(page) === 's-home', 'Safari tab without ?start=1 never auto-starts');
   await ctx.close();
 }
 
