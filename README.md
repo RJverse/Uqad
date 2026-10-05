@@ -8,11 +8,11 @@ A personal Fajr wake-up web app for iPhone. It turns this hadith into three ques
 
 | Knot | Action | Window | "تم" unlocks after | Sound |
 |---|---|---|---|---|
-| 1 | Dhikr on waking | 10 min | immediately | Soft looping alarm until "تم" |
-| 2 | Wudu | 10 min | 90 s | Silent |
-| 3 | Salah | 30 min | 4 min | Silent |
+| 1 | Dhikr on waking | 5 min | 1 min | Soft looping alarm until "تم" |
+| 2 | Wudu | 10 min | 3 min | Silent |
+| 3 | Salah | 45 min | 4 min | Silent |
 
-Each window starts when the previous knot is done. If a window runs out, the day is logged as **failed**.
+Knot 1's window starts when the alarm automation opens the app, and its 1-minute lock starts when you tap «استيقظ». Each later window (and its lock) starts when the previous knot is done. If a window runs out, the day is logged as **failed**.
 
 Plain static files (no framework, no build step): `index.html`, `manifest.webmanifest`, `sw.js`, `icons/`, `fonts/`.
 
@@ -53,6 +53,8 @@ https://rjverse.github.io/Uqad/?start=1
 - `?start=1` starts today's session **only if today has no session yet** (local date, Asia/Riyadh). If one exists, running or finished, it just resumes, so a second alarm can never reset a finished day.
 - The first screen is one big «استيقظ» button. iOS only allows sound after a tap, so this tap starts knot 1 and its alarm tone. Knot 1's 10-minute window is already counting from the moment the Shortcut opened the app.
 
+The wake screen plays the opening: the hadith's first lines appear while the three knots tie at the nape. The button works immediately, so you never have to wait for it.
+
 If Safari opens instead of the installed app, it's fine for a quick test, but keep using one of them consistently (see the storage note above).
 
 ## 4. Test mode
@@ -61,7 +63,7 @@ Add `?test=1` to any URL:
 
 | URL | What it does |
 |---|---|
-| `…/Uqad/?test=1&start=1` | Starts a test session: windows **20 s / 20 s / 40 s**, «تم» unlocks after **5 s** (knot 1 stays at 0 s) |
+| `…/Uqad/?test=1&start=1` | Starts a test session: windows **20 s / 20 s / 40 s**, «تم» unlocks after **5 s** |
 | `…/Uqad/?test=1` | Shows the current test state or the test home |
 
 - A «وضع التجربة» badge shows on every screen.
@@ -73,7 +75,10 @@ Add `?test=1` to any URL:
 
 | Screen | When |
 |---|---|
-| Tap-to-begin («استيقظ») | A session just started, or knot 1 is still running after a reload (the alarm needs a fresh tap) |
+| Tap-to-begin («استيقظ») | A session just started, or knot 1 is still running after a reload (the alarm needs a fresh tap). Shows the time, the opening lines while the knots tie, and a round pulsing button |
+| Knot 1 · ذِكر | Night sky with drifting stars, «المنبّه يعمل» indicator, the segment and the dhikr card |
+| Knot 2 · وُضوء | Water scene: ripples and falling drops |
+| Knot 3 · صَلاة | Dawn scene: mihrab arches and light rays, brightening as the 45 minutes pass |
 | Knot 1–3 | Illustration plus countdown ring, the hadith segment (and the dhikr on knot 1), «الحديث كاملاً», a big «تم» button that stays disabled during the minimum time, and a quiet «طوارئ» link |
 | Success | Last knot unties, the figure stands, dawn glow → «افتح الجوال» runs `Uqad Done` |
 | Failed | Knots stay tied, the figure stays slumped, dim sky → «افتح الجوال» runs `Uqad Fail` |
@@ -92,12 +97,15 @@ Add `?test=1` to any URL:
 
 ## 7. Design
 
+The visuals follow the Claude Design film (*Uqad Film*): the same scenes, figure, knot animation and layout, rebuilt for the live app. The sky is a `<canvas>` (night · water · dawn) and the figure is inline SVG, both driven by one 30 fps loop. The loop sleeps when nothing moves, pauses when the screen is off, and switches to still images when *Reduce Motion* is on.
+
+Each «تم» unties a knot: it loosens, its ends fall, the camera nudges in, and the figure lifts. On success the sun rises behind the figure.
+
 Built on the **RJverse design system** (`RJverse-Design-System/`):
 
-- **Colors:** Midnight Navy `#0B1C3D` base, RJ Blue scale for the knots, ring and primary buttons, dark-mode semantic tokens. The sky moves from night → Blue-800 → Blue-700/Indigo → dawn. The success horizon adds a soft warm glow from the system's warning amber, kept at low opacity. Failure stays dim and desaturated.
-- **Type** (per the design system README, self-hosted and subset to woff2 in `fonts/`): **Cairo** for display, headlines and the hadith text, **Tajawal** for subheadings and labels, **Changa** for body text. Fallbacks are SF Arabic / Geeza Pro / Noto Arabic.
-- Pill CTAs with the RJ glow shadow, 18 px card radius, 4 px spacing scale, navy-tinted shadows. No emoji in the UI.
-- Dark only, RTL, safe-area padding, no sideways scroll. `prefers-reduced-motion` swaps the untie motion for simple fades.
+- **Colors:** Midnight Navy `#0B1C3D`, the RJ Blue scale (Blue-800/700, Indigo Tint, Sky Blue, Blue-100) and the dark-mode semantic tokens. Failure stays dim and desaturated.
+- **Type** (self-hosted woff2 in `fonts/`): **Amiri** for the hadith and dhikr text (as in the film). The design system's **Cairo** is used for headlines and buttons, **Tajawal** for labels, and **Changa** for body text. Fallbacks are SF Arabic / Geeza Pro / Noto Arabic.
+- Pill CTAs with the RJ glow, 18 px card radius, 4 px spacing scale. No emoji in the UI. Dark only, RTL, safe-area padding, no sideways scroll.
 
 ## 8. Maintenance
 
