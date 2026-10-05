@@ -1,0 +1,218 @@
+// Self-test for عُقَد: walks every screen in test mode at 390×844, saves screenshots,
+// and checks text fidelity, overflow, timer persistence, and the no-restart rule.
+//
+//   python3 -m http.server 8765 &              (from the repo root)
+//   npm i playwright && node tools/selftest.mjs
+//
+// Env: BASE (default http://localhost:8765/), OUT (default docs/screenshots), CHROMIUM (executable path).
+import { chromium } from 'playwright';
+import { mkdirSync } from 'node:fs';
+
+const BASE = process.env.BASE || 'http://localhost:8765/';
+const OUT = process.env.OUT || 'docs/screenshots';
+mkdirSync(OUT, { recursive: true });
+
+// Reference text, copied verbatim from the spec.
+const REF = {
+  full: 'يَعقِدُ الشَّيطانُ على قافيةِ رَأسِ أحَدِكُم إذا هو نامَ ثَلاثَ عُقدٍ، يَضرِبُ كُلَّ عُقدةٍ: عليك لَيلٌ طَويلٌ فارقُدْ، فإنِ استَيقَظَ فذَكَرَ اللهَ انحَلَّت عُقدةٌ، فإن تَوضَّأ انحَلَّت عُقدةٌ، فإن صَلَّى انحَلَّت عُقدةٌ، فأصبَحَ نَشيطًا طَيِّبَ النَّفسِ، وإلَّا أصبَحَ خَبيثَ النَّفسِ كَسلانَ.',
+  k1: 'فإنِ استَيقَظَ فذَكَرَ اللهَ انحَلَّت عُقدةٌ',
+  dhikr: 'الحَمدُ للهِ الَّذي أحيانا بَعدَ ما أماتَنا وإلَيهِ النُّشورُ',
+  k2: 'فإن تَوضَّأ انحَلَّت عُقدةٌ',
+  k3: 'فإن صَلَّى انحَلَّت عُقدةٌ',
+  successHead: 'أصبحتَ نشيطًا طيّبَ النفس',
+  successSeg: 'فأصبَحَ نَشيطًا طَيِّبَ النَّفسِ',
+  failHead: 'أصبحتَ اليوم خبيثَ النفسِ كسلان',
+  failSeg: 'وإلَّا أصبَحَ خَبيثَ النَّفسِ كَسلانَ',
+  failLine: 'غدًا فجرٌ جديد',
+};
+
+let failures = 0;
+const ok = (cond, msg) => { console.log((cond ? '  ✓ ' : '  ✗ ') + msg); if (!cond) failures++; };
+
+const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || undefined });
+
+async function newPage(opts = {}) {
+  const ctx = await browser.newContext({
+    viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true,
+    locale: 'ar-SA', timezoneId: 'Asia/Riyadh', colorScheme: 'dark', serviceWorkers: 'block', ...opts,
+  });
+  const page = await ctx.newPage();
+  page.on('pageerror', (e) => { console.log('  ✗ page error: ' + e.message); failures++; });
+  await page.clock.install({ time: new Date('2026-10-05T04:40:00+03:00') });
+  return { ctx, page };
+}
+
+async function shot(page, name) {
+  await page.evaluate(() => document.fonts.ready);
+  await page.waitForTimeout(1700); // let real-time CSS transitions settle (page timers are faked)
+  await page.screenshot({ path: `${OUT}/${name}.png` });
+  const o = await page.evaluate(() => ({
+    sw: document.documentElement.scrollWidth, iw: window.innerWidth,
+    wide: Array.from(document.querySelectorAll('body *')).filter((el) => {
+      if (!el.getClientRects().length) return false;
+      const r = el.getBoundingClientRect();
+      return r.width > 0 && (r.right > window.innerWidth + 0.5 || r.left < -0.5) && !el.closest('.sky');
+    }).map((el) => el.className || el.tagName).slice(0, 5),
+  }));
+  ok(o.sw <= o.iw && o.wide.length === 0, `${name}: no horizontal overflow (scrollWidth ${o.sw}/${o.iw}${o.wide.length ? ', offenders: ' + o.wide.join(', ') : ''})`);
+}
+
+const visibleText = (page) => page.evaluate(() => {
+  const s = Array.from(document.querySelectorAll('.screen')).find((x) => !x.hidden);
+  return s ? s.innerText : '';
+});
+const allText = (page, sel) => page.$$eval(sel, (els) => els.map((e) => e.textContent));
+const screenId = (page) => page.evaluate(() => Array.from(document.querySelectorAll('.screen')).find((x) => !x.hidden)?.id);
+
+// ---------- Happy path ----------
+console.log('Happy path (test mode)');
+{
+  const { ctx, page } = await newPage();
+  await page.goto(BASE + '?test=1&start=1');
+  ok(await screenId(page) === 's-splash', 'start=1 opens the tap-to-begin splash');
+  ok(!(await page.url()).includes('start=1'), 'start=1 is stripped from the URL');
+  await shot(page, '01-splash');
+
+  await page.click('#btn-wake');
+  await page.clock.runFor(400);
+  ok(await screenId(page) === 's-knot', 'tap → knot 1');
+  let t = await visibleText(page);
+  ok((await page.textContent('#knot-text')) === REF.k1, 'knot 1 hadith segment exact');
+  ok((await page.textContent('#dhikr-text')) === REF.dhikr, 'dhikr exact');
+  ok((await allText(page, '[data-text="full"]')).every((x) => x === REF.full), 'full hadith exact (every copy)');
+  ok(!(await page.isDisabled('#btn-done')), 'knot 1 "تم" enabled immediately (0s dwell)');
+  ok(/[٠-٩]{2}:[٠-٩]{2}/.test(await page.textContent('#time-left')), 'countdown shows mm:ss');
+  ok(await page.evaluate(() => document.body.dataset.sky) === 'night', 'sky = night');
+  await shot(page, '02-knot1');
+
+  await page.click('details.full summary');
+  await page.waitForTimeout(100);
+  await shot(page, '03-knot1-full-hadith');
+  await page.click('details.full summary');
+
+  await page.click('#btn-done');
+  await page.clock.runFor(1500);
+  ok((await page.textContent('#knot-text')) === REF.k2, 'knot 2 hadith segment exact');
+  ok(await page.isDisabled('#btn-done'), 'knot 2 "تم" disabled during min-dwell');
+  ok(await page.isVisible('#done-sub'), 'dwell countdown shown on the button');
+  ok(await page.evaluate(() => document.body.dataset.sky) === 'k2', 'sky = k2');
+  await shot(page, '04-knot2-dwell');
+
+  // timers survive a reload
+  const before = await page.evaluate(() => window.__uqad.session.deadline);
+  await page.reload();
+  await page.clock.runFor(300);
+  const after = await page.evaluate(() => window.__uqad.session && window.__uqad.session.deadline);
+  ok(await screenId(page) === 's-knot' && before === after, 'reload mid-knot resumes with the same deadline');
+
+  await page.clock.runFor(4000);
+  ok(!(await page.isDisabled('#btn-done')), 'knot 2 "تم" enables after 5s dwell');
+  await shot(page, '05-knot2-ready');
+  await page.click('#btn-done');
+  await page.clock.runFor(1500);
+  ok((await page.textContent('#knot-text')) === REF.k3, 'knot 3 hadith segment exact');
+  ok(await page.evaluate(() => document.body.dataset.sky) === 'k3', 'sky = k3');
+  await page.clock.runFor(5000);
+  await shot(page, '06-knot3');
+  await page.click('#btn-done');
+  await page.clock.runFor(4000);
+  ok(await screenId(page) === 's-success', 'knot 3 → success');
+  t = await visibleText(page);
+  ok(t.includes(REF.successHead) && (await page.textContent('[data-text="success-seg"]')) === REF.successSeg, 'success text exact');
+  ok(await page.evaluate(() => document.body.dataset.sky) === 'dawn', 'sky = dawn');
+  await shot(page, '07-success');
+
+  // start=1 must not restart a finished day
+  await page.goto(BASE + '?test=1&start=1');
+  await page.clock.runFor(300);
+  ok(await screenId(page) === 's-success', '?start=1 after success keeps the finished day');
+  await page.click('[data-go="home"]');
+  await page.clock.runFor(300);
+  ok((await page.textContent('#today-result')).includes('انحلّت'), 'home shows today = success');
+  await ctx.close();
+}
+
+// ---------- Failure ----------
+console.log('Failure path');
+{
+  const { ctx, page } = await newPage();
+  await page.goto(BASE + '?test=1&start=1');
+  await page.click('#btn-wake');
+  await page.clock.runFor(300);
+  await page.click('#btn-done');
+  await page.clock.runFor(21000);
+  ok(await screenId(page) === 's-failed', 'knot 2 deadline passes → failed');
+  ok((await page.textContent('[data-text="fail-seg"]')) === REF.failSeg, 'fail segment exact');
+  const t = await visibleText(page);
+  ok(t.includes(REF.failHead) && t.includes(REF.failLine), 'fail headline + line exact');
+  ok(await page.evaluate(() => document.body.dataset.sky) === 'fail', 'sky = fail (dim)');
+  await page.clock.runFor(1500);
+  await shot(page, '08-failed');
+  await ctx.close();
+}
+
+// ---------- Failure while closed ----------
+console.log('Deadline passes while the app is closed');
+{
+  const { ctx, page } = await newPage();
+  await page.goto(BASE + '?test=1&start=1');
+  await page.click('#btn-wake');
+  await page.goto('about:blank');
+  await page.clock.fastForward(60000);
+  await page.goto(BASE + '?test=1');
+  await page.clock.runFor(300);
+  ok(await screenId(page) === 's-failed', 'reopening after the deadline shows failed');
+  await ctx.close();
+}
+
+// ---------- Emergency ----------
+console.log('Emergency');
+{
+  const { ctx, page } = await newPage();
+  await page.goto(BASE + '?test=1&start=1');
+  await page.click('#btn-wake');
+  await page.clock.runFor(300);
+  await page.click('#btn-emergency');
+  ok(await page.isVisible('#confirm'), 'emergency asks for confirmation');
+  await shot(page, '09-emergency-confirm');
+  // Swallow the shortcuts:// navigation in the test browser
+  await page.evaluate(() => { window.__nav = []; });
+  await page.click('#confirm-yes');
+  await page.clock.runFor(1500);
+  ok(await screenId(page) === 's-emergency', 'confirmed → emergency screen');
+  ok(await page.evaluate(() => window.__uqad.loadHistory()[window.__uqad.today()]) === 'emergency', 'logged as emergency');
+  await shot(page, '10-emergency');
+  await ctx.close();
+}
+
+// ---------- Home with history ----------
+console.log('Home');
+{
+  const { ctx, page } = await newPage();
+  await page.goto(BASE);
+  await page.evaluate(() => {
+    const h = {}; const t = window.__uqad.today();
+    const add = (d, n) => new Date(Date.UTC(+d.slice(0, 4), +d.slice(5, 7) - 1, +d.slice(8, 10)) + n * 864e5).toISOString().slice(0, 10);
+    const pat = ['success', 'success', 'emergency', 'success', 'failed', 'success', null, 'success', 'success', 'success'];
+    for (let i = 1; i < 30; i++) { const r = pat[i % pat.length]; if (r) h[add(t, -i)] = r; }
+    localStorage.setItem('uqad.v1.history', JSON.stringify(h));
+  });
+  await page.reload();
+  await page.clock.runFor(300);
+  ok(await screenId(page) === 's-home', 'no session → home');
+  const streak = await page.evaluate(() => window.__uqad.streak(window.__uqad.loadHistory()));
+  ok(streak === 2, `streak counts back from yesterday, emergency skipped (got ${streak}, expect 2)`);
+  ok((await page.$$('.day')).length === 30, '30-day grid');
+  await shot(page, '11-home');
+
+  // corrupt storage must not crash
+  await page.evaluate(() => { localStorage.setItem('uqad.v1.session', '{oops'); localStorage.setItem('uqad.v1.history', '[1,2'); });
+  await page.reload();
+  await page.clock.runFor(300);
+  ok(await screenId(page) === 's-home', 'corrupt storage → home, no crash');
+  await ctx.close();
+}
+
+await browser.close();
+console.log(failures ? `\n${failures} check(s) failed` : '\nAll checks passed');
+process.exit(failures ? 1 : 0);

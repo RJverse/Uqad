@@ -1,0 +1,1146 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>عُقَد</title>
+<meta name="description" content="ثلاث عُقد تنحلّ عند الفجر: ذِكر، ثم وضوء، ثم صلاة.">
+<meta name="theme-color" content="#0B1C3D">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="عُقَد">
+<meta name="format-detection" content="telephone=no">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="preload" href="./fonts/Cairo-Var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./fonts/Changa-Var.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* ---------- RJverse brand fonts (subset from RJverse-Design-System/fonts, self-hosted) ---------- */
+@font-face { font-family: 'Cairo';   src: url('./fonts/Cairo-Var.woff2') format('woff2'); font-weight: 400 800; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Changa';  src: url('./fonts/Changa-Var.woff2') format('woff2'); font-weight: 300 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Tajawal'; src: url('./fonts/Tajawal-Medium.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Tajawal'; src: url('./fonts/Tajawal-Bold.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+
+/* ---------- RJverse tokens (from RJverse-Design-System/colors_and_type.css) ---------- */
+:root {
+  --rj-soft-cloud: #F4FAFF;
+  --rj-sky-blue: #9BB1FF;
+  --rj-indigo-tint: #788BFF;
+  --rj-blue: #5465FF;
+  --rj-midnight: #0B1C3D;
+  --rj-blue-50: #EEF1FF;
+  --rj-blue-300: #9BB1FF;
+  --rj-blue-400: #788BFF;
+  --rj-blue-500: #5465FF;
+  --rj-blue-600: #4252E6;
+  --rj-blue-700: #3340BF;
+  --rj-blue-800: #232E8C;
+  --rj-blue-900: #0B1C3D;
+  --rj-ink: #1A1A1A;
+  --rj-ink-3: #8089A0;
+  --rj-ink-inverse: #F4FAFF;
+  --status-warning: #E0A100;
+
+  /* dark-mode semantic set (.rj-dark in the design system) */
+  --fg-1: var(--rj-ink-inverse);
+  --fg-2: rgba(244, 250, 255, 0.72);
+  --fg-3: rgba(244, 250, 255, 0.48);
+  --bg-1: var(--rj-midnight);
+  --bg-2: #112347;
+  --bg-card: #14264b;
+  --border-1: rgba(244, 250, 255, 0.14);
+
+  --shadow-lg: 0 24px 48px -16px rgba(11, 28, 61, 0.18), 0 4px 12px rgba(11, 28, 61, 0.06);
+  --shadow-glow: 0 16px 40px -12px rgba(84, 101, 255, 0.45);
+
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px;
+  --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px; --space-16: 64px;
+
+  /* Arabic stacks — README: Cairo display/headings, Tajawal subheadings, Changa body.
+     Fallbacks are the Arabic system faces on iOS/Android/desktop. */
+  --font-display-ar: 'Cairo', 'SF Arabic', 'Geeza Pro', 'Noto Kufi Arabic', 'Noto Sans Arabic', 'Segoe UI', system-ui, sans-serif;
+  --font-heading-ar: 'Tajawal', 'Cairo', 'SF Arabic', 'Geeza Pro', 'Noto Sans Arabic', 'Segoe UI', system-ui, sans-serif;
+  --font-body-ar: 'Changa', 'Tajawal', 'SF Arabic', 'Geeza Pro', 'Noto Sans Arabic', 'Segoe UI', system-ui, sans-serif;
+
+  --fw-light: 300; --fw-regular: 400; --fw-medium: 500; --fw-semibold: 600; --fw-bold: 700; --fw-extrabold: 800;
+  --fs-h2: 36px; --fs-h3: 28px; --fs-h4: 22px; --fs-body-lg: 18px; --fs-body: 16px; --fs-small: 14px; --fs-caption: 12px;
+
+  --ease-out: cubic-bezier(.2, .7, .2, 1);
+  --ease-in-out: cubic-bezier(.4, 0, .2, 1);
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 360ms;
+
+  /* app */
+  --untie: 1200ms;
+  --stage: min(64vw, 29vh, 300px);
+  --hadith-size: clamp(26px, 7.2vw, 32px);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; overflow-x: hidden; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; background: var(--rj-midnight); }
+body {
+  min-height: 100vh; min-height: 100dvh;
+  background: var(--rj-midnight);
+  color: var(--fg-1);
+  font-family: var(--font-body-ar);
+  font-size: var(--fs-body);
+  line-height: 1.65;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; }
+a { color: var(--rj-sky-blue); text-decoration: none; }
+a:hover { opacity: .7; text-decoration: underline; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--rj-blue-500); outline-offset: 2px; }
+[hidden] { display: none !important; }
+
+/* ---------- Sky: night → first light → dawn (layers cross-fade; gradients can't tween) ---------- */
+.sky { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.sky > i { position: absolute; inset: 0; opacity: 0; transition: opacity 1600ms var(--ease-in-out); }
+.sky .l-night {
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, .12) 70%, rgba(0, 0, 0, 0) 100%),
+    var(--rj-midnight);
+}
+.sky .l-k2 {
+  background:
+    radial-gradient(140% 48% at 50% 112%, rgba(35, 46, 140, .75) 0%, rgba(35, 46, 140, 0) 72%),
+    linear-gradient(180deg, rgba(0, 0, 0, .38) 0%, rgba(0, 0, 0, 0) 65%),
+    var(--rj-midnight);
+}
+.sky .l-k3 {
+  background:
+    radial-gradient(140% 52% at 50% 112%, rgba(120, 139, 255, .30) 0%, rgba(51, 64, 191, .55) 30%, rgba(35, 46, 140, 0) 74%),
+    linear-gradient(180deg, rgba(0, 0, 0, .22) 0%, rgba(0, 0, 0, 0) 60%),
+    var(--rj-midnight);
+}
+.sky .l-dawn {
+  background:
+    radial-gradient(150% 46% at 50% 114%, rgba(224, 161, 0, .55) 0%, rgba(224, 161, 0, .18) 36%, rgba(224, 161, 0, 0) 62%),
+    radial-gradient(140% 70% at 50% 110%, rgba(155, 177, 255, .40) 0%, rgba(84, 101, 255, .32) 38%, rgba(51, 64, 191, 0) 78%),
+    linear-gradient(180deg, var(--rj-midnight) 0%, var(--rj-blue-800) 62%, var(--rj-blue-700) 100%);
+}
+.sky .l-fail {
+  background:
+    linear-gradient(180deg, rgba(26, 26, 26, .55) 0%, rgba(26, 26, 26, .35) 100%),
+    var(--rj-midnight);
+  filter: saturate(.35);
+}
+.sky .l-home {
+  background:
+    radial-gradient(130% 40% at 50% 112%, rgba(35, 46, 140, .55) 0%, rgba(35, 46, 140, 0) 72%),
+    linear-gradient(180deg, rgba(0, 0, 0, .3) 0%, rgba(0, 0, 0, 0) 60%),
+    var(--rj-midnight);
+}
+body[data-sky="night"] .l-night,
+body[data-sky="k2"] .l-k2,
+body[data-sky="k3"] .l-k3,
+body[data-sky="dawn"] .l-dawn,
+body[data-sky="fail"] .l-fail,
+body[data-sky="home"] .l-home { opacity: 1; }
+
+/* ---------- Shell ---------- */
+.app {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 520px; margin: 0 auto;
+  min-height: 100vh; min-height: 100dvh;
+  display: flex; flex-direction: column;
+  padding:
+    calc(env(safe-area-inset-top, 0px) + var(--space-3))
+    calc(env(safe-area-inset-right, 0px) + var(--space-5))
+    calc(env(safe-area-inset-bottom, 0px) + var(--space-4))
+    calc(env(safe-area-inset-left, 0px) + var(--space-5));
+}
+.screen { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+.topbar {
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+  min-height: 44px; gap: var(--space-2);
+}
+.topbar > :first-child { justify-self: start; }
+.topbar > :last-child { justify-self: end; }
+
+.badge-test {
+  font-family: var(--font-heading-ar); font-weight: var(--fw-bold);
+  font-size: var(--fs-caption); line-height: 1;
+  color: var(--rj-sky-blue);
+  background: rgba(84, 101, 255, .16);
+  border: 1px solid rgba(155, 177, 255, .28);
+  padding: 6px 10px; border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+.link-quiet {
+  background: none; border: 0; cursor: pointer;
+  font-family: var(--font-body-ar); font-size: 13px; font-weight: var(--fw-regular);
+  color: var(--fg-3); opacity: .55;
+  padding: 10px 6px; min-height: 44px;
+}
+.link-quiet:hover { opacity: .8; }
+
+/* knot progress (3 small knots) */
+.progress { display: flex; gap: var(--space-2); direction: rtl; }
+.progress svg { width: 26px; height: 26px; display: block; overflow: visible; }
+.progress .p-ring { fill: none; stroke: var(--rj-sky-blue); stroke-width: 2.4; opacity: .35; transition: opacity var(--dur-slow) var(--ease-out); }
+.progress .p-body { fill: var(--rj-blue-500); stroke: var(--rj-sky-blue); stroke-width: 2; transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); transform-box: fill-box; transform-origin: center; }
+.progress .p-cross { fill: none; stroke: var(--rj-soft-cloud); stroke-width: 1.8; stroke-linecap: round; transition: opacity var(--dur-slow) var(--ease-out); }
+.progress .is-done .p-body { opacity: 0; transform: scale(.4); }
+.progress .is-done .p-cross { opacity: 0; }
+.progress .is-done .p-ring { opacity: .9; stroke-dasharray: 3 3; }
+.progress .is-current .p-ring { opacity: .9; }
+
+/* ---------- Stage: figure + countdown ring ---------- */
+.stage {
+  position: relative;
+  width: var(--stage); height: var(--stage);
+  margin: var(--space-2) auto 0;
+  flex: none;
+}
+.stage > svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.ring-track { fill: none; stroke: rgba(155, 177, 255, .14); stroke-width: 5; }
+.ring-prog {
+  fill: none; stroke: var(--rj-sky-blue); stroke-width: 5; stroke-linecap: round;
+  transition: stroke-dashoffset 260ms linear, opacity var(--dur-slow) var(--ease-out);
+}
+.ring-hidden .ring-track, .ring-hidden .ring-prog { opacity: 0; }
+.porthole { fill: rgba(155, 177, 255, .045); }
+
+.time-pill {
+  position: absolute; left: 50%; bottom: -14px; transform: translateX(-50%);
+  font-family: var(--font-heading-ar); font-weight: var(--fw-bold); font-size: 18px; line-height: 1;
+  color: var(--fg-1);
+  background: var(--bg-card);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-pill);
+  padding: 8px 14px 7px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.time-pill small { font-family: var(--font-body-ar); font-weight: var(--fw-regular); font-size: 12px; color: var(--fg-2); margin-inline-start: 6px; }
+
+/* figure — posture driven by data-slump (3 = all knots tied … 0 = upright) */
+.fig-torso, .fig-neck, .fig-head { transition: transform var(--untie) var(--ease-out); }
+.fig-head { transform-origin: 120px 170px; }
+.figure[data-slump="3"] .fig-head  { transform: translate(-2px, 17px) rotate(-10deg); }
+.figure[data-slump="2"] .fig-head  { transform: translate(-1px, 11px) rotate(-6deg); }
+.figure[data-slump="1"] .fig-head  { transform: translate(0, 5px) rotate(-2.5deg); }
+.figure[data-slump="0"] .fig-head  { transform: none; }
+.figure[data-slump="3"] .fig-neck  { transform: translateY(12px); }
+.figure[data-slump="2"] .fig-neck  { transform: translateY(8px); }
+.figure[data-slump="1"] .fig-neck  { transform: translateY(4px); }
+.figure[data-slump="3"] .fig-torso { transform: translateY(9px); }
+.figure[data-slump="2"] .fig-torso { transform: translateY(6px); }
+.figure[data-slump="1"] .fig-torso { transform: translateY(3px); }
+.fig-all { transition: transform 900ms var(--ease-out), filter 1200ms var(--ease-out); }
+.figure.is-risen .fig-all { transform: translateY(-7px); }
+.figure.is-dim .fig-all { filter: saturate(.25) brightness(.72); }
+
+.rope { fill: none; stroke: var(--rj-sky-blue); stroke-width: 4.2; stroke-linecap: round; transition: opacity 900ms var(--ease-out), transform 900ms var(--ease-out); }
+.figure[data-slump="2"] .rope { opacity: .8; }
+.figure[data-slump="1"] .rope { opacity: .6; }
+.figure[data-slump="0"] .rope { opacity: 0; transform: translateY(18px); }
+
+.knot-glow { opacity: .9; transition: opacity var(--untie) var(--ease-out); }
+.knot-body, .knot-tails { transform-box: fill-box; }
+.knot-body { transform-origin: center; transition: transform var(--untie) var(--ease-out), opacity var(--untie) var(--ease-out); }
+.knot-body path, .knot-tails path { fill: none; stroke: var(--rj-sky-blue); stroke-width: 4.2; stroke-linecap: round; }
+.knot-body path.under, .knot-tails path.under { stroke: var(--rj-blue-800); stroke-width: 7.4; }
+.knot-tails { transform-origin: 50% 0; transition: transform 1000ms var(--ease-in-out) 200ms, opacity 1000ms var(--ease-out) 200ms; }
+.knot-loose { fill: none; stroke: var(--rj-sky-blue); stroke-width: 3; stroke-linecap: round; opacity: 0; stroke-dasharray: 64; stroke-dashoffset: 0; }
+
+.knot.is-untied .knot-body { transform: scale(1.75) rotate(40deg); opacity: 0; }
+.knot.is-untied .knot-tails { transform: translateY(34px) rotate(8deg); opacity: 0; }
+.knot.is-untied .knot-glow { opacity: 0; }
+.knot.is-untying .knot-loose { animation: loosen var(--untie) var(--ease-out) forwards; }
+@keyframes loosen {
+  0%   { opacity: 0;  stroke-dashoffset: 0; transform: translateY(0); }
+  30%  { opacity: .9; }
+  100% { opacity: 0;  stroke-dashoffset: 64; transform: translateY(16px); }
+}
+
+.no-anim, .no-anim * { transition: none !important; animation: none !important; }
+
+/* ---------- Type ---------- */
+.eyebrow {
+  font-family: var(--font-heading-ar); font-weight: var(--fw-bold);
+  font-size: var(--fs-small); line-height: 1.4;
+  color: var(--rj-indigo-tint);
+  text-align: center; margin: 0;
+}
+.hadith {
+  font-family: var(--font-display-ar); font-weight: var(--fw-semibold);
+  font-size: var(--hadith-size); line-height: 1.95;
+  color: var(--fg-1);
+  text-align: center; text-wrap: balance;
+  margin: 0;
+}
+.hadith-sm { font-size: 26px; }
+.source { font-family: var(--font-body-ar); font-size: var(--fs-small); color: var(--fg-2); text-align: center; margin: var(--space-2) 0 0; }
+.headline {
+  font-family: var(--font-display-ar); font-weight: var(--fw-extrabold);
+  font-size: clamp(30px, 8.6vw, 40px); line-height: 1.45;
+  color: var(--rj-sky-blue);
+  text-align: center; text-wrap: balance;
+  margin: 0;
+}
+.fail .headline { color: var(--fg-1); font-weight: var(--fw-bold); }
+.quiet-line { font-family: var(--font-heading-ar); font-weight: var(--fw-medium); font-size: var(--fs-body-lg); color: var(--fg-2); text-align: center; margin: 0; }
+
+/* ---------- Knot screen ---------- */
+.knot-content {
+  flex: 1; display: flex; flex-direction: column; justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-8) 0 var(--space-4);
+  min-width: 0;
+}
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  box-shadow: var(--shadow-lg);
+}
+.dhikr-label { font-family: var(--font-heading-ar); font-weight: var(--fw-bold); font-size: var(--fs-small); color: var(--rj-indigo-tint); margin: 0 0 var(--space-1); text-align: center; }
+.dhikr { font-family: var(--font-display-ar); font-weight: var(--fw-semibold); font-size: clamp(22px, 6.2vw, 26px); line-height: 1.9; color: var(--fg-1); text-align: center; margin: 0; text-wrap: balance; }
+
+details.full { align-self: center; width: 100%; }
+details.full > summary {
+  list-style: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: var(--space-1);
+  font-family: var(--font-heading-ar); font-weight: var(--fw-medium); font-size: 15px;
+  color: var(--fg-2);
+  min-height: 40px;
+}
+details.full > summary::-webkit-details-marker { display: none; }
+details.full > summary svg { width: 16px; height: 16px; transition: transform var(--dur-base) var(--ease-out); }
+details.full[open] > summary svg { transform: rotate(180deg); }
+details.full .card { margin-top: var(--space-2); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  width: 100%;
+  border: 1px solid transparent; border-radius: var(--radius-pill);
+  font-family: var(--font-display-ar); font-weight: var(--fw-bold);
+  cursor: pointer; user-select: none; -webkit-user-select: none;
+  touch-action: manipulation;
+  transition: background-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out), transform var(--dur-fast) var(--ease-out), color var(--dur-base) var(--ease-out);
+}
+.btn-primary { background: var(--rj-blue-500); color: #fff; box-shadow: var(--shadow-glow); }
+.btn-primary:hover { background: var(--rj-blue-600); }
+.btn-primary:active { transform: scale(.985); }
+.btn-secondary { background: transparent; color: var(--rj-sky-blue); border-color: rgba(155, 177, 255, .35); }
+.btn-secondary:active { transform: scale(.985); }
+.btn[disabled], .btn[aria-disabled="true"] {
+  background: rgba(84, 101, 255, .14); color: var(--fg-3);
+  box-shadow: none; cursor: not-allowed; border-color: rgba(155, 177, 255, .14);
+}
+.btn-done { min-height: 80px; font-size: 32px; line-height: 1.25; padding: var(--space-2) var(--space-6); gap: 2px; }
+.btn-done .sub { font-family: var(--font-body-ar); font-weight: var(--fw-regular); font-size: 14px; line-height: 1.2; }
+.btn-done[disabled] > span:first-child { font-size: 26px; }
+.btn-lg { min-height: 64px; font-size: 22px; padding: var(--space-3) var(--space-6); }
+.btn-md { min-height: 52px; font-size: 18px; padding: var(--space-2) var(--space-5); }
+
+.footer { padding-top: var(--space-2); }
+
+/* ---------- Splash ---------- */
+.splash .brand { font-family: var(--font-display-ar); font-weight: var(--fw-extrabold); font-size: 28px; color: var(--rj-sky-blue); text-align: center; margin: 0; line-height: 1.3; }
+.splash { --stage: min(78vw, 40vh, 340px); }
+.splash .slot { margin-top: var(--space-6); }
+.splash .quiet-line { margin-top: var(--space-6); }
+.splash .spacer { flex: 1; min-height: var(--space-6); }
+.btn-wake { min-height: 132px; font-size: 52px; font-weight: var(--fw-extrabold); border-radius: 66px; }
+
+/* ---------- Ending screens ---------- */
+.ending { text-align: center; }
+.ending .body { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: var(--space-4); padding: var(--space-6) 0; }
+.reveal { opacity: 0; transform: translateY(8px); transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out); transition-delay: var(--reveal-delay, 0ms); }
+.reveal.is-in { opacity: 1; transform: none; }
+.ending .footer { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); }
+.ending .footer .link-quiet { opacity: .7; font-size: 14px; }
+
+/* ---------- Home ---------- */
+.home-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); min-height: 44px; }
+.home-title { font-family: var(--font-display-ar); font-weight: var(--fw-extrabold); font-size: var(--fs-h2); line-height: 1.2; color: var(--rj-sky-blue); margin: 0; }
+.home-sub { font-family: var(--font-body-ar); font-size: var(--fs-small); color: var(--fg-2); margin: var(--space-1) 0 var(--space-6); }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.stat-label { font-family: var(--font-heading-ar); font-weight: var(--fw-medium); font-size: var(--fs-small); color: var(--fg-2); margin: 0 0 var(--space-1); }
+.stat-value { font-family: var(--font-display-ar); font-weight: var(--fw-bold); font-size: var(--fs-h4); line-height: 1.35; color: var(--fg-1); margin: 0; }
+.stat-big { font-family: var(--font-display-ar); font-weight: var(--fw-extrabold); font-size: 40px; line-height: 1.1; color: var(--rj-sky-blue); }
+.stat-unit { font-family: var(--font-body-ar); font-size: var(--fs-small); color: var(--fg-2); margin-inline-start: var(--space-1); }
+.section-title { font-family: var(--font-heading-ar); font-weight: var(--fw-bold); font-size: var(--fs-body-lg); color: var(--fg-1); margin: var(--space-8) 0 var(--space-3); }
+.grid30 { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 6px; }
+.day {
+  aspect-ratio: 1; border-radius: var(--radius-sm, 8px);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-heading-ar); font-weight: var(--fw-medium); font-size: 11px; line-height: 1;
+  border: 1px solid var(--border-1); color: var(--fg-3);
+  min-width: 0;
+}
+.day.r-success { background: var(--rj-sky-blue); border-color: var(--rj-sky-blue); color: var(--rj-midnight); }
+.day.r-failed { background: rgba(128, 137, 160, .38); border-color: transparent; color: var(--fg-2); }
+.day.r-emergency { border: 1.5px dashed var(--rj-indigo-tint); color: var(--rj-indigo-tint); }
+.day.is-today { outline: 2px solid var(--rj-blue-500); outline-offset: 2px; }
+.legend { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); margin-top: var(--space-3); font-size: var(--fs-small); color: var(--fg-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+.home-actions { margin-top: auto; padding-top: var(--space-8); display: flex; flex-direction: column; gap: var(--space-3); align-items: stretch; }
+.home-actions .link-quiet { align-self: center; opacity: .7; font-size: 14px; }
+.home-hadith { margin-top: var(--space-6); }
+
+/* ---------- Modal ---------- */
+.scrim { position: fixed; inset: 0; z-index: 10; background: rgba(11, 28, 61, .55); display: flex; align-items: flex-end; justify-content: center; padding: var(--space-5); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--space-5)); }
+.sheet { width: 100%; max-width: 480px; background: var(--bg-2); border: 1px solid var(--border-1); border-radius: var(--radius-xl); padding: var(--space-6) var(--space-5) var(--space-5); box-shadow: var(--shadow-lg); }
+.sheet h2 { font-family: var(--font-display-ar); font-weight: var(--fw-bold); font-size: var(--fs-h4); color: var(--fg-1); margin: 0 0 var(--space-2); text-align: center; }
+.sheet p { font-size: var(--fs-body); color: var(--fg-2); margin: 0 0 var(--space-5); text-align: center; }
+.sheet .row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+
+/* ---------- Short screens ---------- */
+@media (max-height: 700px) {
+  :root { --stage: min(56vw, 26vh, 240px); --hadith-size: 26px; }
+  .knot-content { gap: var(--space-3); padding-top: var(--space-6); }
+  .btn-wake { min-height: 112px; }
+}
+
+/* ---------- Reduced motion: simple fades ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .fig-torso, .fig-neck, .fig-head, .fig-all, .rope { transition: opacity 600ms linear !important; }
+  .knot-body, .knot-tails { transition: opacity 600ms linear !important; }
+  .knot.is-untied .knot-body, .knot.is-untied .knot-tails { transform: none; }
+  .knot.is-untying .knot-loose { animation: none; }
+  .reveal { transform: none; transition: opacity 600ms linear; }
+  .sky > i { transition: opacity 800ms linear; }
+  .btn { transition: none; }
+}
+</style>
+</head>
+<body data-sky="night">
+<div class="sky" aria-hidden="true"><i class="l-night"></i><i class="l-k2"></i><i class="l-k3"></i><i class="l-dawn"></i><i class="l-fail"></i><i class="l-home"></i></div>
+
+<!-- Shared illustration. Moved into whichever screen is active. -->
+<template id="tpl-stage">
+<div class="stage ring-hidden" id="stage">
+  <svg viewBox="0 0 240 240" role="img" aria-label="شخص نائم وعلى قافية رأسه ثلاث عُقد">
+    <defs>
+      <clipPath id="clip-porthole"><circle cx="120" cy="120" r="106"/></clipPath>
+      <linearGradient id="g-body" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#3340BF"/>
+        <stop offset=".45" stop-color="#232E8C"/>
+        <stop offset="1" stop-color="#0B1C3D"/>
+      </linearGradient>
+      <linearGradient id="g-neck" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#232E8C"/>
+        <stop offset="1" stop-color="#0B1C3D"/>
+      </linearGradient>
+      <radialGradient id="g-head" cx=".62" cy=".28" r=".85">
+        <stop offset="0" stop-color="#3340BF"/>
+        <stop offset=".55" stop-color="#232E8C"/>
+        <stop offset="1" stop-color="#16226a"/>
+      </radialGradient>
+      <radialGradient id="g-knot-glow">
+        <stop offset="0" stop-color="#9BB1FF" stop-opacity=".55"/>
+        <stop offset="1" stop-color="#9BB1FF" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+
+    <circle class="ring-track" cx="120" cy="120" r="115"/>
+    <circle class="ring-prog" id="ring-prog" cx="120" cy="120" r="115" transform="rotate(-90 120 120)"/>
+    <circle class="porthole" cx="120" cy="120" r="106"/>
+
+    <g class="figure" id="figure" data-slump="3" clip-path="url(#clip-porthole)">
+      <g class="fig-all">
+        <g class="fig-neck">
+          <path d="M104 118 C105 140 103 156 98 168 L142 168 C137 156 135 140 136 118 Z" fill="url(#g-neck)"/>
+        </g>
+        <g class="fig-torso">
+          <path d="M16 256 C18 204 38 174 80 163 C96 159 108 158 120 158 C134 158 148 160 162 165 C202 177 222 206 224 256 Z" fill="url(#g-body)" stroke="rgba(155,177,255,.28)" stroke-width="1.4"/>
+          <path d="M121 172 C120 198 121 222 120 250" fill="none" stroke="rgba(11,28,61,.45)" stroke-width="5" stroke-linecap="round"/>
+          <path d="M64 196 C76 186 92 184 104 189" fill="none" stroke="rgba(155,177,255,.10)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M176 198 C164 188 150 186 138 191" fill="none" stroke="rgba(155,177,255,.08)" stroke-width="3" stroke-linecap="round"/>
+        </g>
+        <g class="fig-head">
+          <ellipse cx="81" cy="100" rx="6.5" ry="11" fill="#232E8C" stroke="rgba(155,177,255,.26)" stroke-width="1.2"/>
+          <ellipse cx="119" cy="90" rx="39" ry="44" transform="rotate(-6 119 90)" fill="url(#g-head)" stroke="rgba(155,177,255,.30)" stroke-width="1.4"/>
+          <path d="M94 56 C106 47 128 45 144 55" fill="none" stroke="rgba(155,177,255,.16)" stroke-width="3" stroke-linecap="round"/>
+          <path class="rope" d="M84 120 Q119 146 154 120"/>
+          <g class="knot" data-knot="1" transform="translate(140 128.3)">
+            <circle class="knot-glow" r="19" fill="url(#g-knot-glow)"/>
+            <g class="knot-tails"><path class="under" d="M3 6 C5 12 3 17 6 23"/><path d="M3 6 C5 12 3 17 6 23"/></g>
+            <path class="knot-loose" d="M-12 0 C-15 10 -3 15 2 6 C6 -2 15 2 11 15"/>
+            <g class="knot-body">
+              <path class="under" d="M-11 3 C-9 -8 5 -11 7 -3 C9 5 -2 9 -4 2"/><path d="M-11 3 C-9 -8 5 -11 7 -3 C9 5 -2 9 -4 2"/>
+              <path class="under" d="M-4 2 C-6 -5 4 -9 11 -2"/><path d="M-4 2 C-6 -5 4 -9 11 -2"/>
+            </g>
+          </g>
+          <g class="knot" data-knot="2" transform="translate(119 133)">
+            <circle class="knot-glow" r="19" fill="url(#g-knot-glow)"/>
+            <g class="knot-tails"><path class="under" d="M3 6 C5 12 3 17 6 23"/><path d="M3 6 C5 12 3 17 6 23"/></g>
+            <path class="knot-loose" d="M-12 0 C-15 10 -3 15 2 6 C6 -2 15 2 11 15"/>
+            <g class="knot-body">
+              <path class="under" d="M-11 3 C-9 -8 5 -11 7 -3 C9 5 -2 9 -4 2"/><path d="M-11 3 C-9 -8 5 -11 7 -3 C9 5 -2 9 -4 2"/>
+              <path class="under" d="M-4 2 C-6 -5 4 -9 11 -2"/><path d="M-4 2 C-6 -5 4 -9 11 -2"/>
+            </g>
+          </g>
+          <g class="knot" data-knot="3" transform="translate(98 128.3)">
+            <circle class="knot-glow" r="19" fill="url(#g-knot-glow)"/>
+            <g class="knot-tails"><path class="under" d="M3 6 C5 12 3 17 6 23"/><path d="M3 6 C5 12 3 17 6 23"/></g>
+            <path class="knot-loose" d="M-12 0 C-15 10 -3 15 2 6 C6 -2 15 2 11 15"/>
+            <g class="knot-body">
+              <path class="under" d="M-11 3 C-9 -8 5 -11 7 -3 C9 5 -2 9 -4 2"/><path d="M-11 3 C-9 -8 5 -11 7 -3 C9 5 -2 9 -4 2"/>
+              <path class="under" d="M-4 2 C-6 -5 4 -9 11 -2"/><path d="M-4 2 C-6 -5 4 -9 11 -2"/>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </svg>
+  <div class="time-pill" id="time-pill" hidden><span dir="ltr" id="time-left">00:00</span><small>متبقٍّ</small></div>
+</div>
+</template>
+
+<main class="app" id="app">
+
+  <!-- Splash: one tap to wake (unlocks audio on iOS) -->
+  <section class="screen splash" id="s-splash" hidden>
+    <div class="topbar"><span></span><p class="brand">عُقَد</p><span><span class="badge-test" data-test-only hidden>وضع التجربة</span></span></div>
+    <div class="slot"></div>
+    <p class="quiet-line">ثلاث عُقد تنتظر أن تنحلّ</p>
+    <div class="spacer"></div>
+    <button class="btn btn-primary btn-wake" id="btn-wake" type="button">استيقظ</button>
+  </section>
+
+  <!-- Knot -->
+  <section class="screen knot-screen" id="s-knot" hidden>
+    <div class="topbar">
+      <span><span class="badge-test" data-test-only hidden>وضع التجربة</span></span>
+      <div class="progress" id="progress" aria-label="العُقد"></div>
+      <button class="link-quiet" id="btn-emergency" type="button">طوارئ</button>
+    </div>
+    <div class="slot"></div>
+    <div class="knot-content">
+      <p class="eyebrow" id="knot-label"></p>
+      <p class="hadith" id="knot-text"></p>
+      <div class="card" id="dhikr-card" hidden>
+        <p class="dhikr-label">قُل</p>
+        <p class="dhikr" id="dhikr-text"></p>
+      </div>
+      <details class="full">
+        <summary>الحديث كاملاً <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div class="card"><p class="hadith hadith-sm" data-text="full"></p><p class="source" data-text="source"></p></div>
+      </details>
+    </div>
+    <div class="footer">
+      <button class="btn btn-primary btn-done" id="btn-done" type="button"><span>تم</span><span class="sub" id="done-sub" hidden></span></button>
+    </div>
+  </section>
+
+  <!-- Success -->
+  <section class="screen ending success" id="s-success" hidden>
+    <div class="topbar"><span><span class="badge-test" data-test-only hidden>وضع التجربة</span></span><span></span><span></span></div>
+    <div class="slot"></div>
+    <div class="body">
+      <h1 class="headline reveal">أصبحتَ نشيطًا طيّبَ النفس</h1>
+      <p class="hadith reveal" style="--reveal-delay:250ms" data-text="success-seg"></p>
+    </div>
+    <div class="footer reveal" style="--reveal-delay:500ms">
+      <button class="btn btn-primary btn-lg" type="button" data-run="done">افتح الجوال</button>
+      <button class="link-quiet" type="button" data-go="home">السجل</button>
+    </div>
+  </section>
+
+  <!-- Failed -->
+  <section class="screen ending fail" id="s-failed" hidden>
+    <div class="topbar"><span><span class="badge-test" data-test-only hidden>وضع التجربة</span></span><span></span><span></span></div>
+    <div class="slot"></div>
+    <div class="body">
+      <h1 class="headline reveal">أصبحتَ اليوم خبيثَ النفسِ كسلان</h1>
+      <p class="hadith reveal" style="--reveal-delay:250ms" data-text="fail-seg"></p>
+      <p class="quiet-line reveal" style="--reveal-delay:600ms">غدًا فجرٌ جديد</p>
+    </div>
+    <div class="footer reveal" style="--reveal-delay:800ms">
+      <button class="btn btn-secondary btn-lg" type="button" data-run="fail">افتح الجوال</button>
+      <button class="link-quiet" type="button" data-go="home">السجل</button>
+    </div>
+  </section>
+
+  <!-- Emergency -->
+  <section class="screen ending emergency" id="s-emergency" hidden>
+    <div class="topbar"><span><span class="badge-test" data-test-only hidden>وضع التجربة</span></span><span></span><span></span></div>
+    <div class="slot"></div>
+    <div class="body">
+      <h1 class="headline reveal" style="color:var(--fg-1)">سُجِّل اليوم حالةً طارئة</h1>
+      <p class="quiet-line reveal" style="--reveal-delay:250ms">غدًا فجرٌ جديد</p>
+    </div>
+    <div class="footer reveal" style="--reveal-delay:400ms">
+      <button class="btn btn-secondary btn-lg" type="button" data-run="fail">افتح الجوال</button>
+      <button class="link-quiet" type="button" data-go="home">السجل</button>
+    </div>
+  </section>
+
+  <!-- Home (idle) -->
+  <section class="screen home" id="s-home" hidden>
+    <div class="home-head">
+      <h1 class="home-title">عُقَد</h1>
+      <span class="badge-test" data-test-only hidden>وضع التجربة</span>
+    </div>
+    <p class="home-sub">ذِكر، ثم وضوء، ثم صلاة — وتنحلّ العُقد الثلاث.</p>
+
+    <div class="stats">
+      <div class="card"><p class="stat-label">اليوم</p><p class="stat-value" id="today-result"></p></div>
+      <div class="card"><p class="stat-label">أيام متتالية</p><p class="stat-value"><span class="stat-big" id="streak"></span><span class="stat-unit" id="streak-unit"></span></p></div>
+    </div>
+
+    <h2 class="section-title">آخر ٣٠ يومًا</h2>
+    <div class="grid30" id="grid30" role="list"></div>
+    <div class="legend">
+      <span><i style="background:var(--rj-sky-blue)"></i>انحلّت</span>
+      <span><i style="background:rgba(128,137,160,.38)"></i>لم تكتمل</span>
+      <span><i style="border:1.5px dashed var(--rj-indigo-tint)"></i>طوارئ</span>
+      <span><i style="border:1px solid var(--border-1)"></i>لا جلسة</span>
+    </div>
+
+    <details class="full home-hadith">
+      <summary>الحديث كاملاً <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+      <div class="card"><p class="hadith hadith-sm" data-text="full"></p><p class="source" data-text="source"></p></div>
+    </details>
+
+    <div class="home-actions">
+      <button class="btn btn-primary btn-md" id="btn-test-new" type="button" data-test-only hidden>ابدأ تجربة جديدة</button>
+      <button class="btn btn-secondary btn-md" id="btn-back-today" type="button" hidden>عودة إلى نتيجة اليوم</button>
+      <a class="link-quiet" id="link-test" href="./?test=1&amp;start=1">وضع التجربة</a>
+      <a class="link-quiet" id="link-exit-test" href="./" data-test-only hidden>الخروج من وضع التجربة</a>
+    </div>
+  </section>
+</main>
+
+<!-- Emergency confirm -->
+<div class="scrim" id="confirm" hidden role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+  <div class="sheet">
+    <h2 id="confirm-title">حالة طارئة؟</h2>
+    <p>ستنتهي جلسة اليوم وتُسجَّل «طوارئ»، ثم يُفتح الجوال.</p>
+    <div class="row">
+      <button class="btn btn-primary btn-md" id="confirm-no" type="button">رجوع</button>
+      <button class="btn btn-secondary btn-md" id="confirm-yes" type="button">تأكيد</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  /* =================== CONFIG — every duration lives here =================== */
+  const CONFIG = {
+    timeZone: 'Asia/Riyadh',
+    knots: [
+      { windowSec: 10 * 60, minDwellSec: 0,   alarm: true  },  // ذِكر
+      { windowSec: 10 * 60, minDwellSec: 90,  alarm: false },  // وضوء
+      { windowSec: 30 * 60, minDwellSec: 240, alarm: false },  // صلاة
+    ],
+    test: { windowsSec: [20, 20, 40], minDwellSec: 5 },        // ?test=1
+    shortcuts: { done: 'Uqad Done', fail: 'Uqad Fail' },
+    storagePrefix: 'uqad.v1.',
+    historyDays: 30,
+    historyKeepDays: 400,
+    untieMs: 1200,
+    tickMs: 250,
+  };
+
+  /* =================== Religious text — exact, do not edit =================== */
+  const TEXT = {
+    full: 'يَعقِدُ الشَّيطانُ على قافيةِ رَأسِ أحَدِكُم إذا هو نامَ ثَلاثَ عُقدٍ، يَضرِبُ كُلَّ عُقدةٍ: عليك لَيلٌ طَويلٌ فارقُدْ، فإنِ استَيقَظَ فذَكَرَ اللهَ انحَلَّت عُقدةٌ، فإن تَوضَّأ انحَلَّت عُقدةٌ، فإن صَلَّى انحَلَّت عُقدةٌ، فأصبَحَ نَشيطًا طَيِّبَ النَّفسِ، وإلَّا أصبَحَ خَبيثَ النَّفسِ كَسلانَ.',
+    source: 'متفق عليه — البخاري ١١٤٢، مسلم ٧٧٦',
+    knots: [
+      'فإنِ استَيقَظَ فذَكَرَ اللهَ انحَلَّت عُقدةٌ',
+      'فإن تَوضَّأ انحَلَّت عُقدةٌ',
+      'فإن صَلَّى انحَلَّت عُقدةٌ',
+    ],
+    dhikr: 'الحَمدُ للهِ الَّذي أحيانا بَعدَ ما أماتَنا وإلَيهِ النُّشورُ',
+    successSeg: 'فأصبَحَ نَشيطًا طَيِّبَ النَّفسِ',
+    failSeg: 'وإلَّا أصبَحَ خَبيثَ النَّفسِ كَسلانَ',
+  };
+  const KNOT_LABELS = ['العقدة الأولى · الذِّكر', 'العقدة الثانية · الوضوء', 'العقدة الثالثة · الصلاة'];
+
+  /* =================== Mode =================== */
+  const params = new URLSearchParams(location.search);
+  const TEST = params.get('test') === '1';
+  const KNOTS = CONFIG.knots.map((k, i) => TEST
+    ? { ...k, windowSec: CONFIG.test.windowsSec[i], minDwellSec: k.minDwellSec > 0 ? CONFIG.test.minDwellSec : 0 }
+    : k);
+  const KEY = CONFIG.storagePrefix + (TEST ? 'test.' : '');
+  const RESULTS = ['success', 'failed', 'emergency'];
+  const PHASES = ['knot', 'success', 'failed', 'emergency'];
+
+  /* =================== Storage (never throws) =================== */
+  const store = {
+    get(name, fallback) {
+      try {
+        const raw = localStorage.getItem(KEY + name);
+        if (raw == null) return fallback;
+        const v = JSON.parse(raw);
+        return v == null ? fallback : v;
+      } catch (_) { return fallback; }
+    },
+    set(name, value) {
+      try { localStorage.setItem(KEY + name, JSON.stringify(value)); return true; } catch (_) { return false; }
+    },
+    del(name) { try { localStorage.removeItem(KEY + name); } catch (_) {} },
+  };
+
+  const isNum = (n) => typeof n === 'number' && Number.isFinite(n);
+  const isDate = (d) => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d);
+
+  function validSession(s) {
+    return !!s && typeof s === 'object' && s.v === 1 && isDate(s.date) &&
+      PHASES.includes(s.phase) && Number.isInteger(s.knot) && s.knot >= 1 && s.knot <= 3 &&
+      isNum(s.startedAt) && isNum(s.deadline) && Array.isArray(s.completed) && s.completed.every(isNum);
+  }
+  function loadSession() { const s = store.get('session', null); return validSession(s) ? s : null; }
+  function saveSession(s) { store.set('session', s); }
+
+  function loadHistory() {
+    const h = store.get('history', {});
+    const out = {};
+    if (h && typeof h === 'object' && !Array.isArray(h)) {
+      for (const [d, r] of Object.entries(h)) if (isDate(d) && RESULTS.includes(r)) out[d] = r;
+    }
+    return out;
+  }
+  function record(date, result) {
+    const h = loadHistory();
+    h[date] = result;
+    const cutoff = addDays(today(), -CONFIG.historyKeepDays);
+    for (const d of Object.keys(h)) if (d < cutoff) delete h[d];
+    store.set('history', h);
+  }
+
+  /* =================== Dates (Asia/Riyadh) =================== */
+  let dateFmt = null;
+  try { dateFmt = new Intl.DateTimeFormat('en-CA', { timeZone: CONFIG.timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }); } catch (_) {}
+  function today(now = Date.now()) {
+    if (dateFmt) {
+      try {
+        const p = {}; for (const x of dateFmt.formatToParts(new Date(now))) p[x.type] = x.value;
+        return `${p.year}-${p.month}-${p.day}`;
+      } catch (_) {}
+    }
+    return new Date(now + 3 * 3600e3).toISOString().slice(0, 10); // Riyadh is UTC+3, no DST
+  }
+  function addDays(date, n) {
+    const t = Date.UTC(+date.slice(0, 4), +date.slice(5, 7) - 1, +date.slice(8, 10)) + n * 864e5;
+    return new Date(t).toISOString().slice(0, 10);
+  }
+
+  /* =================== Formatting =================== */
+  const AR_DIGITS = '٠١٢٣٤٥٦٧٨٩';
+  const ar = (v) => String(v).replace(/\d/g, (d) => AR_DIGITS[d]);
+  function mmss(ms) {
+    const s = Math.max(0, Math.ceil(ms / 1000));
+    return ar(String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'));
+  }
+
+  /* =================== Device helpers =================== */
+  function buzz(pattern) { try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (_) {} }
+
+  function runShortcut(which) {
+    const name = CONFIG.shortcuts[which];
+    if (!name) return;
+    window.location.href = 'shortcuts://run-shortcut?name=' + encodeURIComponent(name);
+  }
+
+  const Wake = {
+    lock: null, want: false,
+    async acquire() {
+      this.want = true;
+      if (!('wakeLock' in navigator) || document.visibilityState !== 'visible') return;
+      try {
+        if (this.lock && !this.lock.released) return;
+        this.lock = await navigator.wakeLock.request('screen');
+        this.lock.addEventListener('release', () => { this.lock = null; });
+      } catch (_) { this.lock = null; }
+    },
+    release() {
+      this.want = false;
+      try { if (this.lock) this.lock.release(); } catch (_) {}
+      this.lock = null;
+    },
+  };
+
+  /* Soft alarm: gentle rising chime, generated with Web Audio, loops until stop(). */
+  const Alarm = {
+    ctx: null, master: null, timer: null, next: 0, on: false,
+    start() {
+      if (this.on) { this.resume(); return; }
+      try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (_) {}
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      try {
+        const ctx = new AC();
+        this.ctx = ctx;
+        const master = ctx.createGain();
+        const comp = ctx.createDynamicsCompressor();
+        master.connect(comp); comp.connect(ctx.destination);
+        const t = ctx.currentTime;
+        master.gain.setValueAtTime(0.0001, t);
+        master.gain.exponentialRampToValueAtTime(0.22, t + 4);   // fade in
+        master.gain.linearRampToValueAtTime(0.75, t + 90);       // slowly louder
+        this.master = master;
+        this.on = true;
+        this.next = t + 0.1;
+        if (ctx.state === 'suspended') ctx.resume();
+        this.pump();
+        this.timer = setInterval(() => this.pump(), 200);
+      } catch (_) { this.on = false; }
+    },
+    pump() {
+      const ctx = this.ctx; if (!ctx) return;
+      while (this.next < ctx.currentTime + 1.2) { this.phrase(this.next); this.next += 3.4; }
+    },
+    phrase(t0) {
+      // three-note rising arpeggio (A4 · C#5 · E5) with a soft octave pad
+      [[440, 0], [554.37, 0.42], [659.25, 0.84]].forEach(([f, dt]) => this.note(f, t0 + dt, 2.2));
+      this.note(220, t0, 2.8, 0.18);
+    },
+    note(freq, t, dur, level = 0.32) {
+      const ctx = this.ctx;
+      const o1 = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain();
+      o1.type = 'sine'; o2.type = 'triangle';
+      o1.frequency.setValueAtTime(freq * 0.985, t); o1.frequency.exponentialRampToValueAtTime(freq, t + 0.25);
+      o2.frequency.setValueAtTime(freq * 2, t);
+      const g2 = ctx.createGain(); g2.gain.value = 0.08;
+      o1.connect(g); o2.connect(g2); g2.connect(g); g.connect(this.master);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(level, t + 0.06);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o1.start(t); o2.start(t); o1.stop(t + dur + 0.05); o2.stop(t + dur + 0.05);
+    },
+    resume() { try { if (this.ctx && this.ctx.state !== 'running') this.ctx.resume(); } catch (_) {} },
+    stop() {
+      if (!this.on) return;
+      this.on = false;
+      clearInterval(this.timer); this.timer = null;
+      const ctx = this.ctx, master = this.master;
+      this.ctx = null; this.master = null;
+      try {
+        const t = ctx.currentTime;
+        master.gain.cancelScheduledValues(t);
+        master.gain.setValueAtTime(Math.max(master.gain.value, 0.0001), t);
+        master.gain.exponentialRampToValueAtTime(0.0001, t + 0.4);
+        setTimeout(() => { try { ctx.close(); } catch (_) {} }, 600);
+      } catch (_) {}
+    },
+  };
+
+  /* =================== State machine =================== */
+  // IDLE (no session today) → KNOT1 → KNOT2 → KNOT3 → SUCCESS; any knot → FAILED (deadline) or EMERGENCY.
+  // Everything is recomputed from absolute timestamps, so closing/killing the app is harmless.
+  let S = null;                 // today's (or still-running) session
+  let audioUnlocked = false;    // splash tap happened in this page load
+  let viewHome = false;         // user chose "السجل" from an ending screen
+  let renderedKey = '';
+  let revealDelay = 0;
+
+  function reconcile(now = Date.now()) {
+    let s = loadSession();
+    if (!s) return null;
+    if (s.phase === 'knot' && now >= s.deadline) {
+      s.phase = 'failed'; s.failedKnot = s.knot; s.endedAt = s.deadline;
+      saveSession(s);
+      record(s.date, 'failed');
+    }
+    if (s.phase !== 'knot' && !loadHistory()[s.date]) record(s.date, s.phase); // repair a lost write
+    if (s.phase !== 'knot' && s.date !== today(now)) { store.del('session'); return null; }
+    return s;
+  }
+
+  function startSession(now) {
+    const d = today(now);
+    if (loadHistory()[d]) return null;          // today already finished — never restart
+    const s = {
+      v: 1, date: d, test: TEST, phase: 'knot', knot: 1,
+      startedAt: now, deadline: now + KNOTS[0].windowSec * 1000,
+      completed: [], createdAt: now,
+    };
+    saveSession(s);
+    return s;
+  }
+
+  function untiedCount(s) {
+    if (!s) return 0;
+    if (s.phase === 'success') return 3;
+    return Math.min(3, s.completed.length);
+  }
+
+  function screenFor(s) {
+    if (!s || viewHome) return 'home';
+    if (s.phase === 'knot') return (s.knot === 1 && !audioUnlocked) ? 'splash' : 'knot';
+    return s.phase;
+  }
+
+  function skyFor(screen, s) {
+    if (screen === 'home') return 'home';
+    if (screen === 'success') return 'dawn';
+    if (screen === 'failed' || screen === 'emergency') return 'fail';
+    if (screen === 'knot') return ['night', 'k2', 'k3'][s.knot - 1];
+    return 'night';
+  }
+
+  /* =================== DOM =================== */
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+  document.body.appendChild($('#tpl-stage').content.cloneNode(true));
+  const stage = $('#stage');
+  const figure = $('#figure');
+  const ringProg = $('#ring-prog');
+  const RING_C = 2 * Math.PI * 115;
+  ringProg.style.strokeDasharray = RING_C.toFixed(2);
+  ringProg.style.strokeDashoffset = '0';
+
+  $$('[data-text="full"]').forEach((el) => { el.textContent = TEXT.full; });
+  $$('[data-text="source"]').forEach((el) => { el.textContent = TEXT.source; });
+  $('[data-text="success-seg"]').textContent = TEXT.successSeg;
+  $('[data-text="fail-seg"]').textContent = TEXT.failSeg;
+  $('#dhikr-text').textContent = TEXT.dhikr;
+  if (TEST) $$('[data-test-only]').forEach((el) => { el.hidden = false; });
+  if (TEST) $('#link-test').hidden = true;
+
+  const progressEl = $('#progress');
+  progressEl.innerHTML = [1, 2, 3].map((i) =>
+    `<svg viewBox="-13 -13 26 26" data-p="${i}" aria-hidden="true"><circle class="p-ring" r="11"/><circle class="p-body" r="6.5"/><path class="p-cross" d="M-4.5 3 Q0 0 3 -4.5"/></svg>`).join('');
+
+  function setFigure(untied, { animateKnot = 0, instant = false } = {}) {
+    if (instant) figure.classList.add('no-anim');
+    figure.dataset.slump = String(3 - untied);
+    $$('.knot', figure).forEach((k) => {
+      const n = +k.dataset.knot;
+      const isUntied = n <= untied;
+      if (n === animateKnot && isUntied) {
+        k.classList.add('is-untying');
+        setTimeout(() => k.classList.remove('is-untying'), CONFIG.untieMs + 100);
+      }
+      k.classList.toggle('is-untied', isUntied);
+    });
+    if (instant) { figure.getBoundingClientRect(); requestAnimationFrame(() => figure.classList.remove('no-anim')); }
+  }
+
+  function placeStage(screen) {
+    const slot = $(`#s-${screen} .slot`);
+    if (slot && stage.parentNode !== slot) {
+      slot.appendChild(stage);
+      stage.getBoundingClientRect();                   // flush style so post-move class changes still transition
+    }
+    stage.hidden = !slot;
+    stage.classList.toggle('ring-hidden', screen !== 'knot');
+    $('#time-pill').hidden = screen !== 'knot';
+  }
+
+  function render({ animateKnot = 0, fresh = false } = {}) {
+    const now = Date.now();
+    const screen = screenFor(S);
+    const key = screen + ':' + (S ? S.knot + ':' + S.phase : '');
+    const changed = key !== renderedKey;
+    renderedKey = key;
+
+    if (changed) {
+      $$('.screen').forEach((el) => { el.hidden = el.id !== 's-' + screen; });
+      document.body.dataset.sky = skyFor(screen, S);
+      placeStage(screen);
+
+      const untied = untiedCount(S);
+      setFigure(untied, { animateKnot, instant: fresh || !animateKnot });
+      figure.classList.toggle('is-risen', screen === 'success');
+      figure.classList.toggle('is-dim', screen === 'failed' || screen === 'emergency');
+
+      if (screen === 'knot') {
+        const i = S.knot - 1;
+        $('#knot-label').textContent = KNOT_LABELS[i];
+        $('#knot-text').textContent = TEXT.knots[i];
+        $('#dhikr-card').hidden = S.knot !== 1;
+        $$('svg', progressEl).forEach((svg) => {
+          const n = +svg.dataset.p;
+          svg.classList.toggle('is-done', n < S.knot);
+          svg.classList.toggle('is-current', n === S.knot);
+        });
+      }
+      if (screen === 'success' || screen === 'failed' || screen === 'emergency') {
+        const els = $$(`#s-${screen} .reveal`);
+        els.forEach((el) => el.classList.remove('is-in'));
+        setTimeout(() => els.forEach((el) => el.classList.add('is-in')), revealDelay || 60);
+        revealDelay = 0;
+      }
+      if (screen === 'home') renderHome();
+    }
+    if (screen === 'knot') renderClock(now);
+  }
+
+  function renderClock(now) {
+    const k = KNOTS[S.knot - 1];
+    const left = S.deadline - now;
+    const frac = Math.max(0, Math.min(1, left / (k.windowSec * 1000)));
+    ringProg.style.strokeDashoffset = (RING_C * (1 - frac)).toFixed(2);
+    $('#time-left').textContent = mmss(left);
+
+    const dwellLeft = S.startedAt + k.minDwellSec * 1000 - now;
+    const btn = $('#btn-done'), sub = $('#done-sub');
+    const locked = dwellLeft > 0;
+    if (btn.disabled !== locked) btn.disabled = locked;
+    sub.hidden = !locked;
+    if (locked) sub.textContent = 'متاح بعد \u2066' + mmss(dwellLeft) + '\u2069';   // LRI…PDI keeps mm:ss in order
+  }
+
+  const RESULT_TEXT = { success: 'انحلّت العُقد الثلاث', failed: 'بقيت العُقد', emergency: 'طوارئ' };
+  const RESULT_SHORT = { success: 'انحلّت', failed: 'لم تكتمل', emergency: 'طوارئ' };
+
+  function streak(h) {
+    let d = today(), n = 0;
+    if (!h[d]) d = addDays(d, -1);                    // today not done yet: count from yesterday
+    for (let i = 0; i < CONFIG.historyKeepDays; i++, d = addDays(d, -1)) {
+      const r = h[d];
+      if (r === 'success') n++;
+      else if (r === 'emergency') continue;            // neutral: neither counts nor breaks
+      else break;
+    }
+    return n;
+  }
+
+  function renderHome() {
+    const h = loadHistory();
+    const t = today();
+    const r = h[t];
+    $('#today-result').textContent = r ? RESULT_TEXT[r] : 'لا جلسة بعد';
+    const n = streak(h);
+    $('#streak').textContent = ar(n);
+    $('#streak-unit').textContent = n === 1 ? 'يوم' : (n === 2 ? 'يومان' : (n >= 3 && n <= 10 ? 'أيام' : 'يومًا'));
+    const cells = [];
+    for (let i = CONFIG.historyDays - 1; i >= 0; i--) {
+      const d = addDays(t, -i);
+      const res = h[d];
+      const label = `${ar(d)} — ${res ? RESULT_SHORT[res] : 'لا جلسة'}`;
+      cells.push(`<div role="listitem" class="day${res ? ' r-' + res : ''}${i === 0 ? ' is-today' : ''}" title="${label}" aria-label="${label}">${ar(+d.slice(8))}</div>`);
+    }
+    $('#grid30').innerHTML = cells.join('');
+    $('#btn-back-today').hidden = !(S && S.phase !== 'knot' && viewHome);
+  }
+
+  /* =================== Actions =================== */
+  function onWake() {
+    audioUnlocked = true;
+    S = reconcile();
+    if (!S || S.phase !== 'knot') { render(); return; }
+    Alarm.start();
+    Wake.acquire();
+    buzz(40);
+    render();
+  }
+
+  function onDone() {
+    const now = Date.now();
+    S = reconcile(now);
+    if (!S || S.phase !== 'knot') { render(); return; }
+    const k = KNOTS[S.knot - 1];
+    if (now < S.startedAt + k.minDwellSec * 1000) return;
+    const done = S.knot;
+    S.completed.push(now);
+    if (done === 1) Alarm.stop();
+    buzz(30);
+    if (done < 3) {
+      S.knot = done + 1;
+      S.startedAt = now;
+      S.deadline = now + KNOTS[done].windowSec * 1000;
+      saveSession(S);
+      render({ animateKnot: done });
+    } else {
+      S.phase = 'success'; S.endedAt = now;
+      saveSession(S);
+      record(S.date, 'success');
+      Wake.release();
+      buzz([30, 80, 30, 80, 60]);
+      revealDelay = CONFIG.untieMs + 700;               // last knot unties, figure rises, then the words
+      render({ animateKnot: 3 });
+    }
+  }
+
+  function openConfirm() { $('#confirm').hidden = false; $('#confirm-no').focus(); }
+  function closeConfirm() { $('#confirm').hidden = true; }
+  function onEmergency() {
+    closeConfirm();
+    S = reconcile();
+    if (S && S.phase === 'knot') {
+      S.phase = 'emergency'; S.endedAt = Date.now();
+      saveSession(S);
+      record(S.date, 'emergency');
+      Alarm.stop(); Wake.release();
+      render();
+    }
+    runShortcut('fail');                               // still inside the tap gesture
+  }
+
+  function onFailedNow() { Alarm.stop(); Wake.release(); buzz([80, 60, 80]); }
+
+  function tick() {
+    const prevPhase = S && S.phase;
+    S = reconcile();
+    if (prevPhase === 'knot' && S && S.phase === 'failed') onFailedNow();
+    render();
+  }
+
+  $('#btn-wake').addEventListener('click', onWake);
+  $('#btn-done').addEventListener('click', onDone);
+  $('#btn-emergency').addEventListener('click', openConfirm);
+  $('#confirm-no').addEventListener('click', closeConfirm);
+  $('#confirm-yes').addEventListener('click', onEmergency);
+  $('#confirm').addEventListener('click', (e) => { if (e.target.id === 'confirm') closeConfirm(); });
+  $$('[data-run]').forEach((b) => b.addEventListener('click', () => runShortcut(b.dataset.run)));
+  $$('[data-go="home"]').forEach((b) => b.addEventListener('click', () => { viewHome = true; render(); }));
+  $('#btn-back-today').addEventListener('click', () => { viewHome = false; render(); });
+  $('#btn-test-new').addEventListener('click', () => {
+    // test mode only: wipe today's trial and start over
+    const h = loadHistory(); delete h[today()]; store.set('history', h);
+    store.del('session');
+    Alarm.stop(); viewHome = false; audioUnlocked = false;
+    S = startSession(Date.now());
+    render({ fresh: true });
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') return;
+    tick();
+    if (S && S.phase === 'knot' && audioUnlocked) Wake.acquire();
+    if (Alarm.on) Alarm.resume();
+  });
+  window.addEventListener('pageshow', (e) => { if (e.persisted) tick(); });
+  window.addEventListener('storage', (e) => { if (!e.key || e.key.startsWith(KEY)) tick(); });
+
+  /* =================== Boot =================== */
+  const now = Date.now();
+  S = reconcile(now);
+  if (params.get('start') === '1') {
+    if (!S) S = startSession(now);                     // only if today has no session yet
+    params.delete('start');
+    const q = params.toString();
+    try { history.replaceState(null, '', location.pathname + (q ? '?' + q : '') + location.hash); } catch (_) {}
+  }
+  render({ fresh: true });
+  setInterval(tick, CONFIG.tickMs);
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(() => {}); });
+  }
+
+  // test hook (harmless in production)
+  window.__uqad = { CONFIG, TEXT, get session() { return S; }, today, streak, loadHistory };
+})();
+</script>
+</body>
+</html>
