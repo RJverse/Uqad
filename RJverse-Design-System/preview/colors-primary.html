@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Colors" name="Primary palette" subtitle="60 / 30 / 10 brand distribution" viewport="700x160" -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); font-family: var(--font-body); }
+  body { padding: 24px; box-sizing: border-box; }
+  .row { display: flex; align-items: stretch; gap: 12px; }
+  .swatch {
+    flex: 1;
+    min-height: 88px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-1);
+    padding: 12px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    color: var(--rj-ink);
+    position: relative;
+  }
+  .swatch.dark { color: var(--rj-soft-cloud); border-color: rgba(255,255,255,0.1); }
+  .swatch .name {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+  .swatch .hex {
+    font-family: var(--font-mono, ui-monospace);
+    font-size: 11px;
+    opacity: 0.7;
+  }
+  .swatch .pct {
+    position: absolute; top: 10px; right: 12px;
+    font-family: var(--font-mono, ui-monospace);
+    font-size: 10px;
+    background: rgba(255,255,255,0.85);
+    color: var(--rj-blue-500);
+    padding: 2px 6px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  .swatch.dark .pct { background: rgba(255,255,255,0.18); color: var(--rj-sky-blue); }
+</style>
+</head>
+<body>
+<div class="row">
+  <div class="swatch" style="background: #F4FAFF;">
+    <span class="pct">60%</span>
+    <div class="name">Soft Cloud</div>
+    <div class="hex">#F4FAFF</div>
+  </div>
+  <div class="swatch" style="background: #F0F4FF;">
+    <div class="name">Light Mist</div>
+    <div class="hex">#F0F4FF</div>
+  </div>
+  <div class="swatch" style="background: #F8F8F8;">
+    <div class="name">Modern Gray</div>
+    <div class="hex">#F8F8F8</div>
+  </div>
+  <div class="swatch" style="background: #9BB1FF;">
+    <span class="pct">30%</span>
+    <div class="name">Sky Blue</div>
+    <div class="hex">#9BB1FF</div>
+  </div>
+  <div class="swatch" style="background: #788BFF;">
+    <div class="name" style="color:#fff;">Indigo Tint</div>
+    <div class="hex" style="color: rgba(255,255,255,0.85);">#788BFF</div>
+  </div>
+  <div class="swatch dark" style="background: #5465FF;">
+    <span class="pct">10%</span>
+    <div class="name">RJ Blue</div>
+    <div class="hex">#5465FF</div>
+  </div>
+  <div class="swatch dark" style="background: #0B1C3D;">
+    <div class="name">Midnight</div>
+    <div class="hex">#0B1C3D</div>
+  </div>
+</div>
+</body>
+</html>

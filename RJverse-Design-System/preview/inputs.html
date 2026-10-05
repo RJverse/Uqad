@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Components" name="Inputs & toggles" subtitle="Default · focus · error · switches" viewport="700x220" -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); font-family: var(--font-body); }
+  body { padding: 24px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 16px; align-items: center;}
+
+  .field { display: flex; flex-direction: column; gap: 6px; min-width: 220px; }
+  .field label {
+    font-family: var(--font-heading); font-size: 12px; font-weight: 600;
+    color: var(--rj-ink-2); letter-spacing: 0.02em;
+  }
+  .input {
+    font-family: var(--font-body); font-size: 15px;
+    padding: 12px 14px;
+    background: #fff;
+    border: 1px solid var(--border-2);
+    border-radius: var(--radius-md);
+    color: var(--rj-ink);
+    outline: none;
+    transition: all var(--dur-base) var(--ease-out);
+  }
+  .input::placeholder { color: var(--rj-ink-3); }
+  .input.focus {
+    border-color: var(--rj-blue-500);
+    box-shadow: 0 0 0 3px rgba(84,101,255,0.18);
+  }
+  .input.error {
+    border-color: var(--status-danger);
+    box-shadow: 0 0 0 3px rgba(214,69,69,0.15);
+  }
+  .helper { font-family: var(--font-body); font-size: 12px; color: var(--rj-ink-3); }
+  .helper.err { color: var(--status-danger); }
+
+  .toggle {
+    width: 44px; height: 24px;
+    background: var(--rj-blue-500);
+    border-radius: 999px;
+    position: relative;
+    cursor: pointer;
+  }
+  .toggle::after {
+    content: ''; position: absolute;
+    top: 3px; right: 3px;
+    width: 18px; height: 18px;
+    background: #fff; border-radius: 999px;
+    box-shadow: var(--shadow-xs);
+  }
+  .toggle.off { background: var(--rj-blue-100); }
+  .toggle.off::after { right: auto; left: 3px; }
+  .toggle-row { display: flex; align-items: center; gap: 10px; font-family: var(--font-heading); font-size: 14px; font-weight: 500;}
+</style>
+</head>
+<body>
+  <div class="field">
+    <label>Email</label>
+    <input class="input" placeholder="you@example.com" />
+    <span class="helper">We'll never share it.</span>
+  </div>
+  <div class="field">
+    <label>Company</label>
+    <input class="input focus" value="RJverse" />
+    <span class="helper">Focused.</span>
+  </div>
+  <div class="field">
+    <label>Phone</label>
+    <input class="input error" value="+966" />
+    <span class="helper err">Enter a valid Saudi number.</span>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 14px;">
+    <div class="toggle-row"><div class="toggle"></div> Email updates</div>
+    <div class="toggle-row"><div class="toggle off"></div> WhatsApp updates</div>
+  </div>
+</body>
+</html>

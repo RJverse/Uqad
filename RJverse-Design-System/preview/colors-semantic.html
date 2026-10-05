@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Colors" name="Semantic colors" subtitle="fg / link / status tokens" viewport="700x200" -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); font-family: var(--font-body); }
+  body { padding: 24px; box-sizing: border-box; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .token {
+    background: #fff;
+    border: 1px solid var(--border-1);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .dot { width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0; box-shadow: var(--shadow-xs);}
+  .meta { display: flex; flex-direction: column; }
+  .meta .name {
+    font-family: var(--font-heading); font-weight: 600; font-size: 13px; color: var(--rj-ink);
+  }
+  .meta .hex { font-family: var(--font-mono, ui-monospace); font-size: 11px; color: var(--rj-ink-3); }
+</style>
+</head>
+<body>
+<div class="grid">
+  <div class="token"><span class="dot" style="background:#5465FF;"></span><span class="meta"><span class="name">fg-accent / link</span><span class="hex">#5465FF</span></span></div>
+  <div class="token"><span class="dot" style="background:#1A1A1A;"></span><span class="meta"><span class="name">fg-1 (ink)</span><span class="hex">#1A1A1A</span></span></div>
+  <div class="token"><span class="dot" style="background:#4B4F58;"></span><span class="meta"><span class="name">fg-2 (secondary)</span><span class="hex">#4B4F58</span></span></div>
+  <div class="token"><span class="dot" style="background:#8089A0;"></span><span class="meta"><span class="name">fg-3 (caption)</span><span class="hex">#8089A0</span></span></div>
+
+  <div class="token"><span class="dot" style="background:#1F9D55;"></span><span class="meta"><span class="name">success</span><span class="hex">#1F9D55</span></span></div>
+  <div class="token"><span class="dot" style="background:#E0A100;"></span><span class="meta"><span class="name">warning</span><span class="hex">#E0A100</span></span></div>
+  <div class="token"><span class="dot" style="background:#D64545;"></span><span class="meta"><span class="name">danger</span><span class="hex">#D64545</span></span></div>
+  <div class="token"><span class="dot" style="background:#5465FF;"></span><span class="meta"><span class="name">info</span><span class="hex">#5465FF</span></span></div>
+</div>
+</body>
+</html>

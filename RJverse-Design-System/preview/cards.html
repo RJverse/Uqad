@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Components" name="Feature cards" subtitle="Icon chip + heading + link" viewport="700x230" -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); font-family: var(--font-body); }
+  body { padding: 24px; box-sizing: border-box; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;}
+
+  .card {
+    background: #fff;
+    border: 1px solid var(--border-1);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    box-shadow: var(--shadow-sm);
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .card .chip {
+    width: 44px; height: 44px;
+    background: var(--rj-blue-50);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--rj-blue-500);
+    font-family: var(--font-heading); font-weight: 700; font-size: 18px;
+  }
+  .card h4 { margin: 0; font-size: 18px; }
+  .card p { margin: 0; font-size: 14px; color: var(--rj-ink-2); }
+  .link { color: var(--rj-blue-500); font-family: var(--font-heading); font-weight: 600; font-size: 14px;}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="chip">📊</div>
+    <h4>Dashboards that decide.</h4>
+    <p>Power BI builds that turn data into action — not another report no one opens.</p>
+    <a class="link">See examples →</a>
+  </div>
+  <div class="card">
+    <div class="chip">⚡</div>
+    <h4>Automation, simplified.</h4>
+    <p>Power Automate and RPA flows that quietly take the boring work off your plate.</p>
+    <a class="link">How it works →</a>
+  </div>
+  <div class="card">
+    <div class="chip">🧠</div>
+    <h4>Workshops in plain Arabic.</h4>
+    <p>Hands-on training in the language your team actually speaks at the office.</p>
+    <a class="link">Book one →</a>
+  </div>
+</body>
+</html>

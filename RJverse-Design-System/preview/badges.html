@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Components" name="Badges & hashtags" subtitle="Tool tags · status · #RJverse" viewport="700x140" -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); font-family: var(--font-body); }
+  body { padding: 28px 24px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+  .badge {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 12px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    display: inline-flex; align-items: center; gap: 6px;
+    letter-spacing: 0.02em;
+  }
+  .b-primary { background: var(--rj-blue-50); color: var(--rj-blue-700); }
+  .b-accent  { background: var(--rj-blue-500); color: #fff; }
+  .b-soft    { background: var(--rj-light-mist); color: var(--rj-blue-700); border: 1px solid var(--border-1); }
+  .b-success { background: #E3F5EB; color: #1F9D55; }
+  .b-warning { background: #FFF3D6; color: #8a6800; }
+  .b-danger  { background: #FBE5E5; color: #B33333; }
+  .b-dot::before { content: ''; width: 6px; height: 6px; border-radius: 999px; background: currentColor; display: inline-block;}
+  .hash { color: var(--rj-blue-500); font-family: var(--font-heading); font-weight: 700; font-size: 14px; }
+</style>
+</head>
+<body>
+  <span class="badge b-primary">Power BI</span>
+  <span class="badge b-primary">Power Automate</span>
+  <span class="badge b-primary">RPA</span>
+  <span class="badge b-accent">New cohort</span>
+  <span class="badge b-soft">Riyadh</span>
+  <span class="badge b-success b-dot">Live</span>
+  <span class="badge b-warning b-dot">Limited seats</span>
+  <span class="badge b-danger b-dot">Closed</span>
+  <span class="hash">#RJverse</span>
+  <span class="hash">#حلول_رقمية</span>
+  <span class="hash">#PowerBI</span>
+</body>
+</html>

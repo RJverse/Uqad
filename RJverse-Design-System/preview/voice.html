@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Brand" name="Voice — do / don't" subtitle="On-brand vs off-brand copy, EN + AR" viewport="700x260" -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); font-family: var(--font-body); }
+  body { padding: 20px 24px; box-sizing: border-box; display: grid; grid-template-columns: 1fr 1fr; gap: 18px;}
+  .case {
+    background: #fff; border: 1px solid var(--border-1); border-radius: var(--radius-lg);
+    padding: 18px;
+  }
+  .case h5 { margin: 0 0 8px; font-family: var(--font-heading); font-weight: 600; font-size: 13px; color: var(--rj-ink-3); letter-spacing: 0.06em; text-transform: uppercase;}
+  .case p { margin: 0; font-family: var(--font-body); font-size: 14px; color: var(--rj-ink); line-height: 1.6;}
+  .good p::first-letter { font-weight: 600; }
+  .good { border-left: none; border-top: 3px solid #1F9D55; }
+  .bad { border-top: 3px solid #D64545; opacity: 0.8;}
+  .tag {
+    display: inline-block;
+    font-family: var(--font-heading); font-weight: 700; font-size: 11px;
+    padding: 3px 8px; border-radius: 999px; margin-bottom: 8px;
+    letter-spacing: 0.04em;
+  }
+  .good .tag { background: #E3F5EB; color: #1F9D55; }
+  .bad .tag { background: #FBE5E5; color: #B33333; }
+</style>
+</head>
+<body>
+<div class="case good">
+  <span class="tag">ON BRAND</span>
+  <p>"Stop fighting Excel. Start owning your data."</p>
+</div>
+<div class="case bad">
+  <span class="tag">OFF BRAND</span>
+  <p>"Leverage cutting-edge BI solutions to drive enterprise outcomes."</p>
+</div>
+<div class="case good" dir="rtl">
+  <span class="tag">ON BRAND</span>
+  <p style="font-family: var(--font-body-ar);">"حلول رقمية، لعالمك الخاص."</p>
+</div>
+<div class="case bad" dir="rtl">
+  <span class="tag">OFF BRAND</span>
+  <p style="font-family: var(--font-body-ar);">"حلولٌ تقنيّةٌ متكاملةٌ لمؤسستكم الموقّرة."</p>
+</div>
+</body>
+</html>

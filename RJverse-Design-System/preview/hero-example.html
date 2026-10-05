@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Brand" name="Hero example" subtitle="Soft blue blob + RJ Blue headline + glow CTA" viewport="700x360" -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); font-family: var(--font-body); }
+  body { padding: 0; box-sizing: border-box; position: relative; height: 100vh; overflow: hidden;}
+
+  .blob {
+    position: absolute;
+    width: 480px; height: 480px;
+    border-radius: 999px;
+    background: radial-gradient(circle at center, var(--rj-sky-blue) 0%, rgba(155,177,255,0) 65%);
+    filter: blur(6px);
+    opacity: 0.7;
+    right: -120px; top: -120px;
+    pointer-events: none;
+  }
+  .blob.two {
+    width: 360px; height: 360px;
+    background: radial-gradient(circle at center, var(--rj-indigo-tint) 0%, rgba(120,139,255,0) 70%);
+    opacity: 0.35;
+    right: auto; left: -100px; top: auto; bottom: -120px;
+  }
+
+  .wrap {
+    position: relative;
+    padding: 36px 40px;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex; flex-direction: column; justify-content: center;
+    max-width: 560px;
+  }
+  .eyebrow {
+    font-family: var(--font-heading); font-weight: 600; font-size: 12px;
+    color: var(--rj-indigo-tint);
+    letter-spacing: 0.16em; text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  h1 {
+    margin: 0; font-size: 38px;
+  }
+  p { margin: 14px 0 22px; color: var(--rj-ink); font-size: 16px; max-width: 460px;}
+  .cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--rj-blue-500); color: #fff;
+    font-family: var(--font-heading); font-weight: 600; font-size: 15px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    box-shadow: var(--shadow-glow);
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+<div class="blob"></div>
+<div class="blob two"></div>
+<div class="wrap">
+  <div class="eyebrow">🌌 RJVERSE · DIGITAL CONSULTING</div>
+  <h1>Stop fighting Excel.<br>Start owning your data.</h1>
+  <p>Power BI dashboards, Power Automate flows, and workshops in plain Arabic — built for Saudi teams who want clarity, not noise.</p>
+  <a class="cta">Start a project →</a>
+</div>
+</body>
+</html>

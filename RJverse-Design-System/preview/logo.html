@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Brand" name="Logo" subtitle="Light + dark backgrounds" viewport="700x260" -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; padding: 0; font-family: var(--font-body); }
+  body { display: grid; grid-template-columns: 1fr 1fr; height: 100vh; }
+  .panel { display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .light { background: var(--rj-soft-cloud); }
+  .dark  { background: var(--rj-midnight); }
+  .light img { max-width: 80%; max-height: 70%; }
+  .dark img { max-width: 80%; max-height: 70%; filter: brightness(0) invert(1); }
+</style>
+</head>
+<body>
+  <div class="panel light"><img src="../assets/logo.png" alt="RJverse"></div>
+  <div class="panel dark"><img src="../assets/logo-on-dark.png?v=4" alt="RJverse on dark"></div>
+</body>
+</html>

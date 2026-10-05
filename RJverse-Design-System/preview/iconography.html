@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Brand" name="Iconography" subtitle="Lucide · 1.75px stroke · currentColor" viewport="700x140" -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); font-family: var(--font-body); }
+  body { padding: 18px; box-sizing: border-box; }
+  .row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .item { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+  .ico-chip {
+    width: 56px; height: 56px;
+    background: var(--rj-blue-50);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--rj-blue-500);
+  }
+  .ico-chip.dark { background: var(--rj-midnight); color: var(--rj-sky-blue); }
+  .ico-chip.tint { background: var(--rj-blue-500); color: #fff; }
+  .name { font-family: var(--font-mono, ui-monospace); font-size: 10px; color: var(--rj-ink-3); }
+  svg { width: 28px; height: 28px; stroke-width: 1.75; }
+</style>
+</head>
+<body>
+<div class="row">
+  <div class="item">
+    <div class="ico-chip">
+      <!-- bar-chart-3 (Lucide) -->
+      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14v4"/><path d="M12 9v9"/><path d="M17 5v13"/></svg>
+    </div>
+    <span class="name">bar-chart-3</span>
+  </div>
+  <div class="item">
+    <div class="ico-chip">
+      <!-- zap -->
+      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+    </div>
+    <span class="name">zap</span>
+  </div>
+  <div class="item">
+    <div class="ico-chip tint">
+      <!-- workflow -->
+      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/></svg>
+    </div>
+    <span class="name">workflow</span>
+  </div>
+  <div class="item">
+    <div class="ico-chip">
+      <!-- graduation-cap -->
+      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 10v6"/><path d="M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 6 3 6 3s6-1 6-3v-5"/></svg>
+    </div>
+    <span class="name">graduation-cap</span>
+  </div>
+  <div class="item">
+    <div class="ico-chip">
+      <!-- lightbulb -->
+      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M2 12a10 10 0 1 1 16 7.94"/><path d="M12 17c-3-3-5-5-5-9a5 5 0 0 1 10 0c0 4-2 6-5 9z"/></svg>
+    </div>
+    <span class="name">lightbulb</span>
+  </div>
+  <div class="item">
+    <div class="ico-chip">
+      <!-- database -->
+      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>
+    </div>
+    <span class="name">database</span>
+  </div>
+  <div class="item">
+    <div class="ico-chip dark">
+      <!-- moon -->
+      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </div>
+    <span class="name">on dark</span>
+  </div>
+  <div class="item">
+    <div class="ico-chip">
+      <!-- arrow-right -->
+      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+    </div>
+    <span class="name">arrow-right</span>
+  </div>
+</div>
+</body>
+</html>

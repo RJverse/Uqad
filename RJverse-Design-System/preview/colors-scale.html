@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Colors" name="Blue scale" subtitle="10 steps from 50 → 900" viewport="700x180" -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); font-family: var(--font-body); }
+  body { padding: 24px; box-sizing: border-box; }
+  .scale { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; }
+  .step {
+    aspect-ratio: 1 / 1.2;
+    border-radius: 8px;
+    padding: 8px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    font-family: var(--font-mono, ui-monospace);
+    font-size: 9px;
+    color: var(--rj-ink);
+    border: 1px solid rgba(11, 28, 61, 0.05);
+  }
+  .step.dark { color: #fff; }
+  .step .num { font-weight: 700; font-size: 11px; font-family: var(--font-heading); }
+  .label { font-family: var(--font-heading); font-size: 11px; color: var(--rj-ink-2); font-weight: 600; margin-bottom: 8px; letter-spacing: 0.04em; text-transform: uppercase;}
+</style>
+</head>
+<body>
+<div class="label">Blue scale · 50 → 900</div>
+<div class="scale">
+  <div class="step" style="background: #EEF1FF;"><span class="num">50</span><span>EEF1FF</span></div>
+  <div class="step" style="background: #DDE2FF;"><span class="num">100</span><span>DDE2FF</span></div>
+  <div class="step" style="background: #BBC6FF;"><span class="num">200</span><span>BBC6FF</span></div>
+  <div class="step" style="background: #9BB1FF;"><span class="num">300</span><span>9BB1FF</span></div>
+  <div class="step dark" style="background: #788BFF;"><span class="num">400</span><span>788BFF</span></div>
+  <div class="step dark" style="background: #5465FF;"><span class="num">500</span><span>5465FF</span></div>
+  <div class="step dark" style="background: #4252E6;"><span class="num">600</span><span>4252E6</span></div>
+  <div class="step dark" style="background: #3340BF;"><span class="num">700</span><span>3340BF</span></div>
+  <div class="step dark" style="background: #232E8C;"><span class="num">800</span><span>232E8C</span></div>
+  <div class="step dark" style="background: #0B1C3D;"><span class="num">900</span><span>0B1C3D</span></div>
+</div>
+</body>
+</html>
