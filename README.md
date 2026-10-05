@@ -26,10 +26,10 @@ Plain static files (no framework, no build step): `index.html`, `manifest.webman
 
 ## 2. Install on the iPhone
 
-1. Open the URL in **Safari** → Share → **Add to Home Screen**. The name is pre-filled as «عُقَد».
+1. Open `https://rjverse.github.io/Uqad/` in **Safari** → Share → **Add to Home Screen**. Keep **Open as Web App** on (iOS 26). The name is pre-filled as «عُقَد».
 2. Open it once from the Home Screen while online, so the service worker caches everything for offline use.
 
-> The app's data (today's session, streak, history) lives in the installed app's local storage. The Home Screen app and a Safari tab keep **separate** storage, so always use the same one. The Shortcut below opens the Home Screen app.
+> The app's data (today's session, streak, history) lives in the installed web app's storage. iOS keeps a Safari tab's storage **separate**, so use the web app for everything.
 
 ## 3. Shortcuts (exact names)
 
@@ -42,24 +42,24 @@ The app calls two Shortcuts by name, and only when you tap a button. Create both
 
 The app opens them with `shortcuts://run-shortcut?name=Uqad%20Done` / `…Uqad%20Fail`. You can change the names in `CONFIG.shortcuts` at the top of the script in `index.html`.
 
-### Automation: open the app when the Fajr alarm stops
+### Automation: open the web app when the Fajr alarm stops
 
-Shortcuts → **Automation** → **+** → **Alarm** → choose your Fajr alarm → **Is Stopped** → *Run Immediately*. Then add the action **Open URLs** with:
+Shortcuts → **Automation** → **+** → **Alarm** → choose your Fajr alarm → **Is Stopped** → **Automation** on (run immediately), **Notify** off. Then add the action **Open URLs** with:
 
 ```
-https://rjverse.github.io/Uqad/?start=1
+webapp://rjverse.github.io/Uqad/
 ```
 
-- `?start=1` starts today's session **only if today has no session yet** (local date, Asia/Riyadh). If one exists, running or finished, it just resumes, so a second alarm can never reset a finished day.
-- The first screen is one big «استيقظ» button. iOS only allows sound after a tap, so this tap starts knot 1 and its alarm tone. Knot 1's 10-minute window is already counting from the moment the Shortcut opened the app.
-
-The wake screen plays the opening: the hadith's first lines appear while the three knots tie at the nape. The button works immediately, so you never have to wait for it.
-
-If Safari opens instead of the installed app, it's fine for a quick test, but keep using one of them consistently (see the storage note above).
+- On iOS 26, `webapp://` opens the **installed web app** instead of Safari. It always opens the app's start page and drops any `?query`, so the app can't be told `?start=1`.
+- Instead, the web app **starts today's session by itself** when it's opened between **03:00 and 07:00** (Riyadh) and today has no session yet. Change the window in `CONFIG.autoStart`. A running or finished day is never restarted. Opening it outside the window, or in a Safari tab, just shows home.
+- The first screen is one big «استيقظ» button. iOS only allows sound after a tap, so this tap starts knot 1 and its alarm tone. Knot 1's 5-minute window counts from when the app opened; its 1-minute lock counts from the tap.
+- The wake screen plays the opening: the hadith's first lines appear while the three knots tie at the nape. The button works immediately, so you never have to wait for it.
+- With a passcode / Face ID, iOS asks you to unlock before the app opens. The session starts when the app opens, so unlocking doesn't eat into your time.
+- `https://rjverse.github.io/Uqad/?start=1` still works in Safari, but Safari keeps its own separate history.
 
 ## 4. Test mode
 
-Add `?test=1` to any URL:
+Inside the web app, tap «وضع التجربة» at the bottom of the home page. In Safari, add `?test=1` to the URL:
 
 | URL | What it does |
 |---|---|
@@ -70,7 +70,7 @@ Add `?test=1` to any URL:
 - A «وضع التجربة» badge shows on every screen.
 - Test sessions and history are stored **separately** from real ones, so they never touch your real streak.
 - The test home has «ابدأ تجربة جديدة» to wipe today's trial and start over, and «الخروج من وضع التجربة» to go back to the real app.
-- The normal home screen links to test mode at the bottom.
+- The normal home screen links to test mode at the bottom. A web app left in test mode falls back to live mode when reopened after 30 minutes, so the Fajr automation never lands in test mode.
 
 ## 5. Screens
 
