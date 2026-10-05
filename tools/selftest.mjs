@@ -142,13 +142,20 @@ console.log('Happy path (test mode)');
   ok(await page.evaluate(() => document.body.dataset.sky) === 'dawn', 'sky = dawn');
   await shot(page, '07-success', 2500);
 
-  // start=1 must not restart a finished day
-  await page.goto(BASE + '?test=1&start=1');
-  await page.clock.runFor(300);
-  ok(await screenId(page) === 's-success', '?start=1 after success keeps the finished day');
   await page.click('[data-go="home"]');
   await page.clock.runFor(300);
   ok((await page.textContent('#today-result')).includes('انحلّت'), 'home shows today = success');
+
+  // test mode: the test link always starts a fresh trial, even after a finished one
+  await page.goto(BASE + '?test=1&start=1');
+  await page.clock.runFor(300);
+  ok(await screenId(page) === 's-splash', 'test mode: ?start=1 after a finished trial starts a new one');
+
+  // real mode: ?start=1 must never restart a finished day
+  await page.evaluate((d) => localStorage.setItem('uqad.v1.history', JSON.stringify({ [d]: 'success' })), await page.evaluate(() => window.__uqad.today()));
+  await page.goto(BASE + '?start=1');
+  await page.clock.runFor(300);
+  ok(await screenId(page) === 's-home' && !(await page.evaluate(() => window.__uqad.session)), 'real mode: ?start=1 after a finished day does not restart it');
   await ctx.close();
 }
 
@@ -170,7 +177,7 @@ console.log('Failure path');
   await page.click('#btn-wake');
   await page.clock.runFor(5300);                  // knot 1 dwell (5s in test mode)
   await page.click('#btn-done');
-  await page.clock.runFor(21000);
+  await page.clock.runFor(61000);
   ok(await screenId(page) === 's-failed', 'knot 2 deadline passes → failed');
   ok((await page.textContent('[data-text="fail-seg"]')) === REF.failSeg, 'fail segment exact');
   const t = await visibleText(page);
@@ -188,7 +195,7 @@ console.log('Deadline passes while the app is closed');
   await page.goto(BASE + '?test=1&start=1');
   await page.click('#btn-wake');
   await page.goto('about:blank');
-  await page.clock.fastForward(60000);
+  await page.clock.fastForward(120000);
   await page.goto(BASE + '?test=1');
   await page.clock.runFor(300);
   ok(await screenId(page) === 's-failed', 'reopening after the deadline shows failed');

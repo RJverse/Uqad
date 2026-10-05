@@ -63,9 +63,10 @@ Add `?test=1` to any URL:
 
 | URL | What it does |
 |---|---|
-| `…/Uqad/?test=1&start=1` | Starts a test session: windows **20 s / 20 s / 40 s**, «تم» unlocks after **5 s** |
+| `…/Uqad/?test=1&start=1` | Starts a test session: windows **60 s / 60 s / 90 s**, «تم» unlocks after **5 s** |
 | `…/Uqad/?test=1` | Shows the current test state or the test home |
 
+- The test link always starts a **fresh trial**, even if the last one finished or failed. Real mode never restarts a finished day.
 - A «وضع التجربة» badge shows on every screen.
 - Test sessions and history are stored **separately** from real ones, so they never touch your real streak.
 - The test home has «ابدأ تجربة جديدة» to wipe today's trial and start over, and «الخروج من وضع التجربة» to go back to the real app.

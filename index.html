@@ -432,7 +432,7 @@ body[data-screen="home"] .shade { opacity: 0; }
       { windowSec: 10 * 60, minDwellSec: 180, alarm: false },  // وضوء
       { windowSec: 45 * 60, minDwellSec: 240, alarm: false },  // صلاة
     ],
-    test: { windowsSec: [20, 20, 40], minDwellSec: 5 },        // ?test=1
+    test: { windowsSec: [60, 60, 90], minDwellSec: 5 },        // ?test=1
     shortcuts: { done: 'Uqad Done', fail: 'Uqad Fail' },
     storagePrefix: 'uqad.v1.',
     historyDays: 30,
@@ -1285,7 +1285,11 @@ body[data-screen="home"] .shade { opacity: 0; }
   const now = Date.now();
   S = reconcile(now);
   if (params.get('start') === '1') {
-    if (!S) S = startSession(now);                     // only if today has no session yet
+    if (TEST && S && S.phase !== 'knot') {             // test mode: a finished trial never blocks a new one
+      const h = loadHistory(); delete h[S.date]; store.set('history', h);
+      store.del('session'); S = null;
+    }
+    if (!S) S = startSession(now);                     // real mode: only if today has no session yet
     params.delete('start');
     const q = params.toString();
     try { history.replaceState(null, '', location.pathname + (q ? '?' + q : '') + location.hash); } catch (_) {}
