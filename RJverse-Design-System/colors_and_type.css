@@ -1,0 +1,330 @@
+/* =========================================================
+   RJverse — Color & Type Foundations
+   "Digital solutions, crafted for your own universe."
+   ========================================================= */
+
+/* -------- Webfonts -------- */
+/* Self-hosted brand fonts (Inter, IBM Plex Sans, Cairo, Changa — variable) */
+@font-face {
+  font-family: 'Inter';
+  src: url('fonts/Inter-VariableFont_opsz_wght.ttf') format('truetype-variations'),
+       url('fonts/Inter-VariableFont_opsz_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('fonts/Inter-Italic-VariableFont_opsz_wght.ttf') format('truetype-variations'),
+       url('fonts/Inter-Italic-VariableFont_opsz_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('fonts/IBMPlexSans-VariableFont_wdth_wght.ttf') format('truetype-variations'),
+       url('fonts/IBMPlexSans-VariableFont_wdth_wght.ttf') format('truetype');
+  font-weight: 100 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('fonts/IBMPlexSans-Italic-VariableFont_wdth_wght.ttf') format('truetype-variations'),
+       url('fonts/IBMPlexSans-Italic-VariableFont_wdth_wght.ttf') format('truetype');
+  font-weight: 100 700;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cairo';
+  src: url('fonts/Cairo-VariableFont_slnt_wght.ttf') format('truetype-variations'),
+       url('fonts/Cairo-VariableFont_slnt_wght.ttf') format('truetype');
+  font-weight: 200 1000;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Changa';
+  src: url('fonts/Changa-VariableFont_wght.ttf') format('truetype-variations'),
+       url('fonts/Changa-VariableFont_wght.ttf') format('truetype');
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Google Fonts CDN — for families RJ hasn't self-hosted yet (Poppins, Tajawal) */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+
+:root {
+  /* ============== COLOR — RAW BRAND ============== */
+  --rj-soft-cloud:      #F4FAFF;   /* 60% — base background */
+  --rj-light-mist:      #F0F4FF;   /* sectional support */
+  --rj-modern-gray:     #F8F8F8;   /* neutral support */
+  --rj-sky-blue:        #9BB1FF;   /* 30% — cards / containers */
+  --rj-indigo-tint:     #788BFF;   /* accent support */
+  --rj-blue:            #5465FF;   /* 10% — primary accent */
+  --rj-midnight:        #0B1C3D;   /* dark mode / footer */
+
+  /* Extended steps (interpolated for hovers, gradients, shadows) */
+  --rj-blue-50:   #EEF1FF;
+  --rj-blue-100:  #DDE2FF;
+  --rj-blue-200:  #BBC6FF;
+  --rj-blue-300:  #9BB1FF;
+  --rj-blue-400:  #788BFF;
+  --rj-blue-500:  #5465FF;          /* primary */
+  --rj-blue-600:  #4252E6;
+  --rj-blue-700:  #3340BF;
+  --rj-blue-800:  #232E8C;
+  --rj-blue-900:  #0B1C3D;
+
+  /* ============== INK / TEXT ============== */
+  --rj-ink:             #1A1A1A;   /* primary text */
+  --rj-ink-2:           #4B4F58;   /* secondary text */
+  --rj-ink-3:           #8089A0;   /* tertiary / captions */
+  --rj-ink-inverse:     #F4FAFF;   /* text on dark */
+  --rj-link:            #5465FF;
+
+  /* ============== SEMANTIC FG/BG ============== */
+  --fg-1: var(--rj-ink);
+  --fg-2: var(--rj-ink-2);
+  --fg-3: var(--rj-ink-3);
+  --fg-accent: var(--rj-blue-500);
+  --fg-on-accent: #FFFFFF;
+  --fg-on-dark: var(--rj-ink-inverse);
+
+  --bg-1: var(--rj-soft-cloud);    /* page */
+  --bg-2: var(--rj-light-mist);    /* section */
+  --bg-3: var(--rj-modern-gray);   /* neutral */
+  --bg-card: #FFFFFF;
+  --bg-dark: var(--rj-midnight);
+
+  /* Status (derived to stay within palette feel) */
+  --status-success: #1F9D55;
+  --status-warning: #E0A100;
+  --status-danger:  #D64545;
+  --status-info:    var(--rj-blue-500);
+
+  /* Borders & dividers */
+  --border-1: #E4EAF7;
+  --border-2: #D6DEF0;
+  --border-strong: #B6C2E2;
+  --border-on-dark: rgba(244,250,255,0.14);
+
+  /* ============== ELEVATION / SHADOW ============== */
+  --shadow-xs: 0 1px 2px rgba(11, 28, 61, 0.06);
+  --shadow-sm: 0 2px 6px rgba(11, 28, 61, 0.06), 0 1px 2px rgba(11, 28, 61, 0.04);
+  --shadow-md: 0 8px 24px -8px rgba(11, 28, 61, 0.12), 0 2px 6px rgba(11, 28, 61, 0.06);
+  --shadow-lg: 0 24px 48px -16px rgba(11, 28, 61, 0.18), 0 4px 12px rgba(11, 28, 61, 0.06);
+  --shadow-glow: 0 16px 40px -12px rgba(84, 101, 255, 0.45);
+  --shadow-inner: inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -1px 0 rgba(11, 28, 61, 0.04);
+
+  /* ============== RADIUS ============== */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-pill: 999px;
+
+  /* ============== SPACING (4px scale) ============== */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* ============== TYPOGRAPHY — RAW ============== */
+  --font-display: 'Inter', 'Cairo', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Poppins', 'Cairo', system-ui, -apple-system, sans-serif;
+  --font-body:    'IBM Plex Sans', 'Changa', system-ui, -apple-system, sans-serif;
+  --font-mono:    'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Arabic-first stack — apply via [dir="rtl"] */
+  --font-display-ar: 'Cairo', 'Inter', system-ui, sans-serif;
+  --font-heading-ar: 'Cairo', 'Tajawal', sans-serif;
+  --font-body-ar:    'Changa', 'Tajawal', sans-serif;
+
+  /* Weights */
+  --fw-light: 300;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-extrabold: 800;
+  --fw-black: 900;
+
+  /* Emoji fallback (system) */
+  --font-emoji: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'Twemoji Mozilla', sans-serif;
+
+  /* Sizes (px / line-height) */
+  --fs-brand:    64px;   --lh-brand:    1.05;
+  --fs-h1:       48px;   --lh-h1:       1.12;
+  --fs-h2:       36px;   --lh-h2:       1.18;
+  --fs-h3:       28px;   --lh-h3:       1.25;
+  --fs-h4:       22px;   --lh-h4:       1.3;
+  --fs-body-lg:  18px;   --lh-body-lg:  1.6;
+  --fs-body:     16px;   --lh-body:     1.65;
+  --fs-small:    14px;   --lh-small:    1.5;
+  --fs-caption:  12px;   --lh-caption:  1.4;
+
+  /* Tracking */
+  --tr-tight: -0.02em;
+  --tr-snug: -0.01em;
+  --tr-normal: 0;
+  --tr-wide: 0.04em;
+  --tr-eyebrow: 0.16em;
+
+  /* Motion */
+  --ease-out: cubic-bezier(.2, .7, .2, 1);
+  --ease-in-out: cubic-bezier(.4, 0, .2, 1);
+  --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 360ms;
+}
+
+/* =========================================================
+   SEMANTIC TYPE — class hooks
+   ========================================================= */
+
+.rj-brand {
+  font-family: var(--font-display);
+  font-weight: var(--fw-extrabold);
+  font-size: clamp(40px, 5.5vw, var(--fs-brand));
+  line-height: var(--lh-brand);
+  letter-spacing: var(--tr-tight);
+  color: var(--rj-blue-500);
+}
+
+.rj-h1, h1 {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: clamp(32px, 4vw, var(--fs-h1));
+  line-height: var(--lh-h1);
+  letter-spacing: var(--tr-tight);
+  color: var(--rj-blue-500);
+  text-wrap: balance;
+}
+
+.rj-h2, h2 {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: clamp(26px, 3vw, var(--fs-h2));
+  line-height: var(--lh-h2);
+  letter-spacing: var(--tr-snug);
+  color: var(--rj-blue-500);
+  text-wrap: balance;
+}
+
+.rj-h3, h3 {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-h3);
+  line-height: var(--lh-h3);
+  color: var(--fg-1);
+}
+
+.rj-h4, h4 {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-h4);
+  line-height: var(--lh-h4);
+  color: var(--fg-1);
+}
+
+.rj-body, p {
+  font-family: var(--font-body);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--fg-1);
+  text-wrap: pretty;
+}
+
+.rj-body-lg {
+  font-family: var(--font-body);
+  font-size: var(--fs-body-lg);
+  line-height: var(--lh-body-lg);
+  color: var(--fg-1);
+}
+
+.rj-caption {
+  font-family: var(--font-body);
+  font-weight: var(--fw-light);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
+  color: var(--rj-indigo-tint);
+}
+
+.rj-eyebrow {
+  font-family: var(--font-heading), var(--font-emoji);
+  font-weight: var(--fw-semibold);
+  font-size: 12px;
+  letter-spacing: var(--tr-eyebrow);
+  text-transform: uppercase;
+  color: var(--rj-indigo-tint);
+}
+
+.rj-mono, code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  background: var(--rj-blue-50);
+  color: var(--rj-blue-700);
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+}
+
+a, .rj-link {
+  color: var(--rj-link);
+  text-decoration: none;
+  font-weight: var(--fw-medium);
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+a:hover, .rj-link:hover { opacity: 0.7; text-decoration: underline; text-underline-offset: 3px; }
+
+/* =========================================================
+   RTL — Arabic
+   ========================================================= */
+[dir="rtl"] .rj-brand,
+[dir="rtl"] .rj-h1, [dir="rtl"] h1,
+[dir="rtl"] .rj-h2, [dir="rtl"] h2 {
+  font-family: var(--font-display-ar);
+}
+[dir="rtl"] .rj-h3, [dir="rtl"] h3,
+[dir="rtl"] .rj-h4, [dir="rtl"] h4 {
+  font-family: var(--font-heading-ar);
+}
+[dir="rtl"] .rj-body, [dir="rtl"] p,
+[dir="rtl"] .rj-body-lg,
+[dir="rtl"] .rj-caption {
+  font-family: var(--font-body-ar);
+}
+
+/* =========================================================
+   DARK MODE override (used on midnight sections)
+   ========================================================= */
+.rj-dark, [data-theme="dark"] {
+  --fg-1: var(--rj-ink-inverse);
+  --fg-2: rgba(244, 250, 255, 0.72);
+  --fg-3: rgba(244, 250, 255, 0.48);
+  --bg-1: var(--rj-midnight);
+  --bg-2: #112347;
+  --bg-card: #14264b;
+  --border-1: var(--border-on-dark);
+  color: var(--fg-1);
+}
+.rj-dark .rj-h1, .rj-dark .rj-h2,
+[data-theme="dark"] h1, [data-theme="dark"] h2 {
+  color: var(--rj-sky-blue);
+}
