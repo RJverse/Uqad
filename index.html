@@ -441,8 +441,9 @@ body[data-screen="home"] .shade { opacity: 0; }
     // Home-screen web app only: opening it in this window (Riyadh time) starts today's
     // session by itself — iOS's webapp:// links drop ?start=1, so the app can't be told.
     autoStart: { from: '03:00', to: '07:00' },
-    // A web app left in test mode and reopened after this long falls back to live mode.
-    testIdleMin: 30,
+    // Coming back after this long in the background (e.g. left open overnight) reloads the app
+    // so the newest version runs and auto-start / live mode are decided afresh. Never mid-knot.
+    reloadAfterMin: 30,
   };
 
   /* =================== Religious text — exact, do not edit =================== */
@@ -1255,6 +1256,7 @@ body[data-screen="home"] .shade { opacity: 0; }
   }
 
   function tick() {
+    if (wokeFromLongSleep()) return;
     const prevPhase = S && S.phase;
     S = reconcile();
     if (prevPhase === 'knot' && S && S.phase === 'failed') { Alarm.stop(); Wake.release(); buzz([80, 60, 80]); }
@@ -1297,14 +1299,24 @@ body[data-screen="home"] .shade { opacity: 0; }
     return true;
   }
 
-  let hiddenAt = 0;
+  // lastSeen advances on every tick while the page runs; iOS freezes timers in the background,
+  // so a big gap means the page was suspended — even if no 'hidden' event fired.
+  let lastSeen = Date.now(), reloading = false;
+  function wokeFromLongSleep() {
+    const now = Date.now(), away = now - lastSeen;
+    lastSeen = now;
+    if (reloading || away < CONFIG.reloadAfterMin * 60e3) return false;
+    const live = reconcile();
+    if (live && live.phase === 'knot') return false;   // never interrupt a running session
+    reloading = true;
+    // a web app left in test mode must wake up in live mode; otherwise reload in place
+    location.replace(TEST && STANDALONE ? './' : location.href);
+    return true;
+  }
+
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState !== 'visible') { hiddenAt = Date.now(); return; }
-    // a web app left in test mode overnight must wake up in live mode
-    if (TEST && STANDALONE && hiddenAt && Date.now() - hiddenAt > CONFIG.testIdleMin * 60e3 && !(S && S.phase === 'knot')) {
-      location.replace('./'); return;
-    }
-    hiddenAt = 0;
+    if (document.visibilityState !== 'visible') { lastSeen = Date.now(); return; }
+    if (wokeFromLongSleep()) return;
     S = reconcile();
     if (maybeAutoStart()) renderedKey = '';
     tick();
@@ -1336,6 +1348,13 @@ body[data-screen="home"] .shade { opacity: 0; }
   setInterval(tick, CONFIG.tickMs);
 
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    // apply a new version on the first open after an update, not the second (never mid-knot)
+    const hadController = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!hadController || reloading || (S && S.phase === 'knot')) return;
+      reloading = true;
+      location.reload();
+    });
     window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(() => {}); });
   }
 

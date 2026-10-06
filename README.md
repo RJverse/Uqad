@@ -55,6 +55,8 @@ webapp://rjverse.github.io/Uqad/
 - The first screen is one big «استيقظ» button. iOS only allows sound after a tap, so this tap starts knot 1 and its alarm tone. Knot 1's 5-minute window counts from when the app opened; its 1-minute lock counts from the tap.
 - The wake screen plays the opening: the hadith's first lines appear while the three knots tie at the nape. The button works immediately, so you never have to wait for it.
 - With a passcode / Face ID, iOS asks you to unlock before the app opens. The session starts when the app opens, so unlocking doesn't eat into your time.
+- If the web app was left open in the background (e.g. overnight), iOS may resume that old page instead of reloading it. The app detects any absence over 30 minutes (`CONFIG.reloadAfterMin`) and reloads itself, unless a session is running, so it always wakes on the newest version and auto-starts.
+- After an update, the new version is applied on the first open (the page reloads once by itself), never mid-session.
 - `https://rjverse.github.io/Uqad/?start=1` still works in Safari, but Safari keeps its own separate history.
 
 ## 4. Test mode
