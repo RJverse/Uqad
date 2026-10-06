@@ -146,7 +146,7 @@ console.log('Happy path (test mode)');
 
   await page.click('[data-go="home"]');
   await page.clock.runFor(300);
-  ok((await page.textContent('#today-result')).includes('انحلّت'), 'home shows today = success');
+  ok((await page.textContent('#today-result')).includes('حُلَّت'), 'home shows today = success (حُلَّت)');
 
   // test mode: the test link always starts a fresh trial, even after a finished one
   await page.goto(BASE + '?test=1&start=1');
@@ -283,6 +283,35 @@ console.log('Home');
   ok(streak === 2, `streak counts back from yesterday, emergency skipped (got ${streak}, expect 2)`);
   ok((await page.$$('.day')).length === 30, '30-day grid');
   await shot(page, '11-home');
+
+  // continuity trend: حُلَّت = 1, لم تكتمل / لا جلسة = −1, طوارئ = gap
+  const trendInfo = () => page.evaluate(() => ({
+    xLabels: [...document.querySelectorAll('#trend-svg .axis-x')].map((e) => e.textContent),
+    dots: document.querySelectorAll('#trend-svg .dot:not(.is-gap)').length,
+    gaps: document.querySelectorAll('#trend-svg .dot.is-gap').length,
+    range: document.querySelector('#trend-range').textContent,
+    sum: document.querySelector('#trend-sum').textContent,
+    newerDisabled: document.querySelector('#trend-newer').disabled,
+  }));
+  let ti = await trendInfo();
+  ok(ti.xLabels.join(',') === 'أحد,اثنين,ثلاثاء,أربعاء,خميس,جمعة,سبت', 'weekly trend: Sunday → Saturday labels');
+  ok(ti.range.startsWith('الأحد، ٤ أكتوبر') && ti.range.endsWith('السبت، ١٠ أكتوبر'), `weekly range shows day + date (${ti.range})`);
+  ok(ti.dots === 1 && ti.newerDisabled, 'current week: only past days plotted, «next» disabled');
+  await page.click('#trend-older');
+  ti = await trendInfo();
+  ok(ti.dots === 6 && ti.gaps === 1, `previous week: 6 points + 1 emergency gap (got ${ti.dots}+${ti.gaps})`);
+  await page.click('#trend-svg', { position: { x: 200, y: 80 } });
+  ok(await page.isVisible('#trend-tip'), 'tapping the chart shows the day tooltip');
+  await shot(page, '12-trend-week', 0);
+  await page.click('#trend-mode [data-mode="month"]');
+  ti = await trendInfo();
+  ok(ti.range === 'أكتوبر ٢٠٢٦' && ti.xLabels.filter(Boolean).length === 5, `monthly view (${ti.range})`);
+  await page.click('#trend-older');
+  await shot(page, '13-trend-month', 0);
+  await page.click('#trend-mode [data-mode="year"]');
+  ti = await trendInfo();
+  ok(ti.range === '٢٠٢٦' && ti.xLabels.join(',') === 'يناير,أبريل,يوليو,أكتوبر', 'yearly view: 12 months');
+  await shot(page, '14-trend-year', 0);
 
   // corrupt storage must not crash
   await page.evaluate(() => { localStorage.setItem('uqad.v1.session', '{oops'); localStorage.setItem('uqad.v1.history', '[1,2'); });

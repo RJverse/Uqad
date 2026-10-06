@@ -86,7 +86,7 @@ Inside the web app, tap «وضع التجربة» at the bottom of the home page
 | Success | Last knot unties, the figure stands, dawn glow → «افتح الجوال» runs `Uqad Done` |
 | Failed | Knots stay tied, the figure stays slumped, dim sky → «افتح الجوال» runs `Uqad Fail` |
 | Emergency | «طوارئ» → confirm → logged as *emergency* (neutral: neither counts toward nor breaks the streak) → runs `Uqad Fail` |
-| Home | Today's result, current streak, 30-day grid (success / failed / emergency / none) |
+| Home | Today's result, current streak, a **continuity trend line** (weekly / monthly / yearly with ‹ › to move between periods; حُلَّت = 1, لم تكتمل or لا جلسة = −1, طوارئ = a break in the line; tap for the day's status), and the 30-day grid |
 
 ## 6. How it works
 
