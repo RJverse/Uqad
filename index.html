@@ -232,6 +232,39 @@ body[data-screen="home"] .shade { opacity: 0; }
 .stat-big { font-family: var(--font-display-ar); font-weight: 800; font-size: 40px; line-height: 1.1; color: var(--rj-sky-blue); }
 .stat-unit { font-family: var(--font-body-ar); font-size: var(--fs-small); color: var(--fg-2); margin-inline-start: var(--space-1); }
 .section-title { font-family: var(--font-heading-ar); font-weight: 700; font-size: var(--fs-body-lg); color: var(--fg-1); margin: var(--space-8) 0 var(--space-3); }
+.seg-ctl { display: flex; gap: 4px; padding: 4px; border-radius: var(--radius-pill); background: rgba(244, 250, 255, .06); border: 1px solid var(--border-1); }
+.seg-ctl button {
+  flex: 1; min-height: 40px; border: 0; border-radius: var(--radius-pill); background: transparent; cursor: pointer;
+  font-family: var(--font-heading-ar); font-weight: 700; font-size: 15px; color: var(--fg-3);
+  transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+.seg-ctl button[aria-selected="true"] { background: var(--rj-midnight); color: var(--rj-sky-blue); }
+.period { display: flex; align-items: stretch; margin-top: var(--space-3); padding: 0; overflow: hidden; }
+.period .nav-btn { flex: none; width: 52px; border: 0; background: transparent; color: var(--rj-sky-blue); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.period .nav-btn svg { width: 22px; height: 22px; }
+.period .nav-btn[disabled] { color: var(--fg-3); opacity: .35; cursor: default; }
+.period-mid { flex: 1; min-width: 0; text-align: center; padding: var(--space-3) var(--space-2); border-inline: 1px solid var(--border-1); }
+.period-range { margin: 0; font-family: var(--font-heading-ar); font-weight: 500; font-size: 14px; color: var(--fg-2); line-height: 1.5; }
+.period-sum { margin: 2px 0 0; font-family: var(--font-display-ar); font-weight: 800; font-size: 26px; line-height: 1.3; color: var(--fg-1); }
+.period-sum small { font-family: var(--font-body-ar); font-weight: 400; font-size: 13px; color: var(--fg-2); margin-inline-start: 6px; }
+.trend { position: relative; margin-top: var(--space-3); padding: var(--space-3) var(--space-3) var(--space-2); }
+.trend svg { display: block; width: 100%; height: 170px; overflow: visible; touch-action: pan-y; }
+.trend .grid { stroke: var(--border-1); stroke-width: 1; }
+.trend .axis-y, .trend .axis-x { font-family: var(--font-heading-ar); font-size: 11px; fill: var(--fg-3); }
+.trend .axis-x.is-today { fill: var(--fg-1); font-weight: 700; }
+.trend .grid.zero { stroke: rgba(244, 250, 255, .28); }
+.trend .area { fill: var(--rj-sky-blue); opacity: .1; }
+.trend .line { fill: none; stroke: var(--rj-sky-blue); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.trend .dot { fill: var(--rj-sky-blue); stroke: var(--bg-card); stroke-width: 2; }
+.trend .dot.is-gap { fill: var(--bg-card); stroke: var(--rj-indigo-tint); stroke-width: 1.5; stroke-dasharray: 2 2; }
+.trend .cross { stroke: var(--fg-3); stroke-width: 1; }
+.trend-tip {
+  position: absolute; top: 4px; transform: translateX(-50%); pointer-events: none; white-space: nowrap;
+  background: var(--rj-midnight); border: 1px solid var(--border-1); border-radius: var(--radius-md);
+  padding: 6px 10px; font-family: var(--font-heading-ar); font-size: 13px; color: var(--fg-2); line-height: 1.4; text-align: center;
+}
+.trend-tip strong { display: block; color: var(--fg-1); font-weight: 700; }
+.trend-empty { margin: 0; padding: var(--space-8) 0; text-align: center; color: var(--fg-3); font-size: var(--fs-small); }
 .grid30 { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 6px; }
 .day {
   aspect-ratio: 1; border-radius: var(--radius-sm); min-width: 0;
@@ -380,10 +413,26 @@ body[data-screen="home"] .shade { opacity: 0; }
       <div class="card"><p class="stat-label">أيام متتالية</p><p class="stat-value"><span class="stat-big" id="streak"></span><span class="stat-unit" id="streak-unit"></span></p></div>
     </div>
 
+    <h2 class="section-title">الاستمرارية</h2>
+    <div class="seg-ctl" role="tablist" aria-label="الفترة" id="trend-mode">
+      <button type="button" role="tab" data-mode="week" aria-selected="true">أسبوعي</button>
+      <button type="button" role="tab" data-mode="month" aria-selected="false">شهري</button>
+      <button type="button" role="tab" data-mode="year" aria-selected="false">سنوي</button>
+    </div>
+    <div class="card period">
+      <button class="nav-btn" type="button" id="trend-older" aria-label="الفترة السابقة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+      <div class="period-mid"><p class="period-range" id="trend-range"></p><p class="period-sum" id="trend-sum"></p></div>
+      <button class="nav-btn" type="button" id="trend-newer" aria-label="الفترة التالية"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+    </div>
+    <div class="card trend" id="trend">
+      <svg id="trend-svg" role="img" aria-label="خط الاستمرارية"></svg>
+      <div class="trend-tip" id="trend-tip" hidden></div>
+    </div>
+
     <h2 class="section-title">آخر ٣٠ يومًا</h2>
     <div class="grid30" id="grid30" role="list"></div>
     <div class="legend">
-      <span><i style="background:var(--rj-sky-blue)"></i>انحلّت</span>
+      <span><i style="background:var(--rj-sky-blue)"></i>حُلَّت</span>
       <span><i style="background:rgba(128,137,160,.38)"></i>لم تكتمل</span>
       <span><i style="border:1.5px dashed var(--rj-indigo-tint)"></i>طوارئ</span>
       <span><i style="border:1px solid var(--border-1)"></i>لا جلسة</span>
@@ -1148,8 +1197,8 @@ body[data-screen="home"] .shade { opacity: 0; }
     $('#alarm-pill').hidden = !Alarm.on;
   }
 
-  const RESULT_TEXT = { success: 'انحلّت العُقد الثلاث', failed: 'بقيت العُقد', emergency: 'طوارئ' };
-  const RESULT_SHORT = { success: 'انحلّت', failed: 'لم تكتمل', emergency: 'طوارئ' };
+  const RESULT_TEXT = { success: 'حُلَّت العُقد الثلاث', failed: 'بقيت العُقد', emergency: 'طوارئ' };
+  const RESULT_SHORT = { success: 'حُلَّت', failed: 'لم تكتمل', emergency: 'طوارئ' };
 
   function streak(h) {
     let d = today(), n = 0;
@@ -1180,6 +1229,172 @@ body[data-screen="home"] .shade { opacity: 0; }
     }
     $('#grid30').innerHTML = cells.join('');
     $('#btn-back-today').hidden = !(S && S.phase !== 'knot' && viewHome);
+    renderTrend();
+  }
+
+  /* ---------- Continuity trend: حُلَّت = 1 · لم تكتمل / لا جلسة = −1 · طوارئ = gap ---------- */
+  const AR_DAYS = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+  const AR_DAYS_SHORT = ['أحد', 'اثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'];
+  const AR_MONTHS = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+  const dow = (d) => new Date(Date.UTC(+d.slice(0, 4), +d.slice(5, 7) - 1, +d.slice(8, 10))).getUTCDay();
+  const ymd = (y, m, d) => new Date(Date.UTC(y, m, d)).toISOString().slice(0, 10);
+  const dayLong = (d) => `${AR_DAYS[dow(d)]}، ${ar(+d.slice(8))} ${AR_MONTHS[+d.slice(5, 7) - 1]}`;
+  const STATUS_TEXT = { success: 'حُلَّت', failed: 'لم تكتمل', none: 'لا جلسة', emergency: 'طوارئ' };
+
+  const trend = { mode: store.get('trendMode', 'week'), offset: 0 };
+  if (!['week', 'month', 'year'].includes(trend.mode)) trend.mode = 'week';
+
+  // one day → { v: 1 | -1 | null, status }. null = no point (emergency, future, today pending, before first use)
+  function dayPoint(d, h, t, first) {
+    const r = h[d];
+    if (r === 'success') return { v: 1, status: 'success' };
+    if (r === 'failed') return { v: -1, status: 'failed' };
+    if (r === 'emergency') return { v: null, status: 'emergency' };
+    if (d >= t || !first || d < first) return { v: null, status: null };
+    return { v: -1, status: 'none' };
+  }
+
+  function trendData() {
+    const h = loadHistory(), t = today();
+    const first = Object.keys(h).sort()[0] || null;
+    const [ty, tm] = [+t.slice(0, 4), +t.slice(5, 7) - 1];
+    const pts = [];
+    let range = '', label = '';
+    if (trend.mode === 'week') {
+      const start = addDays(t, -dow(t) + trend.offset * 7);               // weeks run Sunday → Saturday
+      for (let i = 0; i < 7; i++) {
+        const d = addDays(start, i);
+        pts.push({ ...dayPoint(d, h, t, first), x: AR_DAYS_SHORT[i], tip: dayLong(d), today: d === t });
+      }
+      range = `${dayLong(start)} — ${dayLong(addDays(start, 6))}`;
+      label = trend.offset === 0 ? 'هذا الأسبوع' : 'خلال الأسبوع';
+    } else if (trend.mode === 'month') {
+      const m0 = new Date(Date.UTC(ty, tm + trend.offset, 1));
+      const y = m0.getUTCFullYear(), m = m0.getUTCMonth();
+      const n = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+      for (let i = 1; i <= n; i++) {
+        const d = ymd(y, m, i);
+        pts.push({ ...dayPoint(d, h, t, first), x: [1, 8, 15, 22, 29].includes(i) ? ar(i) : '', tip: dayLong(d), today: d === t });
+      }
+      range = `${AR_MONTHS[m]} ${ar(y)}`;
+      label = trend.offset === 0 ? 'هذا الشهر' : 'خلال الشهر';
+    } else {
+      const y = ty + trend.offset;
+      for (let m = 0; m < 12; m++) {
+        const n = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+        let sum = 0, cnt = 0, ok = 0, any = false;
+        for (let i = 1; i <= n; i++) {
+          const p = dayPoint(ymd(y, m, i), h, t, first);
+          if (p.status) any = true;
+          if (p.v != null) { sum += p.v; cnt++; if (p.v === 1) ok++; }
+        }
+        pts.push({
+          v: any ? sum : null, status: any ? 'month' : null, ok, cnt,
+          x: m % 3 === 0 ? AR_MONTHS[m] : '', tip: `${AR_MONTHS[m]} ${ar(y)}`, today: y === ty && m === tm,
+        });
+      }
+      range = ar(y);
+      label = trend.offset === 0 ? 'هذه السنة' : 'خلال السنة';
+    }
+    // consistency balance: starts at 0 and adds each day's value; طوارئ carries the balance unchanged
+    let bal = 0, ok = 0, counted = 0;
+    for (const p of pts) {
+      if (!p.status) { p.c = null; continue; }               // before first use, today pending, future
+      bal += p.v || 0;
+      p.c = bal;
+      if (trend.mode === 'year') { ok += p.ok; counted += p.cnt; }
+      else if (p.v != null) { counted++; if (p.v === 1) ok++; }
+    }
+    return { pts, range, label, ok, counted, net: bal };
+  }
+
+  // LRI…PDI keeps the sign on the left inside RTL text: «+٢», «−١»
+  const signed = (v) => '\u2066' + (v > 0 ? '+' : v < 0 ? '−' : '') + ar(Math.abs(v)) + '\u2069';
+
+  function renderTrend() {
+    const { pts, range, label, ok, counted, net } = trendData();
+    $$('#trend-mode button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.mode === trend.mode)));
+    $('#trend-range').textContent = range;
+    $('#trend-newer').disabled = trend.offset >= 0;
+    const sum = $('#trend-sum');
+    sum.textContent = signed(net);
+    const small = document.createElement('small');
+    small.textContent = `${label} · ${ar(ok)} من ${ar(counted)} أيام حُلَّت`;
+    sum.appendChild(small);
+
+    const svg = $('#trend-svg');
+    const W = Math.max(240, Math.round(svg.getBoundingClientRect().width || 320)), H = 170;
+    const padR = 40, padL = 10, padT = 14, padB = 30;             // y labels sit on the right (RTL start)
+    const plotW = W - padR - padL, n = pts.length;
+    const X = (i) => W - padR - (n === 1 ? plotW / 2 : (i * plotW) / (n - 1));   // time flows right → left
+    const vals = pts.map((p) => p.c).filter((c) => c != null);
+    let lo = Math.min(0, ...vals), hi = Math.max(0, ...vals);
+    const minSpan = trend.mode === 'week' ? 4 : 8;
+    if (hi - lo < minSpan) { if (hi > -lo) hi = lo + minSpan; else if (lo < 0) lo = hi - minSpan; else hi = minSpan; }
+    const Y = (v) => padT + ((hi - v) / (hi - lo)) * (H - padT - padB);
+    let out = '';
+    const ticks = [...new Set([hi, 0, lo].map((v) => Math.round(v)))];
+    for (const v of ticks) {
+      out += `<line class="grid${v === 0 ? ' zero' : ''}" x1="${padL}" x2="${W - padR + 6}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/>`;
+      out += `<text class="axis-y" x="${W - 2}" y="${(Y(v) + 4).toFixed(1)}" text-anchor="start">${signed(v) || ar(0)}</text>`;
+    }
+    // line + soft wash down to the zero line
+    let d = '', pen = false, segStart = null, area = '';
+    const closeSeg = (lastI) => { if (segStart != null) area += `${d.slice(d.lastIndexOf('M'))}L${X(lastI).toFixed(1)} ${Y(0).toFixed(1)} L${X(segStart).toFixed(1)} ${Y(0).toFixed(1)}Z `; };
+    let lastI = null;
+    pts.forEach((p, i) => {
+      if (p.c == null) { if (pen) closeSeg(lastI); pen = false; segStart = null; return; }
+      d += `${pen ? 'L' : 'M'}${X(i).toFixed(1)} ${Y(p.c).toFixed(1)} `;
+      if (!pen) segStart = i;
+      pen = true; lastI = i;
+    });
+    if (pen) closeSeg(lastI);
+    if (area) out += `<path class="area" d="${area.trim()}"/>`;
+    if (d) out += `<path class="line" d="${d.trim()}"/>`;
+    const showDots = n <= 12;
+    pts.forEach((p, i) => {
+      if (p.c != null) {
+        const end = i === lastI;
+        if (p.status === 'emergency') out += `<circle class="dot is-gap" cx="${X(i).toFixed(1)}" cy="${Y(p.c).toFixed(1)}" r="4"/>`;
+        else if (showDots || end) out += `<circle class="dot" cx="${X(i).toFixed(1)}" cy="${Y(p.c).toFixed(1)}" r="${end ? 5 : 4}"/>`;
+      }
+      if (p.x) out += `<text class="axis-x${p.today ? ' is-today' : ''}" x="${X(i).toFixed(1)}" y="${H - 8}" text-anchor="middle">${p.x}</text>`;
+    });
+    out += `<line class="cross" id="trend-cross" y1="${padT - 4}" y2="${H - padB + 4}" x1="-10" x2="-10" visibility="hidden"/>`;
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.innerHTML = out;
+    svg.setAttribute('aria-label', `رصيد الاستمرارية، ${range}: ${signed(net) || ar(0)}`);
+    trend.layout = { pts, X, W };
+    hideTrendTip();
+  }
+
+  function trendTipText(p) {
+    if (p.c == null) return 'لا بيانات';
+    const st = trend.mode === 'year' ? `حُلَّت ${ar(p.ok)} من ${ar(p.cnt)}` : STATUS_TEXT[p.status];
+    return `${st} · الرصيد ${signed(p.c) || ar(0)}`;
+  }
+  function showTrendTip(clientX) {
+    const L = trend.layout; if (!L) return;
+    const svg = $('#trend-svg'), r = svg.getBoundingClientRect();
+    const sx = ((clientX - r.left) / r.width) * L.W;
+    let best = 0, bd = Infinity;
+    L.pts.forEach((p, i) => { const dd = Math.abs(L.X(i) - sx); if (dd < bd) { bd = dd; best = i; } });
+    const p = L.pts[best], x = L.X(best);
+    const cross = $('#trend-cross');
+    cross.setAttribute('x1', x); cross.setAttribute('x2', x); cross.setAttribute('visibility', 'visible');
+    const tip = $('#trend-tip');
+    tip.textContent = '';
+    const strong = document.createElement('strong'); strong.textContent = trendTipText(p);
+    tip.appendChild(strong); tip.appendChild(document.createTextNode(p.tip));
+    tip.hidden = false;
+    const card = $('#trend').getBoundingClientRect();
+    const px = r.left - card.left + (x / L.W) * r.width;
+    const half = tip.offsetWidth / 2 + 6;
+    tip.style.left = Math.min(card.width - half, Math.max(half, px)) + 'px';
+  }
+  function hideTrendTip() {
+    const tip = $('#trend-tip'); if (tip) tip.hidden = true;
+    const c = $('#trend-cross'); if (c) c.setAttribute('visibility', 'hidden');
   }
 
   /* =================== Actions =================== */
@@ -1275,6 +1490,16 @@ body[data-screen="home"] .shade { opacity: 0; }
   $$('[data-run]').forEach((b) => b.addEventListener('click', () => runShortcut(b.dataset.run)));
   $$('[data-go="home"]').forEach((b) => b.addEventListener('click', () => { viewHome = true; render(); }));
   $('#btn-back-today').addEventListener('click', () => { viewHome = false; render(); });
+  $$('#trend-mode button').forEach((b) => b.addEventListener('click', () => {
+    trend.mode = b.dataset.mode; trend.offset = 0; store.set('trendMode', trend.mode); renderTrend();
+  }));
+  $('#trend-older').addEventListener('click', () => { trend.offset--; renderTrend(); });
+  $('#trend-newer').addEventListener('click', () => { if (trend.offset < 0) { trend.offset++; renderTrend(); } });
+  const trendSvg = $('#trend-svg');
+  trendSvg.addEventListener('pointerdown', (e) => showTrendTip(e.clientX));
+  trendSvg.addEventListener('pointermove', (e) => showTrendTip(e.clientX));
+  trendSvg.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') hideTrendTip(); });
+  document.addEventListener('pointerdown', (e) => { if (!e.target.closest('#trend')) hideTrendTip(); });
   $('#btn-test-new').addEventListener('click', () => {
     // test mode only: wipe today's trial and start over
     const h = loadHistory(); delete h[today()]; store.set('history', h);
@@ -1326,7 +1551,7 @@ body[data-screen="home"] .shade { opacity: 0; }
   });
   window.addEventListener('pageshow', (e) => { if (e.persisted) tick(); });
   window.addEventListener('storage', (e) => { if (!e.key || e.key.startsWith(KEY)) tick(); });
-  window.addEventListener('resize', () => { sizeCanvas(); layout(); });
+  window.addEventListener('resize', () => { sizeCanvas(); layout(); if (screenNow === 'home') renderTrend(); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => layout());
 
   /* =================== Boot =================== */
