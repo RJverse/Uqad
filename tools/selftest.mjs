@@ -51,6 +51,19 @@ async function shot(page, name, settleMs = 600) {
   if (settleMs) await page.clock.runFor(settleMs); // advance the faked clock so rAF animations render
   await page.waitForTimeout(900);                 // real-time CSS transitions (reveals, filters)
   await page.screenshot({ path: `${OUT}/${name}.png` });
+  // Changa can't stack shadda + vowel mark: no visible text with that combination may use it
+  const badFont = await page.evaluate(() => {
+    const re = /[\u064B-\u0650]\u0651|\u0651[\u064B-\u0650]/;
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const bad = [];
+    for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+      const el = n.parentElement;
+      if (!el || !re.test(n.textContent) || !el.getClientRects().length) continue;
+      if (getComputedStyle(el).fontFamily.trim().replace(/["']/g, '').startsWith('Changa')) bad.push(n.textContent.trim().slice(0, 30));
+    }
+    return bad;
+  });
+  ok(badFont.length === 0, `${name}: no shadda+vowel text set in Changa${badFont.length ? ' — ' + badFont.join(' | ') : ''}`);
   const o = await page.evaluate(() => ({
     sw: document.documentElement.scrollWidth, iw: window.innerWidth,
     wide: Array.from(document.querySelectorAll('body *')).filter((el) => {

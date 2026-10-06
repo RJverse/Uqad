@@ -57,6 +57,8 @@
   --font-hadith: 'Amiri', 'Geeza Pro', 'Noto Naskh Arabic', 'Times New Roman', serif;
   --font-display-ar: 'Cairo', 'SF Arabic', 'Geeza Pro', 'Noto Kufi Arabic', 'Noto Sans Arabic', 'Segoe UI', system-ui, sans-serif;
   --font-heading-ar: 'Tajawal', 'Cairo', 'SF Arabic', 'Geeza Pro', 'Noto Sans Arabic', 'Segoe UI', system-ui, sans-serif;
+  /* Changa can't stack a shadda with a vowel mark (draws «حُلاَّت» with a gap) —
+     any text with tashkeel uses Tajawal / Cairo / Amiri instead. */
   --font-body-ar: 'Changa', 'Tajawal', 'SF Arabic', 'Geeza Pro', 'Noto Sans Arabic', 'Segoe UI', system-ui, sans-serif;
 
   --fs-h2: 36px; --fs-h4: 22px; --fs-body-lg: 18px; --fs-body: 16px; --fs-small: 14px; --fs-caption: 12px;
@@ -246,7 +248,7 @@ body[data-screen="home"] .shade { opacity: 0; }
 .period-mid { flex: 1; min-width: 0; text-align: center; padding: var(--space-3) var(--space-2); border-inline: 1px solid var(--border-1); }
 .period-range { margin: 0; font-family: var(--font-heading-ar); font-weight: 500; font-size: 14px; color: var(--fg-2); line-height: 1.5; }
 .period-sum { margin: 2px 0 0; font-family: var(--font-display-ar); font-weight: 800; font-size: 26px; line-height: 1.3; color: var(--fg-1); }
-.period-sum small { font-family: var(--font-body-ar); font-weight: 400; font-size: 13px; color: var(--fg-2); margin-inline-start: 6px; }
+.period-sum small { font-family: var(--font-heading-ar); font-weight: 400; font-size: 13px; color: var(--fg-2); margin-inline-start: 6px; }
 .trend { position: relative; margin-top: var(--space-3); padding: var(--space-3) var(--space-3) var(--space-2); }
 .trend svg { display: block; width: 100%; height: 170px; overflow: visible; touch-action: pan-y; }
 .trend .grid { stroke: var(--border-1); stroke-width: 1; }
@@ -276,7 +278,7 @@ body[data-screen="home"] .shade { opacity: 0; }
 .day.r-failed { background: rgba(128, 137, 160, .38); border-color: transparent; color: var(--fg-2); }
 .day.r-emergency { border: 1.5px dashed var(--rj-indigo-tint); color: var(--rj-indigo-tint); }
 .day.is-today { outline: 2px solid var(--rj-blue-500); outline-offset: 2px; }
-.legend { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); margin-top: var(--space-3); font-size: var(--fs-small); color: var(--fg-2); }
+.legend { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); margin-top: var(--space-3); font-family: var(--font-heading-ar); font-weight: 500; font-size: var(--fs-small); color: var(--fg-2); }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .legend i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
 .home-actions { margin-top: auto; padding-top: var(--space-8); display: flex; flex-direction: column; gap: var(--space-2); align-items: center; }
@@ -286,7 +288,7 @@ body[data-screen="home"] .shade { opacity: 0; }
 .scrim { position: fixed; inset: 0; z-index: 10; background: rgba(11, 28, 61, .55); display: flex; align-items: flex-end; justify-content: center; padding: var(--space-4); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--space-4)); }
 .sheet { width: 100%; max-width: 480px; max-height: 86vh; overflow-y: auto; background: var(--bg-2); border: 1px solid var(--border-1); border-radius: var(--radius-xl); padding: var(--space-6) var(--space-5) var(--space-5); box-shadow: var(--shadow-lg); text-align: center; }
 .sheet h2 { font-family: var(--font-display-ar); font-weight: 700; font-size: var(--fs-h4); color: var(--fg-1); margin: 0 0 var(--space-2); }
-.sheet p.note { font-size: var(--fs-body); color: var(--fg-2); margin: 0 0 var(--space-5); }
+.sheet p.note { font-family: var(--font-heading-ar); font-weight: 500; font-size: var(--fs-body); color: var(--fg-2); margin: 0 0 var(--space-5); }
 .sheet .row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
 .full-hadith { font-family: var(--font-hadith); font-weight: 400; font-size: 26px; line-height: 1.95; color: var(--fg-1); margin: 0; }
 .source { font-family: var(--font-body-ar); font-size: var(--fs-small); color: var(--fg-2); margin: var(--space-3) 0 var(--space-5); }
