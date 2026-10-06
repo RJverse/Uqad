@@ -300,6 +300,7 @@ console.log('Home');
   await page.click('#trend-older');
   ti = await trendInfo();
   ok(ti.dots === 6 && ti.gaps === 1, `previous week: 6 points + 1 emergency gap (got ${ti.dots}+${ti.gaps})`);
+  ok(ti.sum.includes('+٢'), `previous week balance = 4 حُلَّت − 2 missed = +٢; طوارئ adds nothing (got ${ti.sum})`);
   await page.click('#trend-svg', { position: { x: 200, y: 80 } });
   ok(await page.isVisible('#trend-tip'), 'tapping the chart shows the day tooltip');
   await shot(page, '12-trend-week', 0);

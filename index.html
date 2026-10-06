@@ -252,6 +252,8 @@ body[data-screen="home"] .shade { opacity: 0; }
 .trend .grid { stroke: var(--border-1); stroke-width: 1; }
 .trend .axis-y, .trend .axis-x { font-family: var(--font-heading-ar); font-size: 11px; fill: var(--fg-3); }
 .trend .axis-x.is-today { fill: var(--fg-1); font-weight: 700; }
+.trend .grid.zero { stroke: rgba(244, 250, 255, .28); }
+.trend .area { fill: var(--rj-sky-blue); opacity: .1; }
 .trend .line { fill: none; stroke: var(--rj-sky-blue); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .trend .dot { fill: var(--rj-sky-blue); stroke: var(--bg-card); stroke-width: 2; }
 .trend .dot.is-gap { fill: var(--bg-card); stroke: var(--rj-indigo-tint); stroke-width: 1.5; stroke-dasharray: 2 2; }
@@ -1257,7 +1259,7 @@ body[data-screen="home"] .shade { opacity: 0; }
     const first = Object.keys(h).sort()[0] || null;
     const [ty, tm] = [+t.slice(0, 4), +t.slice(5, 7) - 1];
     const pts = [];
-    let range = '';
+    let range = '', label = '';
     if (trend.mode === 'week') {
       const start = addDays(t, -dow(t) + trend.offset * 7);               // weeks run Sunday → Saturday
       for (let i = 0; i < 7; i++) {
@@ -1265,6 +1267,7 @@ body[data-screen="home"] .shade { opacity: 0; }
         pts.push({ ...dayPoint(d, h, t, first), x: AR_DAYS_SHORT[i], tip: dayLong(d), today: d === t });
       }
       range = `${dayLong(start)} — ${dayLong(addDays(start, 6))}`;
+      label = trend.offset === 0 ? 'هذا الأسبوع' : 'خلال الأسبوع';
     } else if (trend.mode === 'month') {
       const m0 = new Date(Date.UTC(ty, tm + trend.offset, 1));
       const y = m0.getUTCFullYear(), m = m0.getUTCMonth();
@@ -1274,76 +1277,101 @@ body[data-screen="home"] .shade { opacity: 0; }
         pts.push({ ...dayPoint(d, h, t, first), x: [1, 8, 15, 22, 29].includes(i) ? ar(i) : '', tip: dayLong(d), today: d === t });
       }
       range = `${AR_MONTHS[m]} ${ar(y)}`;
+      label = trend.offset === 0 ? 'هذا الشهر' : 'خلال الشهر';
     } else {
       const y = ty + trend.offset;
       for (let m = 0; m < 12; m++) {
         const n = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
-        let sum = 0, cnt = 0, ok = 0;
+        let sum = 0, cnt = 0, ok = 0, any = false;
         for (let i = 1; i <= n; i++) {
           const p = dayPoint(ymd(y, m, i), h, t, first);
+          if (p.status) any = true;
           if (p.v != null) { sum += p.v; cnt++; if (p.v === 1) ok++; }
         }
         pts.push({
-          v: cnt ? sum / cnt : null, status: cnt ? 'avg' : null, ok, cnt,
+          v: any ? sum : null, status: any ? 'month' : null, ok, cnt,
           x: m % 3 === 0 ? AR_MONTHS[m] : '', tip: `${AR_MONTHS[m]} ${ar(y)}`, today: y === ty && m === tm,
         });
       }
       range = ar(y);
+      label = trend.offset === 0 ? 'هذه السنة' : 'خلال السنة';
     }
-    let ok = 0, counted = 0;
+    // consistency balance: starts at 0 and adds each day's value; طوارئ carries the balance unchanged
+    let bal = 0, ok = 0, counted = 0;
     for (const p of pts) {
-      if (trend.mode === 'year') { ok += p.ok || 0; counted += p.cnt || 0; }
+      if (!p.status) { p.c = null; continue; }               // before first use, today pending, future
+      bal += p.v || 0;
+      p.c = bal;
+      if (trend.mode === 'year') { ok += p.ok; counted += p.cnt; }
       else if (p.v != null) { counted++; if (p.v === 1) ok++; }
     }
-    return { pts, range, ok, counted };
+    return { pts, range, label, ok, counted, net: bal };
   }
 
+  // LRI…PDI keeps the sign on the left inside RTL text: «+٢», «−١»
+  const signed = (v) => '\u2066' + (v > 0 ? '+' : v < 0 ? '−' : '') + ar(Math.abs(v)) + '\u2069';
+
   function renderTrend() {
-    const { pts, range, ok, counted } = trendData();
+    const { pts, range, label, ok, counted, net } = trendData();
     $$('#trend-mode button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.mode === trend.mode)));
     $('#trend-range').textContent = range;
     $('#trend-newer').disabled = trend.offset >= 0;
     const sum = $('#trend-sum');
-    sum.textContent = `${ar(ok)} من ${ar(counted)}`;
-    const small = document.createElement('small'); small.textContent = 'أيام حُلَّت فيها العُقد';
+    sum.textContent = signed(net);
+    const small = document.createElement('small');
+    small.textContent = `${label} · ${ar(ok)} من ${ar(counted)} أيام حُلَّت`;
     sum.appendChild(small);
 
     const svg = $('#trend-svg');
     const W = Math.max(240, Math.round(svg.getBoundingClientRect().width || 320)), H = 170;
-    const padR = 58, padL = 10, padT = 14, padB = 30;           // y labels sit on the right (RTL start)
+    const padR = 40, padL = 10, padT = 14, padB = 30;             // y labels sit on the right (RTL start)
     const plotW = W - padR - padL, n = pts.length;
     const X = (i) => W - padR - (n === 1 ? plotW / 2 : (i * plotW) / (n - 1));   // time flows right → left
-    const Y = (v) => padT + ((1 - v) / 2) * (H - padT - padB);
+    const vals = pts.map((p) => p.c).filter((c) => c != null);
+    let lo = Math.min(0, ...vals), hi = Math.max(0, ...vals);
+    const minSpan = trend.mode === 'week' ? 4 : 8;
+    if (hi - lo < minSpan) { if (hi > -lo) hi = lo + minSpan; else if (lo < 0) lo = hi - minSpan; else hi = minSpan; }
+    const Y = (v) => padT + ((hi - v) / (hi - lo)) * (H - padT - padB);
     let out = '';
-    for (const [v, label] of [[1, 'حُلَّت'], [0, ''], [-1, 'لم تكتمل']]) {
-      out += `<line class="grid" x1="${padL}" x2="${W - padR + 6}" y1="${Y(v)}" y2="${Y(v)}"/>`;
-      if (label) out += `<text class="axis-y" x="${W - 2}" y="${Y(v) + 4}" text-anchor="start">${label}</text>`;
+    const ticks = [...new Set([hi, 0, lo].map((v) => Math.round(v)))];
+    for (const v of ticks) {
+      out += `<line class="grid${v === 0 ? ' zero' : ''}" x1="${padL}" x2="${W - padR + 6}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/>`;
+      out += `<text class="axis-y" x="${W - 2}" y="${(Y(v) + 4).toFixed(1)}" text-anchor="start">${signed(v) || ar(0)}</text>`;
     }
-    // line, broken wherever a day has no value (طوارئ / no data)
-    let d = '', pen = false;
+    // line + soft wash down to the zero line
+    let d = '', pen = false, segStart = null, area = '';
+    const closeSeg = (lastI) => { if (segStart != null) area += `${d.slice(d.lastIndexOf('M'))}L${X(lastI).toFixed(1)} ${Y(0).toFixed(1)} L${X(segStart).toFixed(1)} ${Y(0).toFixed(1)}Z `; };
+    let lastI = null;
     pts.forEach((p, i) => {
-      if (p.v == null) { pen = false; return; }
-      d += `${pen ? 'L' : 'M'}${X(i).toFixed(1)} ${Y(p.v).toFixed(1)} `;
-      pen = true;
+      if (p.c == null) { if (pen) closeSeg(lastI); pen = false; segStart = null; return; }
+      d += `${pen ? 'L' : 'M'}${X(i).toFixed(1)} ${Y(p.c).toFixed(1)} `;
+      if (!pen) segStart = i;
+      pen = true; lastI = i;
     });
+    if (pen) closeSeg(lastI);
+    if (area) out += `<path class="area" d="${area.trim()}"/>`;
     if (d) out += `<path class="line" d="${d.trim()}"/>`;
-    const dotR = n > 12 ? 3 : 4.5;
+    const showDots = n <= 12;
     pts.forEach((p, i) => {
-      if (p.v != null) out += `<circle class="dot" cx="${X(i).toFixed(1)}" cy="${Y(p.v).toFixed(1)}" r="${dotR}"/>`;
-      else if (p.status === 'emergency') out += `<circle class="dot is-gap" cx="${X(i).toFixed(1)}" cy="${Y(0).toFixed(1)}" r="${dotR}"/>`;
+      if (p.c != null) {
+        const end = i === lastI;
+        if (p.status === 'emergency') out += `<circle class="dot is-gap" cx="${X(i).toFixed(1)}" cy="${Y(p.c).toFixed(1)}" r="4"/>`;
+        else if (showDots || end) out += `<circle class="dot" cx="${X(i).toFixed(1)}" cy="${Y(p.c).toFixed(1)}" r="${end ? 5 : 4}"/>`;
+      }
       if (p.x) out += `<text class="axis-x${p.today ? ' is-today' : ''}" x="${X(i).toFixed(1)}" y="${H - 8}" text-anchor="middle">${p.x}</text>`;
     });
     out += `<line class="cross" id="trend-cross" y1="${padT - 4}" y2="${H - padB + 4}" x1="-10" x2="-10" visibility="hidden"/>`;
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
     svg.innerHTML = out;
-    svg.setAttribute('aria-label', `خط الاستمرارية، ${range}: ${ar(ok)} من ${ar(counted)}`);
+    svg.setAttribute('aria-label', `رصيد الاستمرارية، ${range}: ${signed(net) || ar(0)}`);
     trend.layout = { pts, X, W };
     hideTrendTip();
   }
 
   function trendTipText(p) {
-    if (trend.mode === 'year') return p.cnt ? `حُلَّت ${ar(p.ok)} من ${ar(p.cnt)}` : 'لا بيانات';
-    return p.status ? STATUS_TEXT[p.status] : 'لا بيانات';
+    if (p.c == null) return 'لا بيانات';
+    const st = trend.mode === 'year' ? `حُلَّت ${ar(p.ok)} من ${ar(p.cnt)}` : STATUS_TEXT[p.status];
+    return `${st} · الرصيد ${signed(p.c) || ar(0)}`;
   }
   function showTrendTip(clientX) {
     const L = trend.layout; if (!L) return;
