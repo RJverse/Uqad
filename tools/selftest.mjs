@@ -194,6 +194,17 @@ console.log('Web app auto-start');
   ok(await screenId(page) === 's-home', 'web app does not restart a finished day');
   await ctx.close();
 
+  // this morning's real case: web app left open since the night before, resumed at Fajr
+  ({ ctx, page } = await newPage({ standalone: true, time: '2026-10-05T23:00:00+03:00' }));
+  await page.goto(BASE);
+  ok(await screenId(page) === 's-home', 'web app open at 23:00 shows home');
+  await page.clock.fastForward('05:40:00');                           // phone asleep until 04:40
+  await page.waitForTimeout(600);
+  await page.waitForLoadState();
+  await page.clock.runFor(500);
+  ok(await screenId(page) === 's-splash', 'resumed at 04:40 after the night → reloads and lands on «استيقظ»');
+  await ctx.close();
+
   ({ ctx, page } = await newPage({ standalone: false }));             // Safari tab at 04:40
   await page.goto(BASE);
   ok(await screenId(page) === 's-home', 'Safari tab without ?start=1 never auto-starts');
