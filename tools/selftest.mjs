@@ -180,7 +180,7 @@ console.log('Real mode timings');
   const { ctx, page } = await newPage();
   await page.goto(BASE);
   const k = await page.evaluate(() => window.__uqad.KNOTS.map((x) => [x.windowSec, x.minDwellSec]));
-  ok(JSON.stringify(k) === JSON.stringify([[300, 60], [600, 180], [2700, 240]]), `windows 5/10/45 min, dwell 1/3/4 min (got ${JSON.stringify(k)})`);
+  ok(JSON.stringify(k) === JSON.stringify([[300, 60], [1200, 180], [3600, 600]]), `windows 5/20/60 min, dwell 1/3/10 min (got ${JSON.stringify(k)})`);
   await ctx.close();
 }
 
@@ -293,7 +293,7 @@ console.log('Home');
   await page.clock.runFor(300);
   ok(await screenId(page) === 's-home', 'no session → home');
   const streak = await page.evaluate(() => window.__uqad.streak(window.__uqad.loadHistory()));
-  ok(streak === 2, `streak counts back from yesterday, emergency skipped (got ${streak}, expect 2)`);
+  ok(streak === 20, `streak: single missed days forgiven, emergency skipped (got ${streak}, expect 20)`);
   ok((await page.$$('.day')).length === 30, '30-day grid');
   await shot(page, '11-home');
 
@@ -326,6 +326,28 @@ console.log('Home');
   ti = await trendInfo();
   ok(ti.range === '٢٠٢٦' && ti.xLabels.join(',') === 'يناير,أبريل,يوليو,أكتوبر', 'yearly view: 12 months');
   await shot(page, '14-trend-year', 0);
+
+  // streak grace + balance floor
+  const seed = (map) => page.evaluate((m) => {
+    const t = window.__uqad.today(); const h = {};
+    const add = (n) => new Date(Date.UTC(+t.slice(0, 4), +t.slice(5, 7) - 1, +t.slice(8, 10)) + n * 864e5).toISOString().slice(0, 10);
+    for (const [k, v] of Object.entries(m)) h[add(+k)] = v;
+    localStorage.setItem('uqad.v1.history', JSON.stringify(h));
+  }, map);
+  await seed({ '-1': 'success', '-2': 'failed', '-3': 'failed', '-4': 'success', '-5': 'success' });
+  await page.reload(); await page.clock.runFor(300);
+  ok(await page.evaluate(() => window.__uqad.streak(window.__uqad.loadHistory())) === 1, 'two missed days in a row reset the streak');
+  await seed({ '-1': 'failed', '-2': 'success', '-3': 'success', '-4': 'success' });
+  await page.reload(); await page.clock.runFor(300);
+  ok(await page.evaluate(() => window.__uqad.streak(window.__uqad.loadHistory())) === 3 && await page.isVisible('#streak-note'),
+    'one missed day keeps the streak and shows «فاتك يوم — لا تفوّت الثاني»');
+  // previous week: 4 misses then 3 حُلَّت → balance stays at 0 during the misses, ends at +٣ (not −1)
+  await seed({ '-15': 'success', '-8': 'failed', '-7': 'failed', '-6': 'failed', '-5': 'failed', '-4': 'success', '-3': 'success', '-2': 'success' });
+  await page.reload(); await page.clock.runFor(300);
+  await page.click('#trend-mode [data-mode="week"]');
+  await page.click('#trend-older');
+  const fl = await page.evaluate(() => ({ sum: document.querySelector('#trend-sum').textContent, labels: [...document.querySelectorAll('#trend-svg .axis-y')].map((e) => e.textContent) }));
+  ok(fl.sum.includes('+٣') && !fl.labels.some((l) => l.includes('−')), `balance never drops below 0 (${fl.sum.split('خلال')[0].trim()}, axis ${fl.labels.join(' ')})`);
 
   // corrupt storage must not crash
   await page.evaluate(() => { localStorage.setItem('uqad.v1.session', '{oops'); localStorage.setItem('uqad.v1.history', '[1,2'); });

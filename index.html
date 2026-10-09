@@ -232,6 +232,7 @@ body[data-screen="home"] .shade { opacity: 0; }
 .stat-label { font-family: var(--font-heading-ar); font-weight: 500; font-size: var(--fs-small); color: var(--fg-2); margin: 0 0 var(--space-1); }
 .stat-value { font-family: var(--font-display-ar); font-weight: 700; font-size: var(--fs-h4); line-height: 1.35; color: var(--fg-1); margin: 0; }
 .stat-big { font-family: var(--font-display-ar); font-weight: 800; font-size: 40px; line-height: 1.1; color: var(--rj-sky-blue); }
+.stat-note { margin: var(--space-1) 0 0; font-family: var(--font-heading-ar); font-weight: 500; font-size: 12px; line-height: 1.4; color: var(--rj-sky-blue); }
 .stat-unit { font-family: var(--font-body-ar); font-size: var(--fs-small); color: var(--fg-2); margin-inline-start: var(--space-1); }
 .section-title { font-family: var(--font-heading-ar); font-weight: 700; font-size: var(--fs-body-lg); color: var(--fg-1); margin: var(--space-8) 0 var(--space-3); }
 .seg-ctl { display: flex; gap: 4px; padding: 4px; border-radius: var(--radius-pill); background: rgba(244, 250, 255, .06); border: 1px solid var(--border-1); }
@@ -412,7 +413,7 @@ body[data-screen="home"] .shade { opacity: 0; }
 
     <div class="stats">
       <div class="card"><p class="stat-label">اليوم</p><p class="stat-value" id="today-result"></p></div>
-      <div class="card"><p class="stat-label">أيام متتالية</p><p class="stat-value"><span class="stat-big" id="streak"></span><span class="stat-unit" id="streak-unit"></span></p></div>
+      <div class="card"><p class="stat-label">أيام متتالية</p><p class="stat-value"><span class="stat-big" id="streak"></span><span class="stat-unit" id="streak-unit"></span></p><p class="stat-note" id="streak-note" hidden>فاتك يوم — لا تفوّت الثاني</p></div>
     </div>
 
     <h2 class="section-title">الاستمرارية</h2>
@@ -480,14 +481,16 @@ body[data-screen="home"] .shade { opacity: 0; }
     timeZone: 'Asia/Riyadh',
     knots: [
       { windowSec: 5 * 60,  minDwellSec: 60,  alarm: true  },  // ذِكر
-      { windowSec: 10 * 60, minDwellSec: 180, alarm: false },  // وضوء
-      { windowSec: 45 * 60, minDwellSec: 240, alarm: false },  // صلاة
+      { windowSec: 20 * 60, minDwellSec: 180, alarm: false },  // وضوء
+      { windowSec: 60 * 60, minDwellSec: 600, alarm: false },  // صلاة
     ],
     test: { windowsSec: [60, 60, 90], minDwellSec: 5 },        // ?test=1
     shortcuts: { done: 'Uqad Done', fail: 'Uqad Fail' },
     storagePrefix: 'uqad.v1.',
     historyDays: 30,
     historyKeepDays: 400,
+    // the streak survives a single missed day; this many missed days in a row reset it
+    streakBreakAfter: 2,
     tickMs: 250,
     // Home-screen web app only: opening it in this window (Riyadh time) starts today's
     // session by itself — iOS's webapp:// links drop ?start=1, so the app can't be told.
@@ -1202,16 +1205,28 @@ body[data-screen="home"] .shade { opacity: 0; }
   const RESULT_TEXT = { success: 'حُلَّت العُقد الثلاث', failed: 'بقيت العُقد', emergency: 'طوارئ' };
   const RESULT_SHORT = { success: 'حُلَّت', failed: 'لم تكتمل', emergency: 'طوارئ' };
 
+  // Missed day = لم تكتمل or لا جلسة (after first use). One miss is forgiven; CONFIG.streakBreakAfter
+  // misses in a row (طوارئ in between doesn't separate them) reset the streak.
   function streak(h) {
-    let d = today(), n = 0;
+    const first = Object.keys(h).sort()[0];
+    let d = today(), n = 0, misses = 0;
     if (!h[d]) d = addDays(d, -1);                    // today not done yet: count from yesterday
     for (let i = 0; i < CONFIG.historyKeepDays; i++, d = addDays(d, -1)) {
       const r = h[d];
-      if (r === 'success') n++;
+      if (r === 'success') { n++; misses = 0; }
       else if (r === 'emergency') continue;            // neutral: neither counts nor breaks
-      else break;
+      else {
+        if (!first || d < first) break;               // before first use: nothing more to count
+        if (++misses >= CONFIG.streakBreakAfter) break;
+      }
     }
     return n;
+  }
+  // the latest settled day (today if it has a result, else yesterday) was a miss → one more breaks the chain
+  function streakAtRisk(h) {
+    const first = Object.keys(h).sort()[0];
+    const t = today(), d = h[t] ? t : addDays(t, -1);
+    return !!first && d >= first && (h[d] === 'failed' || !h[d]);
   }
 
   function renderHome() {
@@ -1222,6 +1237,7 @@ body[data-screen="home"] .shade { opacity: 0; }
     const n = streak(h);
     $('#streak').textContent = ar(n);
     $('#streak-unit').textContent = n === 1 ? 'يوم' : (n === 2 ? 'يومان' : (n >= 3 && n <= 10 ? 'أيام' : 'يومًا'));
+    $('#streak-note').hidden = !(n > 0 && streakAtRisk(h));
     const cells = [];
     for (let i = CONFIG.historyDays - 1; i >= 0; i--) {
       const d = addDays(t, -i);
@@ -1282,30 +1298,32 @@ body[data-screen="home"] .shade { opacity: 0; }
       label = trend.offset === 0 ? 'هذا الشهر' : 'خلال الشهر';
     } else {
       const y = ty + trend.offset;
+      let yb = 0;                                                       // daily balance, floored at 0
       for (let m = 0; m < 12; m++) {
         const n = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
-        let sum = 0, cnt = 0, ok = 0, any = false;
+        let cnt = 0, ok = 0, any = false;
         for (let i = 1; i <= n; i++) {
           const p = dayPoint(ymd(y, m, i), h, t, first);
           if (p.status) any = true;
-          if (p.v != null) { sum += p.v; cnt++; if (p.v === 1) ok++; }
+          if (p.v != null) { yb = Math.max(0, yb + p.v); cnt++; if (p.v === 1) ok++; }
         }
         pts.push({
-          v: any ? sum : null, status: any ? 'month' : null, ok, cnt,
+          v: null, c: any ? yb : null, status: any ? 'month' : null, ok, cnt,
           x: m % 3 === 0 ? AR_MONTHS[m] : '', tip: `${AR_MONTHS[m]} ${ar(y)}`, today: y === ty && m === tm,
         });
       }
       range = ar(y);
       label = trend.offset === 0 ? 'هذه السنة' : 'خلال السنة';
     }
-    // consistency balance: starts at 0 and adds each day's value; طوارئ carries the balance unchanged
+    // consistency balance: starts at 0, +1 / −1 per day, never below 0 (a long gap doesn't dig a hole
+    // to climb out of); طوارئ carries the balance unchanged
     let bal = 0, ok = 0, counted = 0;
     for (const p of pts) {
       if (!p.status) { p.c = null; continue; }               // before first use, today pending, future
-      bal += p.v || 0;
+      if (trend.mode === 'year') { bal = p.c; ok += p.ok; counted += p.cnt; continue; }
+      bal = Math.max(0, bal + (p.v || 0));
       p.c = bal;
-      if (trend.mode === 'year') { ok += p.ok; counted += p.cnt; }
-      else if (p.v != null) { counted++; if (p.v === 1) ok++; }
+      if (p.v != null) { counted++; if (p.v === 1) ok++; }
     }
     return { pts, range, label, ok, counted, net: bal };
   }

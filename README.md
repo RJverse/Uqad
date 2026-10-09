@@ -9,8 +9,8 @@ A personal Fajr wake-up web app for iPhone. It turns this hadith into three ques
 | Knot | Action | Window | "تم" unlocks after | Sound |
 |---|---|---|---|---|
 | 1 | Dhikr on waking | 5 min | 1 min | Soft looping alarm until "تم" |
-| 2 | Wudu | 10 min | 3 min | Silent |
-| 3 | Salah | 45 min | 4 min | Silent |
+| 2 | Wudu | 20 min | 3 min | Silent |
+| 3 | Salah | 60 min | 10 min | Silent |
 
 Knot 1's window starts when the alarm automation opens the app, and its 1-minute lock starts when you tap «استيقظ». Each later window (and its lock) starts when the previous knot is done. If a window runs out, the day is logged as **failed**.
 
@@ -81,12 +81,12 @@ Inside the web app, tap «وضع التجربة» at the bottom of the home page
 | Tap-to-begin («استيقظ») | A session just started, or knot 1 is still running after a reload (the alarm needs a fresh tap). Shows the time, the opening lines while the knots tie, and a round pulsing button |
 | Knot 1 · ذِكر | Night sky with drifting stars, «المنبّه يعمل» indicator, the segment and the dhikr card |
 | Knot 2 · وُضوء | Water scene: ripples and falling drops |
-| Knot 3 · صَلاة | Dawn scene: mihrab arches and light rays, brightening as the 45 minutes pass |
+| Knot 3 · صَلاة | Dawn scene: mihrab arches and light rays, brightening as the 60 minutes pass |
 | Knot 1–3 | Illustration plus countdown ring, the hadith segment (and the dhikr on knot 1), «الحديث كاملاً», a big «تم» button that stays disabled during the minimum time, and a quiet «طوارئ» link |
 | Success | Last knot unties, the figure stands, dawn glow → «افتح الجوال» runs `Uqad Done` |
 | Failed | Knots stay tied, the figure stays slumped, dim sky → «افتح الجوال» runs `Uqad Fail` |
 | Emergency | «طوارئ» → confirm → logged as *emergency* (neutral: neither counts toward nor breaks the streak) → runs `Uqad Fail` |
-| Home | Today's result, current streak, a **continuity trend line** (weekly / monthly / yearly with ‹ › to move between periods; a **consistency balance** that starts at 0 each period, +1 for حُلَّت, −1 for لم تكتمل / لا جلسة, طوارئ leaves it unchanged; tap for the day's status and balance), and the 30-day grid |
+| Home | Today's result, current streak (a single missed day is forgiven with a «فاتك يوم — لا تفوّت الثاني» warning; two missed days in a row reset it; طوارئ is neutral), a **continuity trend line** (weekly / monthly / yearly with ‹ › to move between periods; a **consistency balance** that starts at 0 each period and never drops below 0, +1 for حُلَّت, −1 for لم تكتمل / لا جلسة, طوارئ leaves it unchanged; tap for the day's status and balance), and the 30-day grid |
 
 ## 6. How it works
 
