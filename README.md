@@ -9,8 +9,8 @@ A personal Fajr wake-up web app for iPhone. It turns this hadith into three ques
 | Knot | Action | Window | "تم" unlocks after | Sound |
 |---|---|---|---|---|
 | 1 | Dhikr on waking | 5 min | 1 min | Soft looping alarm until "تم" |
-| 2 | Wudu | 10 min | 3 min | Silent |
-| 3 | Salah | 45 min | 4 min | Silent |
+| 2 | Wudu | 20 min | 3 min | Silent |
+| 3 | Salah | 60 min | 10 min | Silent |
 
 Knot 1's window starts when the alarm automation opens the app, and its 1-minute lock starts when you tap «استيقظ». Each later window (and its lock) starts when the previous knot is done. If a window runs out, the day is logged as **failed**.
 
@@ -52,6 +52,7 @@ webapp://rjverse.github.io/Uqad/
 
 - On iOS 26, `webapp://` opens the **installed web app** instead of Safari. It always opens the app's start page and drops any `?query`, so the app can't be told `?start=1`.
 - Instead, the web app **starts today's session by itself** when it's opened between **03:00 and 07:00** (Riyadh) and today has no session yet. Change the window in `CONFIG.autoStart`. A running or finished day is never restarted. Opening it outside the window, or in a Safari tab, just shows home.
+- **Wake-by deadline (live mode):** if «استيقظ» hasn't been tapped by the time set on the history page («آخر موعد للاستيقاظ», default **04:30**), today is recorded as لم تكتمل and no session can start later that day. The failed screen says why. Move it with the seasons, since Fajr shifts by about 1.5 hours over the year. Test mode and your first day of use are exempt.
 - The first screen is one big «استيقظ» button. iOS only allows sound after a tap, so this tap starts knot 1 and its alarm tone. Knot 1's 5-minute window counts from when the app opened; its 1-minute lock counts from the tap.
 - The wake screen plays the opening: the hadith's first lines appear while the three knots tie at the nape. The button works immediately, so you never have to wait for it.
 - With a passcode / Face ID, iOS asks you to unlock before the app opens. The session starts when the app opens, so unlocking doesn't eat into your time.
@@ -81,12 +82,12 @@ Inside the web app, tap «وضع التجربة» at the bottom of the home page
 | Tap-to-begin («استيقظ») | A session just started, or knot 1 is still running after a reload (the alarm needs a fresh tap). Shows the time, the opening lines while the knots tie, and a round pulsing button |
 | Knot 1 · ذِكر | Night sky with drifting stars, «المنبّه يعمل» indicator, the segment and the dhikr card |
 | Knot 2 · وُضوء | Water scene: ripples and falling drops |
-| Knot 3 · صَلاة | Dawn scene: mihrab arches and light rays, brightening as the 45 minutes pass |
+| Knot 3 · صَلاة | Dawn scene: mihrab arches and light rays, brightening as the 60 minutes pass |
 | Knot 1–3 | Illustration plus countdown ring, the hadith segment (and the dhikr on knot 1), «الحديث كاملاً», a big «تم» button that stays disabled during the minimum time, and a quiet «طوارئ» link |
 | Success | Last knot unties, the figure stands, dawn glow → «افتح الجوال» runs `Uqad Done` |
 | Failed | Knots stay tied, the figure stays slumped, dim sky → «افتح الجوال» runs `Uqad Fail` |
 | Emergency | «طوارئ» → confirm → logged as *emergency* (neutral: neither counts toward nor breaks the streak) → runs `Uqad Fail` |
-| Home | Today's result, current streak, a **continuity trend line** (weekly / monthly / yearly with ‹ › to move between periods; a **consistency balance** that starts at 0 each period, +1 for حُلَّت, −1 for لم تكتمل / لا جلسة, طوارئ leaves it unchanged; tap for the day's status and balance), and the 30-day grid |
+| Home | Today's result, current streak (a single missed day is forgiven with a «فاتك يوم — لا تفوّت الثاني» warning; two missed days in a row reset it; طوارئ is neutral), a **continuity trend line** (weekly / monthly / yearly with ‹ › to move between periods; a **consistency balance** that starts at 0 each period and never drops below 0, +1 for حُلَّت, −1 for لم تكتمل / لا جلسة, طوارئ leaves it unchanged; tap for the day's status and balance), and the 30-day grid |
 
 ## 6. How it works
 

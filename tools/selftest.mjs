@@ -33,7 +33,7 @@ const ok = (cond, msg) => { console.log((cond ? '  ✓ ' : '  ✗ ') + msg); if 
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || undefined });
 
-async function newPage({ standalone = false, time = '2026-10-05T04:40:00+03:00' } = {}) {
+async function newPage({ standalone = false, time = '2026-10-05T04:10:00+03:00' } = {}) {
   const ctx = await browser.newContext({
     viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true,
     locale: 'ar-SA', timezoneId: 'Asia/Riyadh', colorScheme: 'dark', serviceWorkers: 'block',
@@ -180,16 +180,16 @@ console.log('Real mode timings');
   const { ctx, page } = await newPage();
   await page.goto(BASE);
   const k = await page.evaluate(() => window.__uqad.KNOTS.map((x) => [x.windowSec, x.minDwellSec]));
-  ok(JSON.stringify(k) === JSON.stringify([[300, 60], [600, 180], [2700, 240]]), `windows 5/10/45 min, dwell 1/3/4 min (got ${JSON.stringify(k)})`);
+  ok(JSON.stringify(k) === JSON.stringify([[300, 60], [1200, 180], [3600, 600]]), `windows 5/20/60 min, dwell 1/3/10 min (got ${JSON.stringify(k)})`);
   await ctx.close();
 }
 
 // ---------- Home-screen web app (webapp:// opens it with no query string) ----------
 console.log('Web app auto-start');
 {
-  let { ctx, page } = await newPage({ standalone: true });            // 04:40 Riyadh
+  let { ctx, page } = await newPage({ standalone: true });            // 04:10 Riyadh
   await page.goto(BASE);
-  ok(await screenId(page) === 's-splash', 'web app opened at 04:40 with no params starts the session');
+  ok(await screenId(page) === 's-splash', 'web app opened at 04:10 with no params starts the session');
   ok(await page.evaluate(() => !document.querySelector('#s-splash .badge-test').offsetParent), 'auto-started session is live (no test badge)');
   await page.reload(); await page.clock.runFor(300);
   ok(await screenId(page) === 's-splash' && await page.evaluate(() => window.__uqad.session.knot === 1), 'reopening resumes the same session');
@@ -211,16 +211,63 @@ console.log('Web app auto-start');
   ({ ctx, page } = await newPage({ standalone: true, time: '2026-10-05T23:00:00+03:00' }));
   await page.goto(BASE);
   ok(await screenId(page) === 's-home', 'web app open at 23:00 shows home');
-  await page.clock.fastForward('05:40:00');                           // phone asleep until 04:40
+  await page.clock.fastForward('05:10:00');                           // phone asleep until 04:10
   await page.waitForTimeout(600);
   await page.waitForLoadState();
   await page.clock.runFor(500);
-  ok(await screenId(page) === 's-splash', 'resumed at 04:40 after the night → reloads and lands on «استيقظ»');
+  ok(await screenId(page) === 's-splash', 'resumed at 04:10 after the night → reloads and lands on «استيقظ»');
   await ctx.close();
 
-  ({ ctx, page } = await newPage({ standalone: false }));             // Safari tab at 04:40
+  ({ ctx, page } = await newPage({ standalone: false }));             // Safari tab at 04:10
   await page.goto(BASE);
   ok(await screenId(page) === 's-home', 'Safari tab without ?start=1 never auto-starts');
+  await ctx.close();
+}
+
+// ---------- Wake-by deadline (live mode) ----------
+console.log('Wake-by deadline');
+{
+  const yday = (t) => new Date(Date.UTC(+t.slice(0, 4), +t.slice(5, 7) - 1, +t.slice(8, 10)) - 864e5).toISOString().slice(0, 10);
+  // app never opened before 04:30 → opening at 06:00 records today as failed, no «استيقظ»
+  let { ctx, page } = await newPage({ standalone: true, time: '2026-10-05T06:00:00+03:00' });
+  await page.goto(BASE);
+  await page.evaluate((y) => { localStorage.setItem('uqad.v1.history', JSON.stringify({ [y]: 'success' })); }, yday('2026-10-05'));
+  await page.reload(); await page.clock.runFor(500);
+  ok(await screenId(page) === 's-failed', 'opened at 06:00 after missing the 04:30 deadline → failed, not «استيقظ»');
+  ok((await page.textContent('#fail-reason')).includes('٤:٣٠'), `failed screen explains why (${await page.textContent('#fail-reason')})`);
+  ok(await page.evaluate(() => window.__uqad.loadHistory()[window.__uqad.today()]) === 'failed', 'today logged as لم تكتمل');
+  await shot(page, '15-missed-wake', 1500);
+  await ctx.close();
+
+  // first day of use: nothing to fail yet
+  ({ ctx, page } = await newPage({ standalone: true, time: '2026-10-05T06:00:00+03:00' }));
+  await page.goto(BASE);
+  ok(await screenId(page) === 's-home' && !(await page.evaluate(() => window.__uqad.loadHistory()[window.__uqad.today()])), 'first day of use is never auto-failed');
+  await ctx.close();
+
+  // auto-started at 04:10 but «استيقظ» not tapped before the deadline → failed
+  ({ ctx, page } = await newPage({ standalone: true }));
+  await page.goto(BASE);
+  await page.evaluate((y) => { localStorage.setItem('uqad.v1.history', JSON.stringify({ [y]: 'success' })); localStorage.setItem('uqad.v1.wakeBy', '"04:12"'); localStorage.removeItem('uqad.v1.session'); }, yday('2026-10-05'));
+  await page.reload(); await page.clock.runFor(500);
+  ok(await screenId(page) === 's-splash', 'with wake-by 04:12, opening at 04:10 still starts');
+  await page.clock.runFor(150000);
+  ok(await screenId(page) === 's-failed', '«استيقظ» not tapped by 04:12 → failed');
+  await ctx.close();
+
+  // a later wake-by (winter Fajr) lets 04:40 start normally; the setting is editable on the history page
+  ({ ctx, page } = await newPage({ standalone: true, time: '2026-10-05T04:40:00+03:00' }));
+  await page.goto(BASE);
+  await page.evaluate((y) => { localStorage.setItem('uqad.v1.history', JSON.stringify({ [y]: 'success' })); localStorage.setItem('uqad.v1.wakeBy', '"05:00"'); }, yday('2026-10-05'));
+  await page.reload(); await page.clock.runFor(500);
+  ok(await screenId(page) === 's-splash', 'wake-by 05:00 → opening at 04:40 starts the session');
+  await ctx.close();
+
+  ({ ctx, page } = await newPage({ time: '2026-10-05T12:00:00+03:00' }));
+  await page.goto(BASE);
+  ok(await page.inputValue('#wake-by') === '04:30', 'history page shows the wake-by setting (default 04:30)');
+  await page.fill('#wake-by', '05:10'); await page.dispatchEvent('#wake-by', 'change');
+  ok(await page.evaluate(() => window.__uqad.wakeBy()) === '05:10', 'changing the setting saves it');
   await ctx.close();
 }
 
@@ -293,7 +340,7 @@ console.log('Home');
   await page.clock.runFor(300);
   ok(await screenId(page) === 's-home', 'no session → home');
   const streak = await page.evaluate(() => window.__uqad.streak(window.__uqad.loadHistory()));
-  ok(streak === 2, `streak counts back from yesterday, emergency skipped (got ${streak}, expect 2)`);
+  ok(streak === 20, `streak: single missed days forgiven, emergency skipped (got ${streak}, expect 20)`);
   ok((await page.$$('.day')).length === 30, '30-day grid');
   await shot(page, '11-home');
 
@@ -326,6 +373,28 @@ console.log('Home');
   ti = await trendInfo();
   ok(ti.range === '٢٠٢٦' && ti.xLabels.join(',') === 'يناير,أبريل,يوليو,أكتوبر', 'yearly view: 12 months');
   await shot(page, '14-trend-year', 0);
+
+  // streak grace + balance floor
+  const seed = (map) => page.evaluate((m) => {
+    const t = window.__uqad.today(); const h = {};
+    const add = (n) => new Date(Date.UTC(+t.slice(0, 4), +t.slice(5, 7) - 1, +t.slice(8, 10)) + n * 864e5).toISOString().slice(0, 10);
+    for (const [k, v] of Object.entries(m)) h[add(+k)] = v;
+    localStorage.setItem('uqad.v1.history', JSON.stringify(h));
+  }, map);
+  await seed({ '-1': 'success', '-2': 'failed', '-3': 'failed', '-4': 'success', '-5': 'success' });
+  await page.reload(); await page.clock.runFor(300);
+  ok(await page.evaluate(() => window.__uqad.streak(window.__uqad.loadHistory())) === 1, 'two missed days in a row reset the streak');
+  await seed({ '-1': 'failed', '-2': 'success', '-3': 'success', '-4': 'success' });
+  await page.reload(); await page.clock.runFor(300);
+  ok(await page.evaluate(() => window.__uqad.streak(window.__uqad.loadHistory())) === 3 && await page.isVisible('#streak-note'),
+    'one missed day keeps the streak and shows «فاتك يوم — لا تفوّت الثاني»');
+  // previous week: 4 misses then 3 حُلَّت → balance stays at 0 during the misses, ends at +٣ (not −1)
+  await seed({ '-15': 'success', '-8': 'failed', '-7': 'failed', '-6': 'failed', '-5': 'failed', '-4': 'success', '-3': 'success', '-2': 'success' });
+  await page.reload(); await page.clock.runFor(300);
+  await page.click('#trend-mode [data-mode="week"]');
+  await page.click('#trend-older');
+  const fl = await page.evaluate(() => ({ sum: document.querySelector('#trend-sum').textContent, labels: [...document.querySelectorAll('#trend-svg .axis-y')].map((e) => e.textContent) }));
+  ok(fl.sum.includes('+٣') && !fl.labels.some((l) => l.includes('−')), `balance never drops below 0 (${fl.sum.split('خلال')[0].trim()}, axis ${fl.labels.join(' ')})`);
 
   // corrupt storage must not crash
   await page.evaluate(() => { localStorage.setItem('uqad.v1.session', '{oops'); localStorage.setItem('uqad.v1.history', '[1,2'); });
