@@ -52,6 +52,7 @@ webapp://rjverse.github.io/Uqad/
 
 - On iOS 26, `webapp://` opens the **installed web app** instead of Safari. It always opens the app's start page and drops any `?query`, so the app can't be told `?start=1`.
 - Instead, the web app **starts today's session by itself** when it's opened between **03:00 and 07:00** (Riyadh) and today has no session yet. Change the window in `CONFIG.autoStart`. A running or finished day is never restarted. Opening it outside the window, or in a Safari tab, just shows home.
+- **Wake-by deadline (live mode):** if «استيقظ» hasn't been tapped by the time set on the history page («آخر موعد للاستيقاظ», default **04:30**), today is recorded as لم تكتمل and no session can start later that day. The failed screen says why. Move it with the seasons, since Fajr shifts by about 1.5 hours over the year. Test mode and your first day of use are exempt.
 - The first screen is one big «استيقظ» button. iOS only allows sound after a tap, so this tap starts knot 1 and its alarm tone. Knot 1's 5-minute window counts from when the app opened; its 1-minute lock counts from the tap.
 - The wake screen plays the opening: the hadith's first lines appear while the three knots tie at the nape. The button works immediately, so you never have to wait for it.
 - With a passcode / Face ID, iOS asks you to unlock before the app opens. The session starts when the app opens, so unlocking doesn't eat into your time.

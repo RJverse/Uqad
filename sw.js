@@ -1,5 +1,5 @@
 /* عُقَد — offline cache. Bump VERSION whenever any shell file changes. */
-const VERSION = 'uqad-v7';
+const VERSION = 'uqad-v8';
 const SHELL = [
   './',
   './index.html',

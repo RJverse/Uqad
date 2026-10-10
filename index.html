@@ -232,6 +232,15 @@ body[data-screen="home"] .shade { opacity: 0; }
 .stat-label { font-family: var(--font-heading-ar); font-weight: 500; font-size: var(--fs-small); color: var(--fg-2); margin: 0 0 var(--space-1); }
 .stat-value { font-family: var(--font-display-ar); font-weight: 700; font-size: var(--fs-h4); line-height: 1.35; color: var(--fg-1); margin: 0; }
 .stat-big { font-family: var(--font-display-ar); font-weight: 800; font-size: 40px; line-height: 1.1; color: var(--rj-sky-blue); }
+.wake-card { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); margin-top: var(--space-3); }
+.wake-label { flex: 1; min-width: 0; margin: 0; font-size: var(--fs-body); color: var(--fg-1); }
+.wake-hint { flex-basis: 100%; margin: 0; font-family: var(--font-heading-ar); font-weight: 500; font-size: 12px; line-height: 1.5; color: var(--fg-3); }
+#wake-by {
+  flex: none; color-scheme: dark; direction: ltr;
+  font-family: var(--font-heading-ar); font-weight: 700; font-size: 20px; color: var(--fg-1);
+  background: var(--rj-midnight); border: 1px solid var(--border-1); border-radius: var(--radius-md);
+  padding: 8px 10px; min-height: 44px;
+}
 .stat-note { margin: var(--space-1) 0 0; font-family: var(--font-heading-ar); font-weight: 500; font-size: 12px; line-height: 1.4; color: var(--rj-sky-blue); }
 .stat-unit { font-family: var(--font-body-ar); font-size: var(--fs-small); color: var(--fg-2); margin-inline-start: var(--space-1); }
 .section-title { font-family: var(--font-heading-ar); font-weight: 700; font-size: var(--fs-body-lg); color: var(--fg-1); margin: var(--space-8) 0 var(--space-3); }
@@ -381,6 +390,7 @@ body[data-screen="home"] .shade { opacity: 0; }
     <div class="textblock" data-anchor>
       <h1 class="headline reveal" style="font-weight:700">أصبحتَ اليوم خبيثَ النفسِ كسلان</h1>
       <p class="seg reveal" style="--d:250ms" data-text="fail-seg"></p>
+      <p class="quiet-line reveal" style="--d:450ms" id="fail-reason" hidden></p>
       <p class="quiet-line reveal" style="--d:600ms">غدًا فجرٌ جديد</p>
     </div>
     <div class="reveal" style="--d:800ms">
@@ -414,6 +424,12 @@ body[data-screen="home"] .shade { opacity: 0; }
     <div class="stats">
       <div class="card"><p class="stat-label">اليوم</p><p class="stat-value" id="today-result"></p></div>
       <div class="card"><p class="stat-label">أيام متتالية</p><p class="stat-value"><span class="stat-big" id="streak"></span><span class="stat-unit" id="streak-unit"></span></p><p class="stat-note" id="streak-note" hidden>فاتك يوم — لا تفوّت الثاني</p></div>
+    </div>
+
+    <div class="card wake-card" id="wake-card">
+      <label class="stat-label wake-label" for="wake-by">آخر موعد للاستيقاظ</label>
+      <input type="time" id="wake-by" step="60" required>
+      <p class="wake-hint">إن لم تضغط «استيقظ» قبله، يُسجَّل اليوم «لم تكتمل». عدّله مع تغيّر وقت الفجر.</p>
     </div>
 
     <h2 class="section-title">الاستمرارية</h2>
@@ -489,6 +505,9 @@ body[data-screen="home"] .shade { opacity: 0; }
     storagePrefix: 'uqad.v1.',
     historyDays: 30,
     historyKeepDays: 400,
+    // Live mode: if «استيقظ» hasn't been tapped by this time (Riyadh), today is recorded as failed and no
+    // new session can start. Default only — the user changes it on the history page (Fajr moves with seasons).
+    wakeBy: '04:30',
     // the streak survives a single missed day; this many missed days in a row reset it
     streakBreakAfter: 2,
     tickMs: 250,
@@ -1059,22 +1078,41 @@ body[data-screen="home"] .shade { opacity: 0; }
   let renderedKey = '';
   let screenNow = '';
 
+  const wakeBy = () => { const v = store.get('wakeBy', CONFIG.wakeBy); return /^\d{2}:\d{2}$/.test(v) ? v : CONFIG.wakeBy; };
+  const pastWakeBy = (now = Date.now()) => !TEST && minutesNow(now) >= toMin(wakeBy());
+  const wakeByText = () => { const v = wakeBy(); return `${ar(+v.slice(0, 2))}:${ar(v.slice(3, 5))}`; };
+
   function reconcile(now = Date.now()) {
-    const s = loadSession();
-    if (!s) return null;
-    if (s.phase === 'knot' && now >= s.deadline) {
-      s.phase = 'failed'; s.failedKnot = s.knot; s.endedAt = s.deadline;
-      saveSession(s);
-      record(s.date, 'failed');
+    let s = loadSession();
+    if (s) {
+      if (s.phase === 'knot' && now >= s.deadline) {
+        s.phase = 'failed'; s.failedKnot = s.knot; s.endedAt = s.deadline;
+        saveSession(s);
+        record(s.date, 'failed');
+      }
+      if (s.phase !== 'knot' && !loadHistory()[s.date]) record(s.date, s.phase); // repair a lost write
+      if (s.phase !== 'knot' && s.date !== today(now)) { store.del('session'); s = null; }
     }
-    if (s.phase !== 'knot' && !loadHistory()[s.date]) record(s.date, s.phase); // repair a lost write
-    if (s.phase !== 'knot' && s.date !== today(now)) { store.del('session'); return null; }
+    // wake-by deadline: not woken in time → today fails (never on the very first day of use)
+    if (pastWakeBy(now)) {
+      const d = today(now), h = loadHistory();
+      if (s && s.phase === 'knot' && s.date === d && s.knot === 1 && !isNum(s.wokeAt)) {
+        s.phase = 'failed'; s.failedKnot = 0; s.missedWake = true; s.endedAt = now;
+        saveSession(s);
+        record(d, 'failed');
+      } else if (!s && !h[d] && Object.keys(h).length) {
+        s = { v: 1, date: d, test: false, phase: 'failed', knot: 1, startedAt: now, deadline: now, completed: [], createdAt: now, endedAt: now, failedKnot: 0, missedWake: true };
+        saveSession(s);
+        record(d, 'failed');
+      }
+    }
     return s;
   }
 
   function startSession(now) {
     const d = today(now);
     if (loadHistory()[d]) return null;          // today already finished — never restart
+    if (pastWakeBy(now)) return null;           // too late to start today (live mode)
     const s = {
       v: 1, date: d, test: TEST, phase: 'knot', knot: 1,
       startedAt: now, deadline: now + KNOTS[0].windowSec * 1000,
@@ -1162,6 +1200,11 @@ body[data-screen="home"] .shade { opacity: 0; }
         $('#kcount').textContent = `العقدة ${ar(S.knot)} من ٣`;
         $('#minis').innerHTML = [1, 2, 3].map((n) => miniKnot(n < S.knot ? 'untied' : n === S.knot ? 'current' : 'tied')).join('');
       }
+      if (screen === 'failed') {
+        const fr = $('#fail-reason');
+        fr.hidden = !S.missedWake;
+        if (S.missedWake) fr.textContent = `لم تضغط «استيقظ» قبل ${wakeByText()}`;
+      }
       if (screen === 'success' || screen === 'failed' || screen === 'emergency') {
         const els = $$(`#s-${screen} .reveal`);
         els.forEach((el) => el.classList.remove('is-in'));
@@ -1238,6 +1281,8 @@ body[data-screen="home"] .shade { opacity: 0; }
     $('#streak').textContent = ar(n);
     $('#streak-unit').textContent = n === 1 ? 'يوم' : (n === 2 ? 'يومان' : (n >= 3 && n <= 10 ? 'أيام' : 'يومًا'));
     $('#streak-note').hidden = !(n > 0 && streakAtRisk(h));
+    $('#wake-card').hidden = TEST;
+    if (document.activeElement !== $('#wake-by')) $('#wake-by').value = wakeBy();
     const cells = [];
     for (let i = CONFIG.historyDays - 1; i >= 0; i--) {
       const d = addDays(t, -i);
@@ -1510,6 +1555,12 @@ body[data-screen="home"] .shade { opacity: 0; }
   $$('[data-run]').forEach((b) => b.addEventListener('click', () => runShortcut(b.dataset.run)));
   $$('[data-go="home"]').forEach((b) => b.addEventListener('click', () => { viewHome = true; render(); }));
   $('#btn-back-today').addEventListener('click', () => { viewHome = false; render(); });
+  $('#wake-by').addEventListener('change', (e) => {
+    const v = e.target.value;
+    if (/^\d{2}:\d{2}$/.test(v)) store.set('wakeBy', v);
+    e.target.value = wakeBy();
+    renderHome();
+  });
   $$('#trend-mode button').forEach((b) => b.addEventListener('click', () => {
     trend.mode = b.dataset.mode; trend.offset = 0; store.set('trendMode', trend.mode); renderTrend();
   }));
@@ -1535,7 +1586,7 @@ body[data-screen="home"] .shade { opacity: 0; }
 
   // Live web app opened in the Fajr window with no session today → start it.
   function maybeAutoStart(now = Date.now()) {
-    if (TEST || !STANDALONE || S) return false;
+    if (TEST || !STANDALONE || S || pastWakeBy(now)) return false;
     const m = minutesNow(now), a = toMin(CONFIG.autoStart.from), b = toMin(CONFIG.autoStart.to);
     if (m < a || m >= b) return false;
     const s = startSession(now);                       // returns null if today already has a result
@@ -1604,7 +1655,7 @@ body[data-screen="home"] .shade { opacity: 0; }
   }
 
   // test hook (harmless in production)
-  window.__uqad = { CONFIG, KNOTS, TEXT, STANDALONE, get session() { return S; }, today, streak, loadHistory };
+  window.__uqad = { CONFIG, KNOTS, TEXT, STANDALONE, wakeBy, get session() { return S; }, today, streak, loadHistory };
 })();
 </script>
 </body>
